@@ -2268,17 +2268,25 @@
 
     	const milli = rightNow - firstDay;
     	let minutes = Math.floor(milli / 60000);
-		let hours = Math.round(minutes / 60);
-		let days = Math.round(hours / 24);
+		  let hours = Math.round(minutes / 60);
+		  let days = Math.round(hours / 24);
     	document.getElementById('songNum').value = days;
     	document.getElementById('songNum').max = days;
+
+    	const file = fetch('/startup-playlist.json');
+    	let reader = new FileReader();
+    	reader.readAsText(file);
+
+    	var fileText = reader.result;
+    	console.log(fileText);
+
     	document.getElementById('setsong').click();
     }
 
     function uploadPlaylist() {
     	let input = document.createElement('input');
-		input.type = 'file';
-		input.onchange = _ => {
+		  input.type = 'file';
+		  input.onchange = _ => {
 		  // you can use this method to get file and perform respective operations
 		        let file = input.files[0];
 		        let reader = new FileReader();
@@ -2289,27 +2297,7 @@
 		        reader.onload = function() {
 		        	fileText = reader.result;
 
-			        const fileJSON = JSON.parse(fileText.toString());
-
-			        links = [];
-			        songs = [];
-			        tmpArr = [];
-
-			        for (let i of fileJSON)
-			        {
-			        	if (i.trackLink)
-			        	{
-			        		tmpArr.push(i.title + " - " + i.artist + "|||" + i.trackLink.replace("\\/", "/"));
-			        	}
-			        }
-
-			        tmpArr = shuffle(tmpArr);
-		        	
-		        	for (let i = 0; i < tmpArr.length; i++)
-		        	{
-		        		songs.push(tmpArr[i].substr(0,tmpArr[i].indexOf("|||")));
-		        		links.push(tmpArr[i].substr(tmpArr[i].indexOf("|||")+3));
-		        	}
+			        parseStringToJsonToArrays(fileText);
 
 		        	autocomplete(document.getElementById("myInput"), songs);
 		        	document.getElementById('songNum').max = tmpArr.length;
@@ -2318,7 +2306,31 @@
 		        	document.getElementById('setsong').click();
 		        }
 		    };
-		input.click();
+		  input.click();
+    }
+
+    function parseStringToJsonToArrays(str) {
+    	const fileJSON = JSON.parse(fileText.toString());
+
+      links = [];
+      songs = [];
+      tmpArr = [];
+
+      for (let i of fileJSON)
+      {
+      	if (i.trackLink)
+      	{
+      		tmpArr.push(i.title + " - " + i.artist + "|||" + i.trackLink.replace("\\/", "/"));
+      	}
+      }
+
+      tmpArr = shuffle(tmpArr);
+    	
+    	for (let i = 0; i < tmpArr.length; i++)
+    	{
+    		songs.push(tmpArr[i].substr(0,tmpArr[i].indexOf("|||")));
+    		links.push(tmpArr[i].substr(tmpArr[i].indexOf("|||")+3));
+    	}
     }
 
     function shuffle(array) {

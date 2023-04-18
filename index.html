@@ -186,6 +186,69 @@
 	    background: #F00;
 	  }
 	}
+
+	.popup {
+	  position: relative;
+	  display: inline-block;
+	  cursor: pointer;
+	}
+
+	/* The actual popup */
+	.popup .popuptext {
+	  visibility: hidden;
+	  width: 240px;
+	  background-color: #555;
+	  color: #fff;
+	  text-align: center;
+	  border-radius: 6px;
+	  padding: 8px 0;
+	  position: absolute;
+	  z-index: 1;
+	  /*bottom: 0%;
+	  left: 50%;*/
+	  margin-left: -131px;
+	  margin-top: 60px;
+	}
+
+	/* Popup arrow */
+	.popup .popuptext::after {
+	  content: "";
+	  position: absolute;
+	  top: -11%;
+	  left: 50%;
+	  transform: scaleY(-1);
+	  margin-left: -5px;
+	  border-width: 5px;
+	  border-style: solid;
+	  border-color: #555 transparent transparent transparent;
+	}
+
+	#qmark {
+	  height: 30px;
+	  padding-top: 20px;
+	}
+
+	a {
+		color: #AFDCEB;
+	}
+
+	/* Toggle this class - hide and show the popup */
+	.popup .show {
+	  visibility: visible;
+	  -webkit-animation: fadeIn 1s;
+	  animation: fadeIn 1s;
+	}
+
+	/* Add animation (fade in the popup) */
+	@-webkit-keyframes fadeIn {
+	  from {opacity: 0;} 
+	  to {opacity: 1;}
+	}
+
+	@keyframes fadeIn {
+	  from {opacity: 0;}
+	  to {opacity:1 ;}
+	}
   </style>
 </head>
 
@@ -202,7 +265,11 @@
 		  	<button id="setplaylist" onclick="uploadPlaylist()">Upload Playlist</button>
 		</div>
 		<div class="switcher">
-		    <form>
+		  <div class="popup">
+		  	<img id="qmark" src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Question_mark_alternate.svg" onclick="showPopup()">
+		  	<span class="popuptext" id="myPopup">Use a site like <a href="https://www.soundiiz.com" target="_blank">Soundiiz</a> to convert your Spotify playlist to JSON, then upload it here for a custom Melodle game!</span>
+		  </div>
+		  <form>
 				<input class="form-input" id="songNum" type="number" min="1">
 			</form>
 		    <button id="setsong" class="setsong">Change Song</button>
@@ -324,6 +391,11 @@
     	document.getElementById('setsong').click();
     	autocomplete(document.getElementById("myInput"), songs);
     }
+
+    function showPopup() {
+		  var popup = document.getElementById("myPopup");
+		  popup.classList.toggle("show");
+		}
 
     function uploadPlaylist() {
     	let input = document.createElement('input');

@@ -390,7 +390,9 @@
     	parseStringToJsonToArrays(fileText, false);
 
     	document.getElementById('setsong').click();
-    	autocomplete(document.getElementById("myInput"), songs);
+    	let tmpArr = songs.slice();
+    	tmpArr = shuffle(tmpArr);
+    	autocomplete(document.getElementById("myInput"), tmpArr);
     }
 
     function showPopup() {
@@ -414,7 +416,9 @@
 
 			        parseStringToJsonToArrays(fileText, true);
 
-		        	autocomplete(document.getElementById("myInput"), songs);
+			        let tmpArr = songs.slice();
+			        tmpArr = shuffle(tmpArr);
+		        	autocomplete(document.getElementById("myInput"), tmpArr);
 		        	document.getElementById('songNum').max = tmpArr.length;
 		        	document.getElementById('songNum').value = 1;
 		        	document.getElementById('playlist').innerHTML = "<b>Current Playlist:</b><br/>" + file.name.substr(0,file.name.indexOf('.json'));
@@ -480,10 +484,10 @@
     	}
 
     	document.getElementById('main-section-3').style.display = 'flex';
-		document.getElementById('main-section-4').style.display = 'flex';
-		document.getElementById('main-section-completed').style.display = 'none';
-		document.getElementsByTagName('iframe')[0].style.width = '0%';
-		document.getElementById('main-section-2').style.paddingBottom = '5%';
+		  document.getElementById('main-section-4').style.display = 'flex';
+		  document.getElementById('main-section-completed').style.display = 'none';
+		  document.getElementsByTagName('iframe')[0].style.width = '0%';
+		  document.getElementById('main-section-2').style.paddingBottom = '5%';
     }
 
     function createProgressbar(id, duration, callback) {
@@ -572,6 +576,7 @@
 
     function checkAnswer() {
 		input = document.getElementById('myInput').value;
+
 		if (songs.includes(input))
 		{
 			document.getElementById('myInput').value = "";

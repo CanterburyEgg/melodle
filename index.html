@@ -285,6 +285,9 @@
 <body onload="setDailySongVal()">
   <div class="container">
   	  <div class="container-row" style="border-bottom: solid;">
+  	  	<div id="decades" style="font-sixe:20px; magin:auto;">
+  	  		<a href="decades/2020s.html">2020s</a>
+  	  	</div>
   	  	<div id="header" style="font-size:60px; margin:auto;">
   	  		<b>Melodle</b>
   	  	</div>
@@ -420,7 +423,7 @@
     	document.getElementById('songNum').value = days;
     	document.getElementById('songNum').max = days;
 
-    	const file = await fetch('https://raw.githubusercontent.com/CanterburyEgg/melodle/main/startup-playlist.json');
+    	const file = await fetch('https://raw.githubusercontent.com/CanterburyEgg/melodle/main/decades/startup-playlist.json');
     	var fileText = await file.text();
     	parseStringToJsonToArrays(fileText, false);
 

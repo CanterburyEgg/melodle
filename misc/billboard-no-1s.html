@@ -306,7 +306,7 @@
   	  </div>
 	  <div class="container-row" id="main-section-1">
 	  	<div class="switcher">
-		  	<div id="playlist" style="font-size:22px; padding-top:10px;"><b>Current Playlist:</b><br/>2010s Billboard Top 10 Hits</div>
+		  	<div id="playlist" style="font-size:22px; padding-top:10px;"><b>Current Playlist:</b><br/>Billboard #1 Hits (All-Time)</div>
 		</div>
 		<div class="switcher">
 	  <div class="songselectiongrid">
@@ -429,7 +429,7 @@
     	document.getElementById('songNum').value = days;
     	document.getElementById('songNum').max = days;
 
-    	const file = await fetch('https://raw.githubusercontent.com/CanterburyEgg/melodle/main/jsons/2010s.json');
+    	const file = await fetch('https://raw.githubusercontent.com/CanterburyEgg/melodle/main/jsons/billboard-no-1s.json');
     	var fileText = await file.text();
     	parseStringToJsonToArrays(fileText, false);
 

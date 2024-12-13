@@ -126,9 +126,9 @@
 
 		#main-section-3 {
 			display: grid;
-			grid-template-columns: repeat(5, 1fr);
-			width: 50%;
-			left: 25%;
+			grid-template-columns: repeat(7, 1fr);
+			width: 70%;
+			left: 15%;
 			position: relative;
 			justify-items: center;
 			padding-top: 4%;
@@ -314,7 +314,7 @@
 			<div class="songselectiongrid">
 				<div class="arrowbuttons">
 					<button id="prevBtn" class="arrowbutton" onclick="incrementSong(-1)" disabled>< Prev</button>
-					<button id="nextBtn" class="arrowbutton" onclick="incrementSong(1)" disabled>Next ></button>
+					<button id="nextBtn" class="arrowbutton" onclick="incrementSong(1)">Next ></button>
 				</div>
 			</div>
 			<button class="playBtn" id="playBtn" onclick="startPlayback()">Play</button>
@@ -340,6 +340,8 @@
 			<div class="wrong-answer" id="wrong-answer-3"></div>
 			<div class="wrong-answer" id="wrong-answer-4"></div>
 			<div class="wrong-answer" id="wrong-answer-5"></div>
+			<div></div> <!-- empty div for spacing -->
+			<button class="giveUpBtn" id="giveUpBtn" onclick="giveUp()">Give Up</button>
 		</div>
 		<div class="container-row" id="main-section-4">
 			<table>
@@ -445,6 +447,7 @@
 		var songVal = 0;
 		var totalSongs = 30;
 		var wrongAnswers = 0;
+		var playing = false;
 
 		let timeRunning = null;
 
@@ -475,6 +478,7 @@
 		});
 
 		function startPlayback() {
+			playing = true;
 			audio.src = quizLinks[songVal];
 			audio.currentTime = timestamps[songVal];
 			audio.play();
@@ -492,7 +496,8 @@
 				{
 					audio.pause();
 					songVal = 0;
-					toggleButtons(true, false);
+					toggleButtons();
+					playing = false;
 				}
 			}, timer);
 		}
@@ -501,12 +506,20 @@
 				clearTimeout(timeRunning);
 				audio.pause();
 				toggleButtons();
+				playing = false;
 		}
 
 		function incrementSong(i) {
 			clearTimeout(timeRunning);
 			songVal = songVal + i;
-			startPlayback();
+			if (playing)
+			{
+				startPlayback();				
+			}
+			else
+			{
+				toggleButtons(false);
+			}
 		}
 
 		async function setDailySongVal() {
@@ -520,7 +533,7 @@
 			autocomplete(document.getElementById("myInput"), tmpArr);
 		}
 
-		function toggleButtons(togglePlayPause = true, playbackOngoing = true) {
+		function toggleButtons(togglePlayPause = true) {
 			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;
 
 			if (togglePlayPause)
@@ -528,8 +541,70 @@
 				document.getElementById("playBtn").disabled = !document.getElementById("playBtn").disabled;
 				document.getElementById("pauseBtn").disabled = !document.getElementById("pauseBtn").disabled;				
 			}
-			document.getElementById("nextBtn").disabled = !playbackOngoing || (songVal == totalSongs - 1);
+			document.getElementById("nextBtn").disabled = (songVal == totalSongs - 1);
 			document.getElementById("prevBtn").disabled = songVal == 0;
+		}
+
+		function giveUp() {
+			clearTimeout(timeRunning);
+			let songsFound = totalSongs;
+
+			for (let i = 0; i < totalSongs; i++)
+			{
+				songBox = document.getElementById("guess" + (i + 1));
+				let songTitle = document.createElement("div");
+
+				if (songBox.innerText == "")
+				{
+					songsFound--;
+					inParens = false;
+					dashIndex = -1;
+					for (let j = 0; j < quizSongs[i].length; j++)
+					{
+						if (quizSongs[i].charAt(j) == '(')
+						{
+							inParens = true;
+						}
+						if (quizSongs[i].charAt(j) == ')')
+						{
+							inParens = false;
+						}
+						if (!inParens && quizSongs[i].substring(j, j + 3) == " - ")
+						{
+							dashIndex = j;
+							break;
+						}
+					}
+					songTitle.innerText = quizSongs[i].substring(0, dashIndex);
+					songTitle.style.color = "red";
+					songTitle.style.fontWeight = "bold";
+				}
+				else
+				{
+					songTitle.innerText = songBox.innerText;
+					songBox.innerText = '';
+				}
+
+				songTitle.onclick = function () {
+				    songVal = i;
+						document.getElementById("hiddenPlayBtn").click();
+				};
+				songTitle.style.cursor = "pointer";
+				songBox.appendChild(songTitle);
+			}
+
+			document.getElementById("game-over-section-1").style.display = 'block';
+			document.getElementById("game-over-section-2").style.display = 'block';
+			document.getElementById("main-section-1").style.display = 'none';
+			document.getElementById("main-section-2").style.display = 'none';
+			document.getElementById("game-over-section-2").innerText = "" + songsFound + " of " + totalSongs + " songs found.";
+			document.getElementById("giveUpBtn").disabled = true;
+
+			document.getElementById("player-iframe").style.width = "auto";
+			document.getElementById("player-iframe").style.height = "auto";
+
+			songVal = 0;
+			document.getElementById("hiddenPlayBtn").click();
 		}
 
 		function checkAnswer() {
@@ -570,64 +645,7 @@
 
 					if (wrongAnswers == 5)
 					{
-						clearTimeout(timeRunning);
-						let songsFound = totalSongs;
-
-						for (let i = 0; i < totalSongs; i++)
-						{
-							songBox = document.getElementById("guess" + (i + 1));
-							let songTitle = document.createElement("div");
-
-							if (songBox.innerText == "")
-							{
-								songsFound--;
-								inParens = false;
-								dashIndex = -1;
-								for (let j = 0; j < quizSongs[i].length; j++)
-								{
-									if (quizSongs[i].charAt(j) == '(')
-									{
-										inParens = true;
-									}
-									if (quizSongs[i].charAt(j) == ')')
-									{
-										inParens = false;
-									}
-									if (!inParens && quizSongs[i].substring(j, j + 3) == " - ")
-									{
-										dashIndex = j;
-										break;
-									}
-								}
-								songTitle.innerText = quizSongs[i].substring(0, dashIndex);
-								songTitle.style.color = "red";
-								songTitle.style.fontWeight = "bold";
-							}
-							else
-							{
-								songTitle.innerText = songBox.innerText;
-								songBox.innerText = '';
-							}
-
-							songTitle.onclick = function () {
-							    songVal = i;
-									document.getElementById("hiddenPlayBtn").click();
-							};
-							songTitle.style.cursor = "pointer";
-							songBox.appendChild(songTitle);
-						}
-
-						document.getElementById("game-over-section-1").style.display = 'block';
-						document.getElementById("game-over-section-2").style.display = 'block';
-						document.getElementById("main-section-1").style.display = 'none';
-						document.getElementById("main-section-2").style.display = 'none';
-						document.getElementById("game-over-section-2").innerText = "" + songsFound + " of " + totalSongs + " songs found.";
-
-						document.getElementById("player-iframe").style.width = "auto";
-						document.getElementById("player-iframe").style.height = "auto";
-
-						songVal = 0;
-						document.getElementById("hiddenPlayBtn").click();
+						giveUp();
 					}
 				}
 			}
@@ -657,7 +675,7 @@
 			{
 				if (i < totalSongs)
 				{
-					console.log(tmpArr[i][0]);
+					// console.log(tmpArr[i][0]); // for debugging
 					quizSongs.push(tmpArr[i][0]);
 					quizLinks.push(tmpArr[i][1]);
 					songLinks.push(tmpArr[i][2]);

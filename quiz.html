@@ -812,6 +812,11 @@
 			wrongAnswers = 0;
 			playing = false;
 
+			for (let i = 0; i < 5; i++)
+			{
+				document.getElementById("wrong-answer-" + i).innerHTML = "";
+			}
+
 			for (let i = 0; i < totalSongs; i++)
 			{
 				songBox = document.getElementById("guess" + (i + 1));

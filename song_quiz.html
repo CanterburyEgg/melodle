@@ -40,6 +40,10 @@
 			position: relative;
 		}
 
+		label {
+			font-size: 13.5px;
+		}
+
 		.num-box {
 			width: 5%;
 			min-width: 50px;
@@ -69,6 +73,32 @@
 			text-align: center;
 		}
 
+		#header {
+			display: grid;
+			grid-template-columns: 4fr 1fr;
+			width: 70%;
+			left: 13%;
+			position: relative;
+			gap: 5px;
+			margin-top: 3%;
+			border: 1px solid black;
+			padding-left: 2%;
+			padding-right: 2%;
+		}
+
+		.checkboxes {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			padding-right: 15px;
+		}
+
+		.checkbox-set {
+			display: grid;
+			grid-template-columns: 0.5fr 3fr;
+			align-items: center;
+			gap: 5px;
+		}
+
 		.container {
 			position: absolute;
 			margin: auto;
@@ -91,7 +121,7 @@
 			 border-bottom: solid;
 		}
 
-		#header {
+		#title {
 			 font-size: 60px;
 			 margin: auto;
 			 text-align: center;
@@ -104,7 +134,7 @@
 		}
 
 		#main-section-1 {
-			padding-top: 5%;
+			padding-top: 3%;
 			display: grid;
 			grid-template-columns: 2fr 1fr 1fr 1fr;
 			gap: 10px;
@@ -302,12 +332,17 @@
 </style>
 </head>
 
-<body onload="setDailySongVal()">
+<body>
 	<div class="container">
 		<div class="container-row" id="title-row">
-			<div id="header">
+			<div id="title">
 				<b>Melodle Song Quiz</b>
 			</div>
+		</div>
+		<div class="container-row" id="header">
+			<div id="checkboxes" class="checkboxes">
+			</div>
+			<button id="newQuizBtn" class="newQuizBtn" onclick="createSongQuiz()">New Quiz</button>
 		</div>
 		<div class="container-row" id="main-section-1">
 			<div id="playlist"><b>Current Song:</b><br/><div id="currentSong">1 of 30</div></div>
@@ -477,6 +512,51 @@
 		  }
 		});
 
+		document.addEventListener("DOMContentLoaded", async function () {
+			var jsonList = '';
+			try {
+				const response = await fetch('./jsons/names-to-jsons.txt');
+				jsonList = await response.text();
+			}
+			catch(error) {
+				console.error('Error:', error);
+			}
+
+			tmp = jsonList.split('\n');
+			jsonList = [];
+			for (let i = 0; i < tmp.length; i++)
+			{
+				jsonList.push(tmp[i].split('\t'));
+			}
+
+			for (let i = 0; i < jsonList.length; i++)
+			{
+				const checkboxSet = document.createElement("div");
+				checkboxSet.id = "checkboxSet" + i;
+				checkboxSet.classList.add("checkbox-set");
+
+				const checkbox = document.createElement("input");
+				checkbox.type = "checkbox";
+				checkbox.id = jsonList[i][0];
+
+				if (i == 0)
+				{
+					checkbox.checked = true;
+				}
+
+				const label = document.createElement("label");
+				label.htmlFor = jsonList[i][0];
+				label.textContent = jsonList[i][1];
+
+				checkboxSet.appendChild(checkbox);
+				checkboxSet.appendChild(label);
+
+				document.getElementById("checkboxes").appendChild(checkboxSet);
+			}
+
+			createSongQuiz();
+    });
+
 		function startPlayback() {
 			playing = true;
 			audio.src = quizLinks[songVal];
@@ -522,12 +602,39 @@
 			}
 		}
 
-		async function setDailySongVal() {
-			//const file = await fetch(`jsons/${playlist}.json`);
-			const file = await fetch('https://raw.githubusercontent.com/CanterburyEgg/melodle/main/jsons/startup-playlist.json');
-			var fileText = await file.text();
-			parseStringToJsonToArrays(fileText, true);
+		async function createSongQuiz() {
+			resetHTML();
+			let songStats = [];
 
+			const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+
+			for (let i = 0; i < checkedBoxes.length; i++)
+			{
+				const file = await fetch(`jsons/${checkedBoxes[i].id}.json`);
+			  const fileText = await file.text();
+			  songStats = songStats.concat(parseStringToJsonToArrays(fileText));
+			}
+
+			// Gemini you rock for this one fr fr
+			const stringifiedArrays = songStats.map(JSON.stringify);
+  		const uniqueArrays = new Set(stringifiedArrays);
+  		songStats = shuffle(Array.from(uniqueArrays).map(JSON.parse));
+
+			for (let i = 0; i < songStats.length; i++)
+			{
+				if (i < totalSongs)
+				{
+					// console.log("Song " + (i + 1) + ": " + songStats[i][0]); // for debugging
+					quizSongs.push(songStats[i][0]);
+					quizLinks.push(songStats[i][1]);
+					songLinks.push(songStats[i][2]);
+																									// length of Spotify previews
+					timestamps.push(Math.floor(Math.random() * (29 - (timer / 1000))));
+				}
+				songs.push(songStats[i][0]);
+			}
+
+			// randomizes autocomplete so you don't know the order of the playlist -- probably should alphabetize now that all results are being shown
 			let tmpArr = songs.slice();
 			tmpArr = shuffle(tmpArr);
 			autocomplete(document.getElementById("myInput"), tmpArr);
@@ -547,6 +654,8 @@
 
 		function giveUp() {
 			clearTimeout(timeRunning);
+			audio.pause();
+
 			let songsFound = totalSongs;
 
 			for (let i = 0; i < totalSongs; i++)
@@ -651,11 +760,9 @@
 			}
 		}
 
-		function parseStringToJsonToArrays(str, rand) {
+		function parseStringToJsonToArrays(str) {
 			const fileJSON = JSON.parse(str.toString());
 
-			links = [];
-			songs = [];
 			tmpArr = [];
 
 			for (let i of fileJSON)
@@ -666,24 +773,7 @@
 				}
 			}
 
-			if (rand)
-			{
-				tmpArr = shuffle(tmpArr);
-			}
-
-			for (let i = 0; i < tmpArr.length; i++)
-			{
-				if (i < totalSongs)
-				{
-					// console.log(tmpArr[i][0]); // for debugging
-					quizSongs.push(tmpArr[i][0]);
-					quizLinks.push(tmpArr[i][1]);
-					songLinks.push(tmpArr[i][2]);
-																									// length of Spotify previews
-					timestamps.push(Math.floor(Math.random() * (29 - (timer / 1000))));
-				}
-				songs.push(tmpArr[i][0]);
-			}
+			return tmpArr;
 		}
 
 		function shuffle(array) {
@@ -704,16 +794,39 @@
 		}
 
 		function resetHTML() {
-			guess = 1;
-			startTimer = true;
-			timer = 5000;
-			increment = 1000;
-
-			for (let i = 1; i <= 6; i++)
+			audio.pause();
+			clearTimeout(timeRunning);
+			
+			quizLinks = [];
+			songLinks = [];
+			quizSongs = [];
+			timestamps = [];
+			songs = [];
+			
+			songVal = 0;
+			if (playing)
 			{
-				document.getElementById('guess' + i).innerHTML = "";
-				document.getElementById('x' + i).innerHTML = "";
+				toggleButtons();
 			}
+
+			wrongAnswers = 0;
+			playing = false;
+
+			for (let i = 0; i < totalSongs; i++)
+			{
+				songBox = document.getElementById("guess" + (i + 1));
+				songBox.innerHTML = "";
+			}
+
+			document.getElementById("game-over-section-1").style.display = 'none';
+			document.getElementById("game-over-section-2").style.display = 'none';
+			document.getElementById("main-section-1").style.display = 'grid';
+			document.getElementById("main-section-2").style.display = 'grid';
+
+			document.getElementById("giveUpBtn").disabled = false;
+
+			document.getElementById("player-iframe").style.width = "0%";
+			document.getElementById("player-iframe").style.height = "0%";
 		}
 
 		function autocomplete(inp, arr) {

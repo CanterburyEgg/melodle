@@ -615,29 +615,49 @@
 			  songStats = songStats.concat(parseStringToJsonToArrays(fileText));
 			}
 
-			// Gemini you rock for this one fr fr
-			const stringifiedArrays = songStats.map(JSON.stringify);
-  		const uniqueArrays = new Set(stringifiedArrays);
-  		songStats = shuffle(Array.from(uniqueArrays).map(JSON.parse));
+			let songNames = [];
+  		for (let i = 0; i < songStats.length; i++)
+  		{
+  			songNames.push(songStats[i][0]);
+  		}
 
-			for (let i = 0; i < songStats.length; i++)
+  		let songStatsCleaned = [];
+  		for (let i = 0; i < songStats.length; i++)
+  		{
+  			if (songNames.indexOf(songStats[i][0]) == i)
+  			{
+  				songStatsCleaned.push(songStats[i]);
+  			}
+  		}
+
+  		songStatsCleaned = shuffle(songStatsCleaned);
+
+			for (let i = 0; i < songStatsCleaned.length; i++)
 			{
 				if (i < totalSongs)
 				{
-					// console.log("Song " + (i + 1) + ": " + songStats[i][0]); // for debugging
-					quizSongs.push(songStats[i][0]);
-					quizLinks.push(songStats[i][1]);
-					songLinks.push(songStats[i][2]);
+					// console.log("Song " + (i + 1) + ": " + songStatsCleaned[i][0]); // for debugging
+					quizSongs.push(songStatsCleaned[i][0]);
+					quizLinks.push(songStatsCleaned[i][1]);
+					songLinks.push(songStatsCleaned[i][2]);
 																									// length of Spotify previews
 					timestamps.push(Math.floor(Math.random() * (29 - (timer / 1000))));
 				}
-				songs.push(songStats[i][0]);
+				songs.push(songStatsCleaned[i][0]);
 			}
 
-			// randomizes autocomplete so you don't know the order of the playlist -- probably should alphabetize now that all results are being shown
-			let tmpArr = songs.slice();
-			tmpArr = shuffle(tmpArr);
-			autocomplete(document.getElementById("myInput"), tmpArr);
+			// now with alphabetical powers
+			songs.sort(sortBySongName);
+			autocomplete(document.getElementById("myInput"), songs);
+		}
+
+		function sortBySongName(a, b) {
+			if (a[0].toLowerCase() === b[0].toLowerCase()) {
+					return 0;
+			}
+			else {
+				return (a[0].toLowerCase() < b[0].toLowerCase()) ? -1 : 1;
+			}
 		}
 
 		function toggleButtons(togglePlayPause = true) {

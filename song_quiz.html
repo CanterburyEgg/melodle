@@ -1,0 +1,806 @@
+<html>
+
+<head>
+	<title>Melodle Song Quiz</title>
+	<link rel="icon" type="image/x-icon" href="img/logo.png">
+	<style>
+		body {
+			font-family: Helvetica;
+			background-color: #f6f6f6;
+			overscroll-behavior: none;
+		}
+
+		table {
+			border-collapse: collapse;
+			table-layout: fixed;
+			width: 100%;
+
+		}
+
+		tr {
+			height: 45px;
+		}
+
+		td,
+		th {
+			border: 1px solid #000000;
+			font-size: 16px;
+			padding: 5px;
+		}
+
+		a {
+			cursor: pointer;
+		}
+
+		img {
+			width: 35px;
+			margin: auto;
+			top: 5px;
+			left: 5px;
+			position: relative;
+		}
+
+		.num-box {
+			width: 5%;
+			min-width: 50px;
+			text-align: center;
+			font-size: 18px;
+		}
+
+		.guess-box {
+			padding-left: 1%;
+			padding-right: 1%;
+			text-align: left;
+		}
+
+		.switcher {
+			display: inline-flex;
+			flex-direction: row;
+			padding: 10px;
+			justify-content: space-between;
+			flex-grow: 1;
+			width: 50%;
+			align-items: center;
+		}
+
+		#completed-text {
+			margin: auto;
+			font-size: 28px;
+			text-align: center;
+		}
+
+		.container {
+			position: absolute;
+			margin: auto;
+			display: block;
+			width: 750px;
+			height: 80%;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		.container-row {
+			width: 100%;
+			padding: 5px;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		#title-row {
+			 border-bottom: solid;
+		}
+
+		#header {
+			 font-size: 60px;
+			 margin: auto;
+			 text-align: center;
+		}
+
+		.wrong-answer {
+			border: 1px solid black;
+			width: 45px;
+			height: 45px;
+		}
+
+		#main-section-1 {
+			padding-top: 5%;
+			display: grid;
+			grid-template-columns: 2fr 1fr 1fr 1fr;
+			gap: 10px;
+			justify-items: center;
+			width: 70%;
+			left: 15%;
+			position: relative;
+		}
+
+		#main-section-2 {
+			display: grid;
+			grid-template-columns: 4fr 1fr;
+			gap: 10px;
+			justify-items: center;
+			width: 70%;
+			left: 15%;
+			position: relative;
+		}
+
+		#main-section-3 {
+			display: grid;
+			grid-template-columns: repeat(5, 1fr);
+			width: 50%;
+			left: 25%;
+			position: relative;
+			justify-items: center;
+			padding-top: 4%;
+		}
+
+		#main-section-4 {
+			padding-top: 5%;
+			padding-bottom: 5%;
+			width: 130%;
+			left: -15%;
+			position: relative;
+		}
+
+		#game-over-section-1 {
+			padding-top: 5%;
+			font-size: 60px;
+			text-align: center;
+			display: none;
+		}
+
+		#game-over-section-2 {
+			font-size: 30px;
+			text-align: center;
+			display: none;
+		}
+
+		#playlist {
+			text-align: center;
+	    padding-right: 13;
+	    font-size: 17px;
+		}
+
+		#player-iframe {
+			width: 0%;
+			height: 0%;
+		}
+
+		/* Chrome, Safari, Edge, Opera -- to remove arrows*/
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+		  -webkit-appearance: none;
+		  margin: 0;
+		}
+
+		/* Firefox */
+		input[type=number] {
+		  -moz-appearance: textfield;
+		}
+
+		button {
+			width: 110px;
+			height: 50px;
+			margin-left: 1%;
+			margin-right: 1%;
+			border-radius: 10px;
+			border: 0;
+			background: #191414;
+			color: #fff;
+			font-size: 15px;
+			cursor: pointer;
+		}
+		
+		button:hover {
+			background: #515151;
+		}
+
+		button:disabled {
+		  background-color: #515151;
+		  cursor: auto;
+		}
+
+		.arrowbutton {
+			height: 110%;
+			border-radius: 5px;
+		}
+
+		.arrowbuttons {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 5px;
+			margin-left: auto;
+		}
+
+		.songselectiongrid {
+			display: grid;
+			justify-items: center;
+			align-items: center;
+		}
+
+		.autocomplete {
+			/*the container must be positioned relative:*/
+			position: relative;
+			display: inline-block;
+			width: 100%;
+		}
+		input {
+			border: 1px solid #000;
+			background-color: #f1f1f1;
+			padding: 10px;
+			font-size: 16px;
+		}
+		input[type=text] {
+			background-color: #f1f1f1;
+			width: 100%;
+		}
+		.autocomplete-items {
+			position: absolute;
+			border: 1px solid #d4d4d4;
+			border-bottom: none;
+			z-index: 99;
+			/*position the autocomplete items to be the same width as the container:*/
+			top: 100%;
+			left: 0;
+			right: 0;
+			overflow-y: scroll;
+			max-height: 317px;
+		}
+		.autocomplete-items div {
+			padding: 10px;
+			cursor: pointer;
+			background-color: #fff;
+			border-bottom: 1px solid #d4d4d4;
+		}
+		.autocomplete-items div:hover {
+			/*when hovering an item:*/
+			background-color: #e9e9e9;
+		}
+		.autocomplete-active {
+			/*when navigating through the items using the arrow keys:*/
+			background-color: DodgerBlue !important;
+			color: #ffffff;
+		}
+
+		.auto-container {
+			width: 100%;
+			padding-right: 5px;
+		}
+
+		.progressbar {
+			width: 100%;
+			height: auto;
+		}
+		.progressbar .inner {
+			height: 40px;
+			animation: progressbar-countdown;
+			/* Placeholder, this will be updated using javascript */
+			animation-duration: 40s;
+			/* We stop in the end */
+			animation-iteration-count: 1;
+			/* Stay on pause when the animation is finished finished */
+			animation-fill-mode: forwards;
+			/* We start paused, we start the animation using javascript */
+			animation-play-state: paused;
+			/* We want a linear animation, ease-out is standard */
+			animation-timing-function: linear;
+		}
+		@keyframes progressbar-countdown {
+			0% {
+				width: 100%;
+				background: #0F0;
+			}
+			100% {
+				width: 0%;
+				background: #F00;
+			}
+		}
+
+	.hidden-item {
+		display: none;
+	}
+</style>
+</head>
+
+<body onload="setDailySongVal()">
+	<div class="container">
+		<div class="container-row" id="title-row">
+			<div id="header">
+				<b>Melodle Song Quiz</b>
+			</div>
+		</div>
+		<div class="container-row" id="main-section-1">
+			<div id="playlist"><b>Current Song:</b><br/><div id="currentSong">1 of 30</div></div>
+			<div class="songselectiongrid">
+				<div class="arrowbuttons">
+					<button id="prevBtn" class="arrowbutton" onclick="incrementSong(-1)" disabled>< Prev</button>
+					<button id="nextBtn" class="arrowbutton" onclick="incrementSong(1)" disabled>Next ></button>
+				</div>
+			</div>
+			<button class="playBtn" id="playBtn" onclick="startPlayback()">Play</button>
+			<button class="pauseBtn" id="pauseBtn" onclick="pause()" disabled>Pause</button>
+		</div>
+		<div class="container-row" id="main-section-2">
+			<div class="auto-container" autocomplete="off">
+				<div class="autocomplete">
+					<input id="myInput" type="text" name="myInput" placeholder="Type a song name ...">
+				</div>
+			</div>
+			<button class="submit" onclick="checkAnswer()">Submit</button>
+		</div>
+		<div class="container-row" id="game-over-section-1">
+			<b>GAME OVER</b>
+		</div>
+		<div class="container-row" id="game-over-section-2">
+			24 of 30 songs identified.
+		</div>
+		<div class="container-row" id="main-section-3">
+			<div class="wrong-answer" id="wrong-answer-1"></div>
+			<div class="wrong-answer" id="wrong-answer-2"></div>
+			<div class="wrong-answer" id="wrong-answer-3"></div>
+			<div class="wrong-answer" id="wrong-answer-4"></div>
+			<div class="wrong-answer" id="wrong-answer-5"></div>
+		</div>
+		<div class="container-row" id="main-section-4">
+			<table>
+				<tr>
+					<td class="num-box" id="num1">1.</td>
+					<td class="guess-box" id="guess1"></td>
+					<td class="num-box" id="num11">11.</td>
+					<td class="guess-box" id="guess11"></td>
+					<td class="num-box" id="num21">21.</td>
+					<td class="guess-box" id="guess21"></td>
+				</tr>
+				<tr>
+					<td class="num-box" id="num2">2.</td>
+					<td class="guess-box" id="guess2"></td>
+					<td class="num-box" id="num12">12.</td>
+					<td class="guess-box" id="guess12"></td>
+					<td class="num-box" id="num22">22.</td>
+					<td class="guess-box" id="guess22"></td>
+				</tr>
+				<tr>
+					<td class="num-box" id="num3">3.</td>
+					<td class="guess-box" id="guess3"></td>
+					<td class="num-box" id="num13">13.</td>
+					<td class="guess-box" id="guess13"></td>
+					<td class="num-box" id="num23">23.</td>
+					<td class="guess-box" id="guess23"></td>
+				</tr>
+				<tr>
+					<td class="num-box" id="num4">4.</td>
+					<td class="guess-box" id="guess4"></td>
+					<td class="num-box" id="num14">14.</td>
+					<td class="guess-box" id="guess14"></td>
+					<td class="num-box" id="num24">24.</td>
+					<td class="guess-box" id="guess24"></td>
+				</tr>
+				<tr>
+					<td class="num-box" id="num5">5.</td>
+					<td class="guess-box" id="guess5"></td>
+					<td class="num-box" id="num15">15.</td>
+					<td class="guess-box" id="guess15"></td>
+					<td class="num-box" id="num25">25.</td>
+					<td class="guess-box" id="guess25"></td>
+				</tr>
+				<tr>
+					<td class="num-box" id="num6">6.</td>
+					<td class="guess-box" id="guess6"></td>
+					<td class="num-box" id="num16">16.</td>
+					<td class="guess-box" id="guess16"></td>
+					<td class="num-box" id="num26">26.</td>
+					<td class="guess-box" id="guess26"></td>
+				</tr>
+				<tr>
+					<td class="num-box" id="num7">7.</td>
+					<td class="guess-box" id="guess7"></td>
+					<td class="num-box" id="num17">17.</td>
+					<td class="guess-box" id="guess17"></td>
+					<td class="num-box" id="num27">27.</td>
+					<td class="guess-box" id="guess27"></td>
+				</tr>
+				<tr>
+					<td class="num-box" id="num8">8.</td>
+					<td class="guess-box" id="guess8"></td>
+					<td class="num-box" id="num18">18.</td>
+					<td class="guess-box" id="guess18"></td>
+					<td class="num-box" id="num28">28.</td>
+					<td class="guess-box" id="guess28"></td>
+				</tr>
+				<tr>
+					<td class="num-box" id="num9">9.</td>
+					<td class="guess-box" id="guess9"></td>
+					<td class="num-box" id="num19">19.</td>
+					<td class="guess-box" id="guess19"></td>
+					<td class="num-box" id="num29">29.</td>
+					<td class="guess-box" id="guess29"></td>
+				</tr>
+				<tr>
+					<td class="num-box" id="num10">10.</td>
+					<td class="guess-box" id="guess10"></td>
+					<td class="num-box" id="num20">20.</td>
+					<td class="guess-box" id="guess20"></td>
+					<td class="num-box" id="num30">30.</td>
+					<td class="guess-box" id="guess30"></td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="container-row" id="player-iframe">
+			<audio controls class="hidden-item" id="audio"></audio>
+			<button class="hidden-item" id="hiddenPlayBtn"></button>
+			<div id="embed-iframe"></div>
+		</div>
+	</div>
+
+	<script src="https://open.spotify.com/embed-podcast/iframe-api/v1" async>
+	</script>
+	<script type="text/javascript">
+		var quizLinks = [];
+		var songLinks = [];
+		var quizSongs = [];
+		var timestamps = [];
+		var songs = [];
+		var timer = 4000;
+		var songVal = 0;
+		var totalSongs = 30;
+		var wrongAnswers = 0;
+
+		let timeRunning = null;
+
+		window.onSpotifyIframeApiReady = (IFrameAPI) => {
+			const element = document.getElementById('embed-iframe');
+			songVal = 0;
+			const options = {
+				width: '100%',
+				height: '200px'
+			};
+			const callback = (EmbedController) => {
+			document.querySelectorAll('#hiddenPlayBtn').forEach(
+				hiddenPlayBtn => {
+					hiddenPlayBtn.addEventListener('click', () => {
+						clearTimeout(timeRunning);
+						EmbedController.loadUri(songLinks[songVal]);
+					});
+				})
+			};
+
+			IFrameAPI.createController(element, options, callback);
+		};
+
+		document.addEventListener('visibilitychange', function() {
+		  if (document.visibilityState == 'hidden') {
+		    document.getElementById("pauseBtn").click();
+		  }
+		});
+
+		function startPlayback() {
+			audio.src = quizLinks[songVal];
+			audio.currentTime = timestamps[songVal];
+			audio.play();
+			toggleButtons(!document.getElementById("playBtn").disabled);
+						
+			timeRunning = setTimeout(function() {
+				songVal++;
+
+				if (songVal != totalSongs)
+				{
+					toggleButtons(false);
+					startPlayback();
+				}
+				else
+				{
+					audio.pause();
+					songVal = 0;
+					toggleButtons(true, false);
+				}
+			}, timer);
+		}
+
+		function pause() {
+				clearTimeout(timeRunning);
+				audio.pause();
+				toggleButtons();
+		}
+
+		function incrementSong(i) {
+			clearTimeout(timeRunning);
+			songVal = songVal + i;
+			startPlayback();
+		}
+
+		async function setDailySongVal() {
+			//const file = await fetch(`jsons/${playlist}.json`);
+			const file = await fetch('https://raw.githubusercontent.com/CanterburyEgg/melodle/main/jsons/startup-playlist.json');
+			var fileText = await file.text();
+			parseStringToJsonToArrays(fileText, true);
+
+			let tmpArr = songs.slice();
+			tmpArr = shuffle(tmpArr);
+			autocomplete(document.getElementById("myInput"), tmpArr);
+		}
+
+		function toggleButtons(togglePlayPause = true, playbackOngoing = true) {
+			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;
+
+			if (togglePlayPause)
+			{
+				document.getElementById("playBtn").disabled = !document.getElementById("playBtn").disabled;
+				document.getElementById("pauseBtn").disabled = !document.getElementById("pauseBtn").disabled;				
+			}
+			document.getElementById("nextBtn").disabled = !playbackOngoing || (songVal == totalSongs - 1);
+			document.getElementById("prevBtn").disabled = songVal == 0;
+		}
+
+		function checkAnswer() {
+			input = document.getElementById('myInput').value;
+
+			if (songs.includes(input))
+			{
+				document.getElementById('myInput').value = '';
+
+				if (quizSongs.includes(input))
+				{
+					inParens = false;
+					dashIndex = -1;
+					for (let i = 0; i < input.length; i++)
+					{
+						if (input.charAt(i) == '(')
+						{
+							inParens = true;
+						}
+						if (input.charAt(i) == ')')
+						{
+							inParens = false;
+						}
+						if (!inParens && input.substring(i, i + 3) == " - ")
+						{
+							dashIndex = i;
+							break;
+						}
+					}
+					document.getElementById("guess" + (quizSongs.indexOf(input) + 1)).innerText = input.substring(0, dashIndex);
+				}
+				else
+				{
+					wrongAnswers++;
+					let xImg = document.createElement("img");
+					xImg.src = "img/x.png";
+					document.getElementById("wrong-answer-" + wrongAnswers).appendChild(xImg);
+
+					if (wrongAnswers == 5)
+					{
+						clearTimeout(timeRunning);
+						let songsFound = totalSongs;
+
+						for (let i = 0; i < totalSongs; i++)
+						{
+							songBox = document.getElementById("guess" + (i + 1));
+							let songTitle = document.createElement("div");
+
+							if (songBox.innerText == "")
+							{
+								songsFound--;
+								inParens = false;
+								dashIndex = -1;
+								for (let j = 0; j < quizSongs[i].length; j++)
+								{
+									if (quizSongs[i].charAt(j) == '(')
+									{
+										inParens = true;
+									}
+									if (quizSongs[i].charAt(j) == ')')
+									{
+										inParens = false;
+									}
+									if (!inParens && quizSongs[i].substring(j, j + 3) == " - ")
+									{
+										dashIndex = j;
+										break;
+									}
+								}
+								songTitle.innerText = quizSongs[i].substring(0, dashIndex);
+								songTitle.style.color = "red";
+								songTitle.style.fontWeight = "bold";
+							}
+							else
+							{
+								songTitle.innerText = songBox.innerText;
+								songBox.innerText = '';
+							}
+
+							songTitle.onclick = function () {
+							    songVal = i;
+									document.getElementById("hiddenPlayBtn").click();
+							};
+							songTitle.style.cursor = "pointer";
+							songBox.appendChild(songTitle);
+						}
+
+						document.getElementById("game-over-section-1").style.display = 'block';
+						document.getElementById("game-over-section-2").style.display = 'block';
+						document.getElementById("main-section-1").style.display = 'none';
+						document.getElementById("main-section-2").style.display = 'none';
+						document.getElementById("game-over-section-2").innerText = "" + songsFound + " of " + totalSongs + " songs found.";
+
+						document.getElementById("player-iframe").style.width = "auto";
+						document.getElementById("player-iframe").style.height = "auto";
+
+						songVal = 0;
+						document.getElementById("hiddenPlayBtn").click();
+					}
+				}
+			}
+		}
+
+		function parseStringToJsonToArrays(str, rand) {
+			const fileJSON = JSON.parse(str.toString());
+
+			links = [];
+			songs = [];
+			tmpArr = [];
+
+			for (let i of fileJSON)
+			{
+				if (i.trackLink)
+				{
+					tmpArr.push([i.title + " - " + i.artist, i.preview.replace("\\/", "/"), i.trackLink.replace("\\/", "/")]);
+				}
+			}
+
+			if (rand)
+			{
+				tmpArr = shuffle(tmpArr);
+			}
+
+			for (let i = 0; i < tmpArr.length; i++)
+			{
+				if (i < totalSongs)
+				{
+					console.log(tmpArr[i][0]);
+					quizSongs.push(tmpArr[i][0]);
+					quizLinks.push(tmpArr[i][1]);
+					songLinks.push(tmpArr[i][2]);
+																									// length of Spotify previews
+					timestamps.push(Math.floor(Math.random() * (29 - (timer / 1000))));
+				}
+				songs.push(tmpArr[i][0]);
+			}
+		}
+
+		function shuffle(array) {
+			let currentIndex = array.length, randomIndex;
+
+	  // While there remain elements to shuffle.
+			while (currentIndex != 0) {
+
+	    // Pick a remaining element.
+				randomIndex = Math.floor(Math.random() * currentIndex);
+				currentIndex--;
+
+	    // And swap it with the current element.
+				[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+			}
+
+			return array;
+		}
+
+		function resetHTML() {
+			guess = 1;
+			startTimer = true;
+			timer = 5000;
+			increment = 1000;
+
+			for (let i = 1; i <= 6; i++)
+			{
+				document.getElementById('guess' + i).innerHTML = "";
+				document.getElementById('x' + i).innerHTML = "";
+			}
+		}
+
+		function autocomplete(inp, arr) {
+	  /*the autocomplete function takes two arguments,
+	  the text field element and an array of possible autocompleted values:*/
+			var currentFocus;
+	  /*execute a function when someone writes in the text field:*/
+			inp.addEventListener("input", function(e) {
+				var a, b, i, val = this.value;
+	      /*close any already open lists of autocompleted values*/
+				closeAllLists();
+				if (!val) { return false;}
+				currentFocus = -1;
+	      /*create a DIV element that will contain the items (values):*/
+				a = document.createElement("DIV");
+				a.setAttribute("id", this.id + "autocomplete-list");
+				a.setAttribute("class", "autocomplete-items");
+	      /*append the DIV element as a child of the autocomplete container:*/
+				this.parentNode.appendChild(a);
+	      /*for each item in the array...*/
+				searchResults = 0;
+				for (i = 0; i < arr.length; i++) {
+	        /*check if the item starts with the same letters as the text field value:*/
+					if (val.length >= 2 && arr[i].toUpperCase().includes(val.toUpperCase())) {
+	          /*create a DIV element for each matching element:*/
+						b = document.createElement("DIV");
+						index = arr[i].toUpperCase().indexOf(val.toUpperCase());
+	          /*make the matching letters bold:*/
+						b.innerHTML = arr[i].substr(0,index);
+						b.innerHTML += "<strong>" + arr[i].substr(index, val.length) + "</strong>";
+						b.innerHTML += arr[i].substr(index+val.length);
+	          /*insert a input field that will hold the current array item's value:*/
+						b.innerHTML += '<input type="hidden" value="' + arr[i].replaceAll('"', '&quot;') + '">';
+	          /*execute a function when someone clicks on the item value (DIV element):*/
+						b.addEventListener("click", function(e) {
+	              /*insert the value for the autocomplete text field:*/
+							inp.value = this.getElementsByTagName("input")[0].value;
+	              /*close the list of autocompleted values,
+	              (or any other open lists of autocompleted values:*/
+							closeAllLists();
+						});
+						a.appendChild(b);
+
+						searchResults++;
+						/*if (searchResults == 10)
+							i = arr.length;*/
+					}
+				}
+			});
+	  /*execute a function presses a key on the keyboard:*/
+			inp.addEventListener("keydown", function(e) {
+				var x = document.getElementById(this.id + "autocomplete-list");
+				if (x) x = x.getElementsByTagName("div");
+				if (e.keyCode == 40) {
+	        /*If the arrow DOWN key is pressed,
+	        increase the currentFocus variable:*/
+					currentFocus++;
+	        /*and and make the current item more visible:*/
+					addActive(x);
+	      } else if (e.keyCode == 38) { //up
+	        /*If the arrow UP key is pressed,
+	        decrease the currentFocus variable:*/
+	      	currentFocus--;
+	        /*and and make the current item more visible:*/
+	      	addActive(x);
+	      } else if (e.keyCode == 13) {
+	        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+	      	e.preventDefault();
+	      	if (currentFocus > -1) {
+	          /*and simulate a click on the "active" item:*/
+	      		if (x) x[currentFocus].click();
+	      	}
+	      }
+	    });
+			function addActive(x) {
+	    /*a function to classify an item as "active":*/
+				if (!x) return false;
+	    /*start by removing the "active" class on all items:*/
+				removeActive(x);
+				if (currentFocus >= x.length) currentFocus = 0;
+				if (currentFocus < 0) currentFocus = (x.length - 1);
+	    /*add class "autocomplete-active":*/
+				x[currentFocus].classList.add("autocomplete-active");
+			}
+			function removeActive(x) {
+	    /*a function to remove the "active" class from all autocomplete items:*/
+				for (var i = 0; i < x.length; i++) {
+					x[i].classList.remove("autocomplete-active");
+				}
+			}
+			function closeAllLists(elmnt) {
+	    /*close all autocomplete lists in the document,
+	    except the one passed as an argument:*/
+				var x = document.getElementsByClassName("autocomplete-items");
+				for (var i = 0; i < x.length; i++) {
+					if (elmnt != x[i] && elmnt != inp) {
+						x[i].parentNode.removeChild(x[i]);
+					}
+				}
+			}
+			/*execute a function when someone clicks in the document:*/
+			document.addEventListener("click", function (e) {
+				closeAllLists(e.target);
+			});
+		}
+	</script>
+</body>
+</html>

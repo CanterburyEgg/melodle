@@ -214,7 +214,7 @@
 			bottom: 100%;
 			left: 0;
 			right: 0;
-			overflow-y: scroll;
+			overflow-y: auto;
 			max-height: 317px;
 		}
 		.autocomplete-items div {
@@ -462,7 +462,6 @@
 						setTimeout(function() {
 							EmbedController.togglePlay();
 							EmbedController.loadUri(links[songVal]);
-							// EmbedController.seek(0); I don't think I need this for mobile but I haven't tested it tbh
 							document.getElementById('progressbar').innerHTML = "";
 							document.getElementById("playBtn").disabled = false;
 						}, timer);
@@ -539,9 +538,19 @@
 			}
 
 			document.getElementById('setsong').click();
-			let tmpArr = songs.slice();
-			tmpArr = shuffle(tmpArr);
-			autocomplete(document.getElementById("myInput"), tmpArr);
+			
+			// now with alphabetical powers
+			songs.sort(sortBySongName);
+			autocomplete(document.getElementById("myInput"), songs);
+		}
+
+		function sortBySongName(a, b) {
+			if (a[0].toLowerCase() === b[0].toLowerCase()) {
+					return 0;
+			}
+			else {
+				return (a[0].toLowerCase() < b[0].toLowerCase()) ? -1 : 1;
+			}
 		}
 
 		function incrementSong(x) {

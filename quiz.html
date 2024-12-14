@@ -88,8 +88,20 @@
 
 		.checkboxes {
 			display: grid;
-			grid-template-columns: 1fr 1fr;
-			padding-right: 15px;
+			grid-template-columns: 1fr;
+			padding-top: 1%;
+		}
+
+		.category-title {
+			font-weight: bold;
+		}
+
+		.checkbox-category {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			gap: 2px;
+			padding-top: 1%;
+			padding-bottom: 1%;
 		}
 
 		.checkbox-set {
@@ -229,6 +241,9 @@
 		  background-color: #515151;
 		  cursor: auto;
 		}
+		label {
+			white-space: nowrap;
+		}
 
 		.arrowbutton {
 			height: 110%;
@@ -273,7 +288,7 @@
 			top: 100%;
 			left: 0;
 			right: 0;
-			overflow-y: scroll;
+			overflow-y: auto;
 			max-height: 317px;
 		}
 		.autocomplete-items div {
@@ -529,6 +544,26 @@
 				jsonList.push(tmp[i].split('\t'));
 			}
 
+			let categories = [];
+			for (const json of jsonList)
+			{
+				category = json[2].replace('\r','');
+				if (!categories.includes(category))
+				{
+					categories.push(category);
+				}
+			}
+
+			let catsToElems = [];
+			for (const cat of categories)
+			{
+				const ele = document.createElement("div");
+				ele.classList.add("checkbox-category");
+				ele.id = "category-" + cat.toLowerCase().replace(' ','-');
+
+				catsToElems.push([cat, ele]);
+			}
+
 			for (let i = 0; i < jsonList.length; i++)
 			{
 				const checkboxSet = document.createElement("div");
@@ -551,7 +586,23 @@
 				checkboxSet.appendChild(checkbox);
 				checkboxSet.appendChild(label);
 
-				document.getElementById("checkboxes").appendChild(checkboxSet);
+				for (const cat of catsToElems)
+				{
+					if (cat[0] == jsonList[i][2].replace('\r',''))
+					{
+						cat[1].appendChild(checkboxSet);
+					}
+				}
+			}
+
+			for (const cat of catsToElems)
+			{
+				const title = document.createElement("div");
+				title.classList.add("category-title");
+				title.innerText = cat[0];
+
+				document.getElementById("checkboxes").appendChild(title);
+				document.getElementById("checkboxes").appendChild(cat[1]);
 			}
 
 			createSongQuiz();
@@ -816,6 +867,7 @@
 		function resetHTML() {
 			audio.pause();
 			clearTimeout(timeRunning);
+			document.getElementById("hiddenPlayBtn").click();
 			
 			quizLinks = [];
 			songLinks = [];

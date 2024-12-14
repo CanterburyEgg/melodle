@@ -1,9 +1,11 @@
-startup-playlist	Spotify's Most Streamed
-1960s	1960s Billboard Top 10 Hits
-1970s	1970s Billboard Top 10 Hits
-1980s	1980s Billboard Top 10 Hits
-1990s	1990s Billboard Top 10 Hits
-2000s	2000s Billboard Top 10 Hits
-2010s	2010s Billboard Top 10 Hits
-2020s	2020s Billboard Top 10 Hits
-billboard-no-1s	Billboard #1 Hits (All-Time)
+startup-playlist	Spotify's Most Streamed	Default
+1960s	1960s	Billboard Hits
+1970s	1970s	Billboard Hits
+1980s	1980s 	Billboard Hits
+1990s	1990s 	Billboard Hits
+2000s	2000s 	Billboard Hits
+2010s	2010s 	Billboard Hits
+2020s	2020s 	Billboard Hits
+billboard-no-1s	#1 Hits (All-Time)	Billboard Hits
+disney	Disney	Genres
+kpop	K-Pop	Genres

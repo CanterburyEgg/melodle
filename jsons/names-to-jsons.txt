@@ -9,3 +9,4 @@ startup-playlist	Spotify's Most Streamed	Default
 billboard-no-1s	#1 Hits (All-Time)	Billboard Hits
 disney	Disney	Genres
 kpop	K-Pop	Genres
+musicals	Musicals	Genres

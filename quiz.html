@@ -312,33 +312,17 @@
 			padding-right: 5px;
 		}
 
-		.progressbar {
-			width: 100%;
+		.inline-img {
+			width: 19px;
 			height: auto;
+			position: static;
 		}
-		.progressbar .inner {
-			height: 40px;
-			animation: progressbar-countdown;
-			/* Placeholder, this will be updated using javascript */
-			animation-duration: 40s;
-			/* We stop in the end */
-			animation-iteration-count: 1;
-			/* Stay on pause when the animation is finished finished */
-			animation-fill-mode: forwards;
-			/* We start paused, we start the animation using javascript */
-			animation-play-state: paused;
-			/* We want a linear animation, ease-out is standard */
-			animation-timing-function: linear;
-		}
-		@keyframes progressbar-countdown {
-			0% {
-				width: 100%;
-				background: #0F0;
-			}
-			100% {
-				width: 0%;
-				background: #F00;
-			}
+
+		.revealed-answer-box {
+			display: grid;
+			grid-template-columns: 7fr 1fr;
+			gap: 2px;
+			align-items: center;
 		}
 
 	.hidden-item {
@@ -633,6 +617,18 @@
 			}, timer);
 		}
 
+		function playClip(i) {
+			songVal = i;
+
+			audio.src = quizLinks[songVal];
+			audio.currentTime = timestamps[songVal];
+			audio.play();
+						
+			timeRunning = setTimeout(function() {
+				audio.pause();
+			}, timer);
+		}
+
 		function pause() {
 				clearTimeout(timeRunning);
 				audio.pause();
@@ -732,7 +728,9 @@
 			for (let i = 0; i < totalSongs; i++)
 			{
 				songBox = document.getElementById("guess" + (i + 1));
+				let songTitleBox = document.createElement("div");
 				let songTitle = document.createElement("div");
+				let songTitleText = document.createElement("text");
 
 				if (songBox.innerText == "")
 				{
@@ -755,22 +753,37 @@
 							break;
 						}
 					}
-					songTitle.innerText = quizSongs[i].substring(0, dashIndex);
-					songTitle.style.color = "red";
-					songTitle.style.fontWeight = "bold";
+					songTitleText.innerText = quizSongs[i].substring(0, dashIndex);
+					songTitleText.style.color = "red";
+					songTitleText.style.fontWeight = "bold";
 				}
 				else
 				{
-					songTitle.innerText = songBox.innerText;
+					songTitleText.innerText = songBox.innerText;
 					songBox.innerText = '';
 				}
 
-				songTitle.onclick = function () {
+				songTitleText.onclick = function () {
 				    songVal = i;
-						document.getElementById("hiddenPlayBtn").click();
+					document.getElementById("hiddenPlayBtn").click();
 				};
-				songTitle.style.cursor = "pointer";
-				songBox.appendChild(songTitle);
+				
+				songTitleBox.classList.add('revealed-answer-box');
+				songTitleText.style.cursor = "pointer";
+				songTitle.appendChild(songTitleText);
+
+				const speakerIcon = document.createElement("img");
+				speakerIcon.src = "img/speaker.png";
+				speakerIcon.classList.add("inline-img");
+				speakerIcon.style.cursor = "pointer";
+				speakerIcon.onclick = function () {
+					playClip(i);
+				};
+
+				songTitleBox.appendChild(songTitle);
+				songTitleBox.appendChild(speakerIcon);
+
+				songBox.appendChild(songTitleBox);
 			}
 
 			document.getElementById("game-over-section-1").style.display = 'block';

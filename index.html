@@ -474,7 +474,7 @@
 							resetHTML();
 							songVal = parseInt(document.getElementById('songNum').value) - 1;
 							EmbedController.loadUri(links[songVal]);
-              //EmbedController.loadUri('spotify:episode:7makk4oTQel546B0PZlDM5');
+              				//EmbedController.loadUri('spotify:episode:7makk4oTQel546B0PZlDM5');
 						});
 					});
 				document.querySelectorAll('.playBtn').forEach(
@@ -540,8 +540,9 @@
 			document.getElementById('setsong').click();
 			
 			// now with alphabetical powers
-			songs.sort(sortBySongName);
-			autocomplete(document.getElementById("myInput"), songs);
+			let sortedSongs = songs.slice();
+			sortedSongs.sort(sortBySongName);
+			autocomplete(document.getElementById("myInput"), sortedSongs);
 		}
 
 		function sortBySongName(a, b) {

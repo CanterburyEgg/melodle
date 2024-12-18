@@ -92,6 +92,18 @@
 			padding-top: 1%;
 		}
 
+		.new-quiz-btn-container {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 5px;
+			align-items: center;
+			justify-items: center;
+		}
+
+		.newQuizBtn {
+			margin-bottom: 10px;
+		}
+
 		.category-title {
 			font-weight: bold;
 		}
@@ -168,15 +180,41 @@
 			transition: visibility 0s 2s, opacity 2s linear;
 		}
 
-		#main-section-1 {
-			padding-top: 3%;
+		.slider-container {
 			display: grid;
-			grid-template-columns: 2fr 1fr 1fr 1fr;
-			gap: 10px;
+			grid-template-columns: 1fr 4fr 1fr;
+			gap: 5px;
+			align-items: center;
+			justify-items: center;
+		}
+
+		.slider {
+			padding: 0;
+		}
+
+		.volume-icon {
+			width: 22px;
+			height: auto;
+			position: static;
+			cursor: pointer;
+		}
+
+		#main-section-1 {
+			padding-top: 4%;
+			display: grid;
+			grid-template-columns: 4fr 0.5fr 1fr 0.5fr 1fr 4fr;
 			justify-items: center;
 			width: 70%;
 			left: 15%;
 			position: relative;
+		}
+
+		#main-section-1 img {
+			position: static;
+		}
+
+		#main-section-1 .active-button {
+			cursor: pointer;
 		}
 
 		#main-section-2 {
@@ -191,12 +229,20 @@
 
 		#main-section-3 {
 			display: grid;
-			grid-template-columns: repeat(7, 1fr);
+			grid-template-columns: 4fr 1fr;
+			gap: 10px;
 			width: 70%;
 			left: 15%;
 			position: relative;
 			justify-items: center;
 			padding-top: 4%;
+		}
+
+		#wrong-answer-boxes {
+			width: 100%;
+			display: grid;
+			grid-template-columns: 0.5fr repeat(5, 1fr) 0.5fr;
+			justify-items: center;
 		}
 
 		#main-section-4 {
@@ -208,7 +254,7 @@
 		}
 
 		#game-over-section-1 {
-			padding-top: 5%;
+			padding-top: 3%;
 			font-size: 60px;
 			text-align: center;
 			display: none;
@@ -231,16 +277,20 @@
 			height: 0%;
 		}
 
+		#seedInput {
+			text-align: center;
+		}
+
 		/* Chrome, Safari, Edge, Opera -- to remove arrows*/
 		input::-webkit-outer-spin-button,
 		input::-webkit-inner-spin-button {
-		  -webkit-appearance: none;
-		  margin: 0;
+			-webkit-appearance: none;
+			margin: 0;
 		}
 
 		/* Firefox */
 		input[type=number] {
-		  -moz-appearance: textfield;
+			-moz-appearance: textfield;
 		}
 
 		button {
@@ -261,29 +311,23 @@
 		}
 
 		button:disabled {
-		  background-color: #515151;
-		  cursor: auto;
+			background-color: #515151;
+			cursor: auto;
 		}
+
 		label {
 			white-space: nowrap;
 		}
 
-		.arrowbutton {
+		#playBtn img {
+			left: 0;
+			top: 0;
+		}
+
+		.short-button {
 			height: 110%;
 			border-radius: 5px;
-		}
-
-		.arrowbuttons {
-			display: grid;
-			grid-template-columns: 1fr;
-			gap: 5px;
-			margin-left: auto;
-		}
-
-		.songselectiongrid {
-			display: grid;
-			justify-items: center;
-			align-items: center;
+			padding: 4px;
 		}
 
 		.autocomplete {
@@ -347,7 +391,7 @@
 			position: static;
 		}
 
-		.revealed-answer-box {
+		.answer-box {
 			display: grid;
 			grid-template-columns: 7fr 1fr;
 			gap: 2px;
@@ -373,18 +417,26 @@
 		<div class="container-row" id="header">
 			<div id="checkboxes" class="checkboxes">
 			</div>
-			<button id="newQuizBtn" class="newQuizBtn" onclick="createSongQuiz()">New Quiz</button>
+			<div class="new-quiz-btn-container" id="new-quiz-buttons">
+				<button id="newQuizBtn" class="newQuizBtn" onclick="createSongQuiz()">New Quiz</button>
+				<input id="seedInput" type="text" placeholder="Seed ...">
+				<button id="newSeedBtn" class="short-button" onclick="generateSeed()">New Seed</button>
+			</div>
 		</div>
 		<div class="container-row" id="main-section-1">
 			<div id="playlist"><b>Current Song:</b><br/><div id="currentSong">1 of 30</div></div>
-			<div class="songselectiongrid">
-				<div class="arrowbuttons">
-					<button id="prevBtn" class="arrowbutton" onclick="incrementSong(-1)" disabled>< Prev</button>
-					<button id="nextBtn" class="arrowbutton" onclick="incrementSong(1)">Next ></button>
-				</div>
+			<img src="img/prev.png" class="active-button" id="prev-button" onclick="incrementSong(-1)">
+			<img src="img/prev-disabled.png" id="prev-disabled-button">
+			<img src="img/play.png" class="active-button" id="play-button" onclick="startPlayback()">
+			<img src="img/pause.png" class="active-button" id="pause-button" onclick="pausePlayback()">
+			<img src="img/next.png" class="active-button" id="next-button" onclick="incrementSong(1)">
+			<img src="img/next-disabled.png" id="next-disabled-button">
+			<div></div> <!-- empty div for spacing -->
+			<div class="slider-container" id="volume-container">
+				<img src="img/mute.png" class="volume-icon" onclick="incrementVolume(-10)">
+				<input type="range" min="0" max="100" value="80" class="slider" id="volume-slider" step="1">
+				<img src="img/speaker.png" class="volume-icon" onclick="incrementVolume(10)">
 			</div>
-			<button class="playBtn" id="playBtn" onclick="startPlayback()">Play</button>
-			<button class="pauseBtn" id="pauseBtn" onclick="pause()" disabled>Pause</button>
 		</div>
 		<div class="container-row" id="main-section-2">
 			<div class="auto-container" autocomplete="off">
@@ -401,12 +453,15 @@
 			24 of 30 songs identified.
 		</div>
 		<div class="container-row" id="main-section-3">
-			<div class="wrong-answer" id="wrong-answer-1"></div>
-			<div class="wrong-answer" id="wrong-answer-2"></div>
-			<div class="wrong-answer" id="wrong-answer-3"></div>
-			<div class="wrong-answer" id="wrong-answer-4"></div>
-			<div class="wrong-answer" id="wrong-answer-5"></div>
-			<div></div> <!-- empty div for spacing -->
+			<div id="wrong-answer-boxes">
+				<div></div> <!-- empty div for spacing -->
+				<div class="wrong-answer" id="wrong-answer-1"></div>
+				<div class="wrong-answer" id="wrong-answer-2"></div>
+				<div class="wrong-answer" id="wrong-answer-3"></div>
+				<div class="wrong-answer" id="wrong-answer-4"></div>
+				<div class="wrong-answer" id="wrong-answer-5"></div>
+				<div></div> <!-- empty div for spacing -->
+			</div>
 			<button class="giveUpBtn" id="giveUpBtn" onclick="giveUp()">Give Up</button>
 		</div>
 		<div class="container-row" id="main-section-4">
@@ -513,6 +568,7 @@
 		var songVal = 0;
 		var totalSongs = 30;
 		var wrongAnswers = 0;
+		var seed = 0;
 		var playing = false;
 
 		let timeRunning = null;
@@ -539,9 +595,9 @@
 		};
 
 		document.addEventListener('visibilitychange', function() {
-		  if (document.visibilityState == 'hidden') {
-			document.getElementById("pauseBtn").click();
-		  }
+			if (document.visibilityState == 'hidden') {
+				//document.getElementById("pauseBtn").click();
+			}
 		});
 
 		document.addEventListener("DOMContentLoaded", async function () {
@@ -622,9 +678,37 @@
 				document.getElementById("checkboxes").appendChild(cat[1]);
 			}
 
+			generateSeed();
+			setVolume();
 			createSongQuiz();
+			toggleButtons();
 			firstQuiz = false;
 		});
+
+		document.getElementById("volume-slider").addEventListener("input", function(e) {
+			setVolume();
+		});
+
+		function setVolume() {
+			audio.volume = document.getElementById("volume-slider").value / 100;
+		}
+
+		function incrementVolume(i) {
+			let slider = document.getElementById("volume-slider");
+			
+			let vol = parseInt(slider.value) + i;
+			if (vol > slider.max)
+			{
+				vol = slider.max;
+			}
+			if (vol < slider.min)
+			{
+				vol = slider.min;
+			}
+
+			slider.value = vol;
+			setVolume();
+		}
 
 		function showNewQuizDialog() {
 			dialog = document.getElementById("new-quiz-section");
@@ -643,34 +727,33 @@
 
 		function startPlayback() {
 			playing = true;
+			clearTimeout(timeRunning);
+
 			audio.src = quizLinks[songVal];
 			audio.currentTime = timestamps[songVal];
 			audio.play();
-			toggleButtons(!document.getElementById("playBtn").disabled);
+			toggleButtons();
 						
 			timeRunning = setTimeout(function() {
-				songVal++;
-
-				if (songVal != totalSongs)
+				if (songVal != totalSongs - 1)
 				{
-					toggleButtons(false);
-					startPlayback();
+					incrementSong(1);
 				}
 				else
 				{
-					audio.pause();
 					songVal = 0;
-					toggleButtons();
-					playing = false;
+					pausePlayback();
 				}
 			}, timer);
 		}
 
 		function playClip(i) {
-			songVal = i;
+			clearTimeout(timeRunning);
+			playing = false;
+			toggleButtons();
 
-			audio.src = quizLinks[songVal];
-			audio.currentTime = timestamps[songVal];
+			audio.src = quizLinks[i];
+			audio.currentTime = timestamps[i];
 			audio.play();
 						
 			timeRunning = setTimeout(function() {
@@ -678,32 +761,43 @@
 			}, timer);
 		}
 
-		function pause() {
-				clearTimeout(timeRunning);
-				audio.pause();
-				toggleButtons();
-				playing = false;
+		function pausePlayback() {
+			clearTimeout(timeRunning);
+			audio.pause();
+			playing = false;
+			toggleButtons();
 		}
 
 		function incrementSong(i) {
 			clearTimeout(timeRunning);
+
 			songVal = songVal + i;
+			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;
+
+			toggleButtons();
+
 			if (playing)
 			{
 				startPlayback();				
 			}
-			else
-			{
-				toggleButtons(false);
-			}
+		}
+
+		function generateSeed() {
+			document.getElementById("seedInput").value = Math.floor(Math.random() * (900000) + 100000);
 		}
 
 		async function createSongQuiz() {
+			seed = document.getElementById("seedInput").value;
+			if (!/^\d+$/.test(seed))
+			{
+				console.log("Seeds should be numeric only.");
+				return;
+			}
+
 			if (!firstQuiz)
 			{
 				showNewQuizDialog();
 			}
-
 			resetHTML();
 			let songStats = [];
 
@@ -712,37 +806,58 @@
 			for (let i = 0; i < checkedBoxes.length; i++)
 			{
 				const file = await fetch(`jsons/${checkedBoxes[i].id}.json`);
-			  const fileText = await file.text();
-			  songStats = songStats.concat(parseStringToJsonToArrays(fileText));
+				const fileText = await file.text();
+				songStats = songStats.concat(parseStringToJsonToArrays(fileText));
 			}
 
 			let songNames = [];
-	  		for (let i = 0; i < songStats.length; i++)
-	  		{
-	  			songNames.push(songStats[i][0]);
-	  		}
+				for (let i = 0; i < songStats.length; i++)
+				{
+					songNames.push(songStats[i][0]);
+				}
 
-	  		let songStatsCleaned = [];
-	  		for (let i = 0; i < songStats.length; i++)
-	  		{
-	  			if (songNames.indexOf(songStats[i][0]) == i)
-	  			{
-	  				songStatsCleaned.push(songStats[i]);
-	  			}
-	  		}
+				let songStatsCleaned = [];
+				for (let i = 0; i < songStats.length; i++)
+				{
+					if (songNames.indexOf(songStats[i][0]) == i)
+					{
+						songStatsCleaned.push(songStats[i]);
+					}
+				}
 
-	  		songStatsCleaned = shuffle(songStatsCleaned);
+				songStatsCleaned = shuffle(songStatsCleaned);
 
 			for (let i = 0; i < songStatsCleaned.length; i++)
 			{
 				if (i < totalSongs)
 				{
-					// console.log("Song " + (i + 1) + ": " + songStatsCleaned[i][0]); // for debugging
+					console.log("Song " + (i + 1) + ": " + songStatsCleaned[i][0]); // for debugging
 					quizSongs.push(songStatsCleaned[i][0]);
 					quizLinks.push(songStatsCleaned[i][1]);
 					songLinks.push(songStatsCleaned[i][2]);
-																									// length of Spotify previews
-					timestamps.push(Math.floor(Math.random() * (29 - (timer / 1000))));
+															// length of Spotify previews
+					timestamps.push(Math.floor(seededRandom((30 - (timer / 1000)))));
+
+					let songBox = document.getElementById("guess" + (i + 1));
+					let songTitleBox = document.createElement("div");
+					songTitleBox.classList.add('answer-box');
+					let blankContainer = document.createElement("div");
+					let blank = document.createElement("text");
+					blank.id = "guessText" + (i + 1);
+
+					const speakerIcon = document.createElement("img");
+					speakerIcon.src = "img/speaker.png";
+					speakerIcon.classList.add("inline-img");
+					speakerIcon.style.cursor = "pointer";
+					speakerIcon.onclick = function () {
+						playClip(i);
+					};
+
+					blankContainer.appendChild(blank)
+					songTitleBox.appendChild(blankContainer);
+					songTitleBox.appendChild(speakerIcon);
+
+					songBox.appendChild(songTitleBox);
 				}
 				songs.push(songStatsCleaned[i][0]);
 			}
@@ -761,16 +876,22 @@
 			}
 		}
 
-		function toggleButtons(togglePlayPause = true) {
-			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;
+		function toggleButtons() {
+			play = document.getElementById("play-button");
+			pause = document.getElementById("pause-button");
 
-			if (togglePlayPause)
-			{
-				document.getElementById("playBtn").disabled = !document.getElementById("playBtn").disabled;
-				document.getElementById("pauseBtn").disabled = !document.getElementById("pauseBtn").disabled;				
-			}
-			document.getElementById("nextBtn").disabled = (songVal == totalSongs - 1);
-			document.getElementById("prevBtn").disabled = songVal == 0;
+			prev = document.getElementById("prev-button");
+			next = document.getElementById("next-button");
+
+			prevD = document.getElementById("prev-disabled-button");
+			nextD = document.getElementById("next-disabled-button");
+			play.style.display = playing ? 'none' : '';
+			pause.style.display = playing ? '' : 'none';
+
+			prev.style.display = (songVal == 0) ? 'none' : '';
+			prevD.style.display = (songVal == 0) ? '' : 'none';
+			next.style.display = (songVal == totalSongs - 1) ? 'none' : '';
+			nextD.style.display = (songVal == totalSongs - 1) ? '' : 'none';
 		}
 
 		function giveUp() {
@@ -781,12 +902,9 @@
 
 			for (let i = 0; i < totalSongs; i++)
 			{
-				songBox = document.getElementById("guess" + (i + 1));
-				let songTitleBox = document.createElement("div");
-				let songTitle = document.createElement("div");
-				let songTitleText = document.createElement("text");
+				let songTitleText = document.getElementById("guessText" + (i + 1));
 
-				if (songBox.innerText == "")
+				if (songTitleText.innerText == "")
 				{
 					songsFound--;
 					inParens = false;
@@ -811,33 +929,13 @@
 					songTitleText.style.color = "red";
 					songTitleText.style.fontWeight = "bold";
 				}
-				else
-				{
-					songTitleText.innerText = songBox.innerText;
-					songBox.innerText = '';
-				}
 
 				songTitleText.onclick = function () {
 					songVal = i;
 					document.getElementById("hiddenPlayBtn").click();
 				};
-				
-				songTitleBox.classList.add('revealed-answer-box');
+
 				songTitleText.style.cursor = "pointer";
-				songTitle.appendChild(songTitleText);
-
-				const speakerIcon = document.createElement("img");
-				speakerIcon.src = "img/speaker.png";
-				speakerIcon.classList.add("inline-img");
-				speakerIcon.style.cursor = "pointer";
-				speakerIcon.onclick = function () {
-					playClip(i);
-				};
-
-				songTitleBox.appendChild(songTitle);
-				songTitleBox.appendChild(speakerIcon);
-
-				songBox.appendChild(songTitleBox);
 			}
 
 			document.getElementById("game-over-section-1").style.display = 'block';
@@ -881,7 +979,7 @@
 							break;
 						}
 					}
-					document.getElementById("guess" + (quizSongs.indexOf(input) + 1)).innerText = input.substring(0, dashIndex);
+					document.getElementById("guessText" + (quizSongs.indexOf(input) + 1)).innerText = input.substring(0, dashIndex);
 				}
 				else
 				{
@@ -914,18 +1012,24 @@
 			return tmpArr;
 		}
 
+		// stolen from https://stackoverflow.com/questions/16801687/javascript-random-ordering-with-seed
+		function seededRandom(max) {
+			var x = Math.sin(seed++) * 10000; 
+			return Math.floor((max + 1) * (x - Math.floor(x)));
+		}
+
 		function shuffle(array) {
-			let currentIndex = array.length, randomIndex;
+			var index = array.length;
 
-	  // While there remain elements to shuffle.
-			while (currentIndex != 0) {
+			while (index > 0)
+			{
+				let tmpIndex = seededRandom(index);
 
-		// Pick a remaining element.
-				randomIndex = Math.floor(Math.random() * currentIndex);
-				currentIndex--;
+				let tmp = array[index - 1];
+				array[index - 1] = array[tmpIndex];
+				array[tmpIndex] = tmp;
 
-		// And swap it with the current element.
-				[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+				index--;
 			}
 
 			return array;
@@ -943,10 +1047,8 @@
 			songs = [];
 			
 			songVal = 0;
-			if (playing)
-			{
-				toggleButtons();
-			}
+			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;
+			toggleButtons(playing);
 
 			wrongAnswers = 0;
 			playing = false;
@@ -974,42 +1076,42 @@
 		}
 
 		function autocomplete(inp, arr) {
-	  /*the autocomplete function takes two arguments,
-	  the text field element and an array of possible autocompleted values:*/
+		/*the autocomplete function takes two arguments,
+		the text field element and an array of possible autocompleted values:*/
 			var currentFocus;
-	  /*execute a function when someone writes in the text field:*/
+		/*execute a function when someone writes in the text field:*/
 			inp.addEventListener("input", function(e) {
 				var a, b, i, val = this.value;
-		  /*close any already open lists of autocompleted values*/
+			/*close any already open lists of autocompleted values*/
 				closeAllLists();
 				if (!val) { return false;}
 				currentFocus = -1;
-		  /*create a DIV element that will contain the items (values):*/
+			/*create a DIV element that will contain the items (values):*/
 				a = document.createElement("DIV");
 				a.setAttribute("id", this.id + "autocomplete-list");
 				a.setAttribute("class", "autocomplete-items");
-		  /*append the DIV element as a child of the autocomplete container:*/
+			/*append the DIV element as a child of the autocomplete container:*/
 				this.parentNode.appendChild(a);
-		  /*for each item in the array...*/
+			/*for each item in the array...*/
 				searchResults = 0;
 				for (i = 0; i < arr.length; i++) {
 			/*check if the item starts with the same letters as the text field value:*/
 					if (val.length >= 2 && arr[i].toUpperCase().includes(val.toUpperCase())) {
-			  /*create a DIV element for each matching element:*/
+				/*create a DIV element for each matching element:*/
 						b = document.createElement("DIV");
 						index = arr[i].toUpperCase().indexOf(val.toUpperCase());
-			  /*make the matching letters bold:*/
+				/*make the matching letters bold:*/
 						b.innerHTML = arr[i].substr(0,index);
 						b.innerHTML += "<strong>" + arr[i].substr(index, val.length) + "</strong>";
 						b.innerHTML += arr[i].substr(index+val.length);
-			  /*insert a input field that will hold the current array item's value:*/
+				/*insert a input field that will hold the current array item's value:*/
 						b.innerHTML += '<input type="hidden" value="' + arr[i].replaceAll('"', '&quot;') + '">';
-			  /*execute a function when someone clicks on the item value (DIV element):*/
+				/*execute a function when someone clicks on the item value (DIV element):*/
 						b.addEventListener("click", function(e) {
-				  /*insert the value for the autocomplete text field:*/
+					/*insert the value for the autocomplete text field:*/
 							inp.value = this.getElementsByTagName("input")[0].value;
-				  /*close the list of autocompleted values,
-				  (or any other open lists of autocompleted values:*/
+					/*close the list of autocompleted values,
+					(or any other open lists of autocompleted values:*/
 							closeAllLists();
 						});
 						a.appendChild(b);
@@ -1020,7 +1122,7 @@
 					}
 				}
 			});
-	  /*execute a function presses a key on the keyboard:*/
+		/*execute a function presses a key on the keyboard:*/
 			inp.addEventListener("keydown", function(e) {
 				var x = document.getElementById(this.id + "autocomplete-list");
 				if (x) x = x.getElementsByTagName("div");
@@ -1030,20 +1132,20 @@
 					currentFocus++;
 			/*and and make the current item more visible:*/
 					addActive(x);
-		  } else if (e.keyCode == 38) { //up
+			} else if (e.keyCode == 38) { //up
 			/*If the arrow UP key is pressed,
 			decrease the currentFocus variable:*/
-		  	currentFocus--;
+				currentFocus--;
 			/*and and make the current item more visible:*/
-		  	addActive(x);
-		  } else if (e.keyCode == 13) {
+				addActive(x);
+			} else if (e.keyCode == 13) {
 			/*If the ENTER key is pressed, prevent the form from being submitted,*/
-		  	e.preventDefault();
-		  	if (currentFocus > -1) {
-			  /*and simulate a click on the "active" item:*/
-		  		if (x) x[currentFocus].click();
-		  	}
-		  }
+				e.preventDefault();
+				if (currentFocus > -1) {
+				/*and simulate a click on the "active" item:*/
+					if (x) x[currentFocus].click();
+				}
+			}
 		});
 			function addActive(x) {
 		/*a function to classify an item as "active":*/

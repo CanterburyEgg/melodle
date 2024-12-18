@@ -7,6 +7,7 @@ startup-playlist	Spotify's Most Streamed	Default
 2010s	2010s 	Billboard Hits
 2020s	2020s 	Billboard Hits
 billboard-no-1s	#1 Hits (All-Time)	Billboard Hits
+christmas	Christmas	Genres
 disney	Disney	Genres
 kpop	K-Pop	Genres
 musicals	Musicals	Genres

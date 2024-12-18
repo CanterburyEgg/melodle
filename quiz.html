@@ -585,7 +585,6 @@
 			document.querySelectorAll('#hiddenPlayBtn').forEach(
 				hiddenPlayBtn => {
 					hiddenPlayBtn.addEventListener('click', () => {
-						clearTimeout(timeRunning);
 						EmbedController.loadUri(songLinks[songVal]);
 					});
 				})
@@ -596,7 +595,7 @@
 
 		document.addEventListener('visibilitychange', function() {
 			if (document.visibilityState == 'hidden') {
-				//document.getElementById("pauseBtn").click();
+				document.getElementById("pause-button").click();
 			}
 		});
 

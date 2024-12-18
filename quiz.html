@@ -769,7 +769,10 @@
 		}
 
 		function incrementSong(i) {
-			clearTimeout(timeRunning);
+			if (playing)
+			{
+				clearTimeout(timeRunning);
+			}
 
 			songVal = songVal + i;
 			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;

@@ -879,7 +879,7 @@
 			quizStats = shuffle(quizStats);
 			for (const songStat of quizStats)
 			{
-				console.log(songStat[0]); // for debugging
+				// console.log(songStat[0]); // for debugging
 				quizSongs.push(songStat[0]);
 				quizLinks.push(songStat[1]);
 				songLinks.push(songStat[2]);
@@ -1046,7 +1046,7 @@
 
 			while (index > 0)
 			{
-				let tmpIndex = seededRandom(index + 1);
+				let tmpIndex = seededRandom(index);
 
 				let tmp = array[index];
 				array[index] = array[tmpIndex];

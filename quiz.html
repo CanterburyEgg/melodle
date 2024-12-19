@@ -803,40 +803,52 @@
 			resetHTML();
 			let songStats = [];
 
-			const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+			const checkedBoxes = shuffle(Array.from(document.querySelectorAll('input[type="checkbox"]:checked')));
 
+			let maxListLength = 0;
 			for (let i = 0; i < checkedBoxes.length; i++)
 			{
 				const file = await fetch(`jsons/${checkedBoxes[i].id}.json`);
 				const fileText = await file.text();
-				songStats = songStats.concat(parseStringToJsonToArrays(fileText));
+
+				const fileArr = parseStringToJsonToArrays(fileText);
+				maxListLength = fileArr.length > maxListLength ? fileArr.length : maxListLength;
+				songStats.push(shuffle(fileArr));
+			}
+
+			let songStatsEqualized = [];
+			for (let i = 0; i < maxListLength; i++)
+			{
+				for (const arr of songStats)
+				{
+					if (i < arr.length)
+					{
+						songStatsEqualized.push(arr[i]);
+					}
+				}
 			}
 
 			let songNames = [];
-				for (let i = 0; i < songStats.length; i++)
+			for (let i = 0; i < songStatsEqualized.length; i++)
+			{
+				songNames.push(songStatsEqualized[i][0]);
+			}
+
+			let songStatsCleaned = [];
+			for (let i = 0; i < songStatsEqualized.length; i++)
+			{
+				if (songNames.indexOf(songStatsEqualized[i][0]) == i)
 				{
-					songNames.push(songStats[i][0]);
+					songStatsCleaned.push(songStatsEqualized[i]);
 				}
+			}
 
-				let songStatsCleaned = [];
-				for (let i = 0; i < songStats.length; i++)
-				{
-					if (songNames.indexOf(songStats[i][0]) == i)
-					{
-						songStatsCleaned.push(songStats[i]);
-					}
-				}
-
-				songStatsCleaned = shuffle(songStatsCleaned);
-
+			let quizStats = [];
 			for (let i = 0; i < songStatsCleaned.length; i++)
 			{
 				if (i < totalSongs)
 				{
-					// console.log("Song " + (i + 1) + ": " + songStatsCleaned[i][0]); // for debugging
-					quizSongs.push(songStatsCleaned[i][0]);
-					quizLinks.push(songStatsCleaned[i][1]);
-					songLinks.push(songStatsCleaned[i][2]);
+					quizStats.push(songStatsCleaned[i]);
 															// length of Spotify previews
 					timestamps.push(Math.floor(seededRandom((30 - (timer / 1000)))));
 
@@ -855,13 +867,22 @@
 						playClip(i);
 					};
 
-					blankContainer.appendChild(blank)
+					blankContainer.appendChild(blank);
 					songTitleBox.appendChild(blankContainer);
 					songTitleBox.appendChild(speakerIcon);
 
 					songBox.appendChild(songTitleBox);
 				}
 				songs.push(songStatsCleaned[i][0]);
+			}
+
+			quizStats = shuffle(quizStats);
+			for (const songStat of quizStats)
+			{
+				console.log(songStat[0]); // for debugging
+				quizSongs.push(songStat[0]);
+				quizLinks.push(songStat[1]);
+				songLinks.push(songStat[2]);
 			}
 
 			// now with alphabetical powers
@@ -1021,14 +1042,14 @@
 		}
 
 		function shuffle(array) {
-			var index = array.length;
+			var index = array.length - 1;
 
 			while (index > 0)
 			{
-				let tmpIndex = seededRandom(index);
+				let tmpIndex = seededRandom(index + 1);
 
-				let tmp = array[index - 1];
-				array[index - 1] = array[tmpIndex];
+				let tmp = array[index];
+				array[index] = array[tmpIndex];
 				array[tmpIndex] = tmp;
 
 				index--;

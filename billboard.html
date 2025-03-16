@@ -191,13 +191,19 @@
 			grid-template-columns: 4fr 1fr;
 			justify-items: center;
 			position: relative;
-			font-size: 18px;
+			font-size: 32px;
+			text-align: center;
+			font-weight: 550;
 		}
 		#main-section-1 img {
 			position: static;
 		}
 		#main-section-1 .active-button {
 			cursor: pointer;
+		}
+		.quiz-year {
+			font-size: 100px;
+			font-weight: bold;
 		}
 		#main-section-2 {
 			justify-items: center;
@@ -517,6 +523,10 @@
 
 			songs.sort(sortBySongName);
 			autocomplete(document.getElementById("myInput"), songs);
+
+			quizYear = getRandomNumberFromDate();
+			quizDateStringy = '' + quizYear + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+			date = new Date(quizDateStringy);
 			createTopTen();
 		});
 
@@ -626,9 +636,13 @@
 		async function createTopTen() {
 			resetHTML();
 
-			let dateString = date.toISOString().split('T')[0];
+			let dateYear = '' + date.getFullYear();
+			let dateMonth = date.toLocaleString('default', { month: 'long' });
+			let dateDay = '' + date.getDate();
 
-			current_date.innerHTML = "<strong>Chart Date</strong>: " + dateString;
+			current_date.innerHTML = dateMonth + " " + dateDay + "<br><div class='quiz-year'>" + dateYear + "</div>";
+
+			let dateString = date.toISOString().split('T')[0];
 			while (!dates.includes(dateString))
 			{
 				date.setDate(date.getDate() - 1);
@@ -788,6 +802,28 @@
 			document.getElementById("main-section-3").style.display = 'grid';
 
 			document.getElementById("giveUpBtn").disabled = false;
+		}
+
+		function generateSeededRandom(seed) {
+			const x = Math.sin(seed++) * 10000;
+			return x - Math.floor(x);
+		}
+
+		function getRandomNumberFromDate() {
+			const now = new Date();
+			let min = 1958;
+			if (now.getMonth() < 7)
+			{
+				min = 1959;
+			}
+			let max = now.getFullYear();
+			const date_string_int = Number("" + now.getFullYear() + now.getMonth() + now.getDate());
+			
+			const range = max - min;
+			const random = generateSeededRandom(date_string_int);
+			const random_year = Math.floor(random * (range + 1)) + min;
+
+			return random_year;
 		}
 
 		function autocomplete(inp, arr) {

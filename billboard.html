@@ -1,7 +1,7 @@
 <html>
 
 <head>
-	<title>Melodle Song Quiz</title>
+	<title>Melodle Billboard</title>
 	<link rel="icon" type="image/x-icon" href="img/logo.png">
 	<style>
 		body {
@@ -38,13 +38,13 @@
 			font-size: 13.5px;
 		}
 		.num-box {
-			width: 5%;
+			width: 10%;
 			min-width: 50px;
 			text-align: center;
 			font-size: 18px;
 		}
 		.guess-box {
-			padding-left: 1%;
+			padding-left: 2%;
 			padding-right: 1%;
 			text-align: left;
 		}
@@ -114,6 +114,12 @@
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
+			align-content: center;
+		}
+		.container-columns {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 20px;
 		}
 		.container-row {
 			width: 100%;
@@ -170,14 +176,22 @@
 			position: static;
 			cursor: pointer;
 		}
+		.container-columns {
+			padding-top: 2%;
+		}
+		.container-column {
+			height: min-content;
+		}
+		#main-column-1 {
+			padding-top: 10%;
+		}
 		#main-section-1 {
-			padding-top: 4%;
+			padding: 3.5% 0;
 			display: grid;
-			grid-template-columns: 4fr 0.5fr 1fr 0.5fr 1fr 4fr;
+			grid-template-columns: 4fr 1fr;
 			justify-items: center;
-			width: 70%;
-			left: 15%;
 			position: relative;
+			font-size: 18px;
 		}
 		#main-section-1 img {
 			position: static;
@@ -186,40 +200,33 @@
 			cursor: pointer;
 		}
 		#main-section-2 {
-			display: grid;
-			grid-template-columns: 4fr 1fr;
-			gap: 10px;
 			justify-items: center;
-			width: 70%;
-			left: 15%;
 			position: relative;
+			display: flex;
 		}
 		#main-section-3 {
 			display: grid;
-			grid-template-columns: 4fr 1fr;
-			gap: 10px;
-			width: 70%;
-			left: 15%;
 			position: relative;
 			justify-items: center;
-			padding-top: 4%;
+			justify-content: center;
+			padding-top: 16px;
+			gap: 18px;
 		}
 		#wrong-answer-boxes {
 			width: 100%;
 			display: grid;
 			grid-template-columns: 0.5fr repeat(5, 1fr) 0.5fr;
+			gap: 10px;
 			justify-items: center;
 		}
 		#main-section-4 {
 			padding-top: 5%;
 			padding-bottom: 5%;
-			width: 60%;
 			margin: auto;
 			position: relative;
 		}
 		#game-over-section-1 {
-			padding-top: 3%;
-			font-size: 60px;
+			font-size: 50px;
 			text-align: center;
 			display: none;
 		}
@@ -227,18 +234,6 @@
 			font-size: 30px;
 			text-align: center;
 			display: none;
-		}
-		#playlist {
-			text-align: center;
-			padding-right: 13;
-			font-size: 17px;
-		}
-		#player-iframe {
-			width: 0%;
-			height: 0%;
-		}
-		#seedInput {
-			text-align: center;
 		}
 		/* Chrome, Safari, Edge, Opera -- to remove arrows*/
 		input::-webkit-outer-spin-button,
@@ -249,6 +244,15 @@
 		/* Firefox */
 		input[type=number] {
 			-moz-appearance: textfield;
+		}
+		.submit {
+			position: absolute;
+			height: 16px;
+			width: auto;
+			left: 90%;
+			top: 50%;
+			transform: translate(0, -50%);
+			cursor: pointer;
 		}
 		button {
 			width: 110px;
@@ -290,7 +294,7 @@
 		input {
 			border: 1px solid #000;
 			background-color: #f1f1f1;
-			padding: 10px;
+			padding: 10px 35px 10px 10px;
 			font-size: 16px;
 		}
 		input[type=text] {
@@ -342,6 +346,22 @@
 		.hidden-item {
 			display: none;
 		}
+		.date-picker {
+			border: none;
+			background: none;
+			padding: 0;
+		}
+		.date-picker::-webkit-calendar-picker-indicator {
+			cursor: pointer;
+			height: 25px;
+			width: 25px;
+		}
+		.date-picker::-webkit-datetime-edit {
+			display: none;
+		}
+		#player-audio {
+			padding: 0;
+		}
 	</style>
 </head>
 
@@ -349,118 +369,125 @@
 	<div class="container">
 		<div class="container-row" id="title-row">
 			<div id="title">
-				<b>Melodle: Billboard Quiz</b>
+				<b>Melodle Billboard</b>
 			</div>
 		</div>
-		<div class="container-row" id="main-section-2">
-			<div class="auto-container" autocomplete="off">
-				<div class="autocomplete">
-					<input id="myInput" type="text" name="myInput" placeholder="Type a song name ...">
+		<div class="container-columns" id="main-columns">
+			<div class="container-column" id="main-column-1">
+				<div class="container-row" id="main-section-1">
+					<div id="current_date"></div>
+					<input type="date" class="date-picker" id="chart_date" min="1958-08-04"/>
+				</div>
+				<div class="container-row" id="main-section-2">
+					<div class="auto-container" autocomplete="off">
+						<div class="autocomplete">
+							<input id="myInput" type="text" name="myInput" placeholder="Type a song name ...">
+						</div>
+					</div>
+					<img class="submit" src="img/submit.png" onclick="checkAnswer()">
+				</div>
+				<div class="container-row" id="game-over-section-1">
+					<b>GAME OVER</b>
+				</div>
+				<div class="container-row" id="game-over-section-2">
+					24 of 30 songs identified.
+				</div>
+				<div class="container-row" id="main-section-3">
+					<div id="wrong-answer-boxes">
+						<div></div> <!-- empty div for spacing -->
+						<div class="wrong-answer" id="wrong-answer-1"></div>
+						<div class="wrong-answer" id="wrong-answer-2"></div>
+						<div class="wrong-answer" id="wrong-answer-3"></div>
+						<div class="wrong-answer" id="wrong-answer-4"></div>
+						<div class="wrong-answer" id="wrong-answer-5"></div>
+						<div></div> <!-- empty div for spacing -->
+					</div>
+					<button class="giveUpBtn" id="giveUpBtn" onclick="giveUp()">Give Up</button>
 				</div>
 			</div>
-			<button class="submit" onclick="checkAnswer()">Submit</button>
-		</div>
-		<div class="container-row" id="game-over-section-1">
-			<b>GAME OVER</b>
-		</div>
-		<div class="container-row" id="game-over-section-2">
-			24 of 30 songs identified.
-		</div>
-		<div class="container-row" id="main-section-3">
-			<div id="wrong-answer-boxes">
-				<div></div> <!-- empty div for spacing -->
-				<div class="wrong-answer" id="wrong-answer-1"></div>
-				<div class="wrong-answer" id="wrong-answer-2"></div>
-				<div class="wrong-answer" id="wrong-answer-3"></div>
-				<div class="wrong-answer" id="wrong-answer-4"></div>
-				<div class="wrong-answer" id="wrong-answer-5"></div>
-				<div></div> <!-- empty div for spacing -->
+			<div class="container-column" id="main-column-2">
+				<div class="container-row" id="main-section-4">
+					<table>
+						<tr>
+							<td class="num-box" id="num1">1.</td>
+							<td class="guess-box" id="guess1"></td>
+						</tr>
+						<tr>
+							<td class="num-box" id="num2">2.</td>
+							<td class="guess-box" id="guess2"></td>
+						</tr>
+						<tr>
+							<td class="num-box" id="num3">3.</td>
+							<td class="guess-box" id="guess3"></td>
+						</tr>
+						<tr>
+							<td class="num-box" id="num4">4.</td>
+							<td class="guess-box" id="guess4"></td>
+						</tr>
+						<tr>
+							<td class="num-box" id="num5">5.</td>
+							<td class="guess-box" id="guess5"></td>
+						</tr>
+						<tr>
+							<td class="num-box" id="num6">6.</td>
+							<td class="guess-box" id="guess6"></td>
+						</tr>
+						<tr>
+							<td class="num-box" id="num7">7.</td>
+							<td class="guess-box" id="guess7"></td>
+						</tr>
+						<tr>
+							<td class="num-box" id="num8">8.</td>
+							<td class="guess-box" id="guess8"></td>
+						</tr>
+						<tr>
+							<td class="num-box" id="num9">9.</td>
+							<td class="guess-box" id="guess9"></td>
+						</tr>
+						<tr>
+							<td class="num-box" id="num10">10.</td>
+							<td class="guess-box" id="guess10"></td>
+						</tr>
+					</table>
+				</div>
 			</div>
-			<button class="giveUpBtn" id="giveUpBtn" onclick="giveUp()">Give Up</button>
-		</div>
-		<div class="container-row" id="main-section-4">
-			<table>
-				<tr>
-					<td class="num-box" id="num1">1.</td>
-					<td class="guess-box" id="guess1"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num2">2.</td>
-					<td class="guess-box" id="guess2"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num3">3.</td>
-					<td class="guess-box" id="guess3"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num4">4.</td>
-					<td class="guess-box" id="guess4"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num5">5.</td>
-					<td class="guess-box" id="guess5"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num6">6.</td>
-					<td class="guess-box" id="guess6"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num7">7.</td>
-					<td class="guess-box" id="guess7"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num8">8.</td>
-					<td class="guess-box" id="guess8"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num9">9.</td>
-					<td class="guess-box" id="guess9"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num10">10.</td>
-					<td class="guess-box" id="guess10"></td>
-				</tr>
-			</table>
 		</div>
 
-		<div class="container-row" id="player-iframe">
+		<div class="container-row" id="player-audio">
 			<audio controls class="hidden-item" id="audio"></audio>
 			<button class="hidden-item" id="hiddenPlayBtn"></button>
-			<div id="embed-iframe"></div>
 		</div>
 	</div>
 
-	<script src="https://open.spotify.com/embed-podcast/iframe-api/v1" async>
-	</script>
 	<script type="text/javascript">
-		var songLinks = [];
 		var timestamps = [];
 		var timer = 4000;
-		var songVal = 0;
-		var clipIndex = 0;
 		var totalSongs = 10;
 		var wrongAnswers = 0;
-		var seed = 0;
 		var playing = false;
 		var buffering = false;
 
 		let timeRunning = null;
 		let firstQuiz = true;
 
-		let date = new Date("2011-05-25");
+		let json_top10 = [];
+		let dates = [];
+
+		let date = new Date();
 		let songs = [];
 		let quizSongs = [ null, null, null, null, null, null, null, null, null, null ];
 		let quizNames = [ null, null, null, null, null, null, null, null, null, null ];
 		let quizLinks = [ null, null, null, null, null, null, null, null, null, null ];
 
+		/*
 		document.addEventListener('visibilitychange', function() {
 			if (document.visibilityState == 'hidden') {
 				document.getElementById("pause-button").click();
 			}
 		});
+		*/
 
 		document.addEventListener("DOMContentLoaded", async function() {
-			var json_top10 = [];
 			try {
 				const response = await fetch('./jsons/top_10s_linked.json');
 				json_top10 = await response.json();
@@ -469,26 +496,22 @@
 				console.error('Error:', error);
 			}
 
-			const dayOfWeek = date.getDay(); // 0 (Sunday) to 6 (Saturday)
-			const diff = dayOfWeek == 6 ? 0 : dayOfWeek + 1; // Calculate days to subtract
-			date.setDate(date.getDate() - diff);
+			try {
+				const response = await fetch('./jsons/chart_dates.json');
+				datesJSON = await response.json();
+				dates = datesJSON.dates;
+			}
+			catch(error) {
+				console.error('Error:', error);
+			}
 
-			var dd = String(date.getDate()).padStart(2, '0');
-			var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
-			var yyyy = date.getFullYear();
-			date = yyyy + '-' + mm + '-' + dd;
-
+			chart_date.max = new Date().toLocaleDateString('fr-ca');
+			
 			for (const entry of json_top10)
 			{
 				if (!songs.includes(entry.title + ' - ' + entry.artist))
 				{
 					songs.push(entry.title + ' - ' + entry.artist)
-				}
-				if (entry.date == date)
-				{
-					quizSongs[entry.rank - 1] = entry;
-					quizNames[entry.rank - 1] = entry.title + ' - ' + entry.artist;
-					quizLinks[entry.rank - 1] = entry.link;
 				}
 			}
 
@@ -507,6 +530,11 @@
 				playClip();
 			}
 		});
+
+		chart_date.onchange = function() {
+			date = new Date(chart_date.value);
+			createTopTen();
+		}
 
 		/*
 		document.getElementById("volume-slider").addEventListener("input", function(e) {
@@ -596,12 +624,31 @@
 		}
 
 		async function createTopTen() {
-			// resetHTML();
+			resetHTML();
+
+			let dateString = date.toISOString().split('T')[0];
+
+			current_date.innerHTML = "<strong>Chart Date</strong>: " + dateString;
+			while (!dates.includes(dateString))
+			{
+				date.setDate(date.getDate() - 1);
+				dateString = date.toISOString().split('T')[0];
+			}
+
+			for (const entry of json_top10)
+			{
+				if (entry.date == date.toISOString().split("T")[0])
+				{
+					quizSongs[entry.rank - 1] = entry;
+					quizNames[entry.rank - 1] = entry.title + ' - ' + entry.artist;
+					quizLinks[entry.rank - 1] = entry.link;
+				}
+			}
 			
 			for (let i = 0; i < quizSongs.length; i++)
 			{
-														// length of Spotify previews
-				timestamps.push(Math.floor(seededRandom((30 - (timer / 1000)))));
+												// length of Spotify previews
+				timestamps.push(Math.floor(Math.random() * (30 - (timer / 1000))));
 
 				let songBox = document.getElementById("guess" + (i + 1));
 				let songTitleBox = document.createElement("div");
@@ -648,25 +695,8 @@
 				if (songTitleText.innerText == "")
 				{
 					songsFound--;
-					inParens = false;
-					dashIndex = -1;
-					for (let j = 0; j < quizSongs[i].length; j++)
-					{
-						if (quizSongs[i].charAt(j) == '(')
-						{
-							inParens = true;
-						}
-						if (quizSongs[i].charAt(j) == ')')
-						{
-							inParens = false;
-						}
-						if (!inParens && quizSongs[i].substring(j, j + 3) == " - ")
-						{
-							dashIndex = j;
-							break;
-						}
-					}
-					songTitleText.innerText = quizSongs[i].substring(0, dashIndex);
+
+					songTitleText.innerText = quizNames[i];
 					songTitleText.style.color = "red";
 					songTitleText.style.fontWeight = "bold";
 				}
@@ -681,13 +711,10 @@
 
 			document.getElementById("game-over-section-1").style.display = 'block';
 			document.getElementById("game-over-section-2").style.display = 'block';
-			document.getElementById("main-section-1").style.display = 'none';
 			document.getElementById("main-section-2").style.display = 'none';
+			document.getElementById("main-section-3").style.display = 'none';
 			document.getElementById("game-over-section-2").innerText = "" + songsFound + " of " + totalSongs + " songs found.";
 			document.getElementById("giveUpBtn").disabled = true;
-
-			document.getElementById("player-iframe").style.width = "auto";
-			document.getElementById("player-iframe").style.height = "auto";
 
 			songVal = 0;
 			document.getElementById("hiddenPlayBtn").click();
@@ -735,43 +762,12 @@
 			return tmpArr;
 		}
 
-		// stolen from https://stackoverflow.com/questions/16801687/javascript-random-ordering-with-seed
-		function seededRandom(max) {
-			var x = Math.sin(seed++) * 10000; 
-			return Math.floor((max + 1) * (x - Math.floor(x)));
-		}
-
-		function shuffle(array) {
-			var index = array.length - 1;
-
-			while (index > 0)
-			{
-				let tmpIndex = seededRandom(index);
-
-				let tmp = array[index];
-				array[index] = array[tmpIndex];
-				array[tmpIndex] = tmp;
-
-				index--;
-			}
-
-			return array;
-		}
-
 		function resetHTML() {
 			audio.pause();
 			clearTimeout(timeRunning);
-			document.getElementById("hiddenPlayBtn").click();
 			
-			quizLinks = [];
-			songLinks = [];
-			quizSongs = [];
 			timestamps = [];
-			songs = [];
 			
-			songVal = 0;
-			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;
-
 			wrongAnswers = 0;
 			playing = false;
 
@@ -788,13 +784,10 @@
 
 			document.getElementById("game-over-section-1").style.display = 'none';
 			document.getElementById("game-over-section-2").style.display = 'none';
-			document.getElementById("main-section-1").style.display = 'grid';
-			document.getElementById("main-section-2").style.display = 'grid';
+			document.getElementById("main-section-2").style.display = 'flex';
+			document.getElementById("main-section-3").style.display = 'grid';
 
 			document.getElementById("giveUpBtn").disabled = false;
-
-			document.getElementById("player-iframe").style.width = "0%";
-			document.getElementById("player-iframe").style.height = "0%";
 		}
 
 		function autocomplete(inp, arr) {

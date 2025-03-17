@@ -385,6 +385,75 @@
 		#player-audio {
 			padding: 0;
 		}
+		.modals {
+			display: grid;
+			grid-template-columns: 1fr;
+			justify-items: center;
+			align-items: center;
+			font-size: 13px;
+			line-height: 1.2;
+			gap: 25px;
+		}
+		.modals-subcontainer {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+		}
+
+		/* this entire section is for the difficulty toggle */
+
+		/* The switch - the box around the slider */
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 40px;
+			height: 22px;
+		}
+		/* Hide default HTML checkbox */
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+		/* The slider */
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+		}
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 16px;
+			width: 16px;
+			left: 3px;
+			bottom: 3px;
+			background-color: white;
+		}
+		input:checked + .slider {
+			background-color: #171717;
+		}
+		input:focus + .slider {
+			box-shadow: 0 0 1px #171717;
+		}
+		input:checked + .slider:before {
+			-webkit-transform: translateX(18px);
+			-ms-transform: translateX(18px);
+			transform: translateX(18px);
+		}
+		/* Rounded sliders */
+		.slider.round {
+			border-radius: 34px;
+		}
+		.slider.round:before {
+			border-radius: 50%;
+		}
+
+		/* end section for difficulty toggle */
 	</style>
 </head>
 
@@ -402,7 +471,18 @@
 				</div>
 				<div class="container-row" id="main-section-1">
 					<div id="current_date"></div>
-					<input type="date" class="date-picker" id="chart_date" min="1958-08-04"/>
+					<div class="modals">
+						<input type="date" class="date-picker" id="chart_date" min="1958-08-04"/>
+						<div class="modals-subcontainer">
+							<label class="switch">
+								<input type="checkbox" id="difficulty">
+								<span class="slider round"></span>
+							</label>
+							<div>
+								Easy<br>Mode
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="container-row" id="main-section-2">
 					<div class="auto-container" autocomplete="off">
@@ -623,12 +703,19 @@
 		}
 
 		function playClip() {
-			audio.currentTime = Math.min(timestamps[songVal], audio.duration - 4);
-			audio.play();
-						
-			timeRunning = setTimeout(function() {
-				audio.pause();
-			}, timer);
+			if (difficulty.checked)
+			{
+				audio.play();
+			}
+			else
+			{
+				audio.currentTime = Math.min(timestamps[songVal], audio.duration - 4);
+				audio.play();
+							
+				timeRunning = setTimeout(function() {
+					audio.pause();
+				}, timer);
+			}
 		}
 
 		function pausePlayback() {
@@ -680,7 +767,7 @@
 			
 			for (let i = 0; i < quizSongs.length; i++)
 			{
-												// length of Spotify previews
+															// length of Spotify previews
 				timestamps.push(Math.floor(Math.random() * (30 - (timer / 1000))));
 
 				let songBox = document.getElementById("guess" + (i + 1));

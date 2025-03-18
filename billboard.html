@@ -559,7 +559,6 @@
 
 		<div class="container-row" id="player-audio">
 			<audio controls class="hidden-item" id="audio"></audio>
-			<button class="hidden-item" id="hiddenPlayBtn"></button>
 		</div>
 	</div>
 
@@ -803,9 +802,6 @@
 		}
 
 		function giveUp() {
-			clearTimeout(timeRunning);
-			audio.pause();
-
 			let songsFound = totalSongs;
 
 			for (let i = 0; i < totalSongs; i++)
@@ -821,11 +817,6 @@
 					songTitleText.style.fontWeight = "bold";
 				}
 
-				songTitleText.onclick = function () {
-					songVal = i;
-					document.getElementById("hiddenPlayBtn").click();
-				};
-
 				songTitleText.style.cursor = "pointer";
 			}
 
@@ -837,7 +828,6 @@
 			document.getElementById("giveUpBtn").disabled = true;
 
 			songVal = 0;
-			document.getElementById("hiddenPlayBtn").click();
 		}
 
 		function checkAnswer() {
@@ -850,6 +840,26 @@
 				if (quizNames.includes(input))
 				{
 					document.getElementById("guessText" + (quizNames.indexOf(input) + 1)).innerText = input;
+
+					answers = document.getElementsByClassName("answer-box");
+					l1: while (true)
+					{
+						l2: for (const box of answers)
+						{
+							if (box.innerText == "")
+							{
+								break l1;
+							}
+						}
+
+						document.getElementById("game-over-section-1").style.display = 'block';
+						document.getElementById("game-over-section-2").style.display = 'block';
+						document.getElementById("main-section-2").style.display = 'none';
+						document.getElementById("main-section-3").style.display = 'none';
+						document.getElementById("game-over-section-2").innerText = "All songs found!";
+						document.getElementById("giveUpBtn").disabled = true;
+						break
+					}
 				}
 				else
 				{

@@ -2,7 +2,7 @@ import json
 import os
 import re
 
-with open(os.path.join('jsons', 'top_10s_links.json')) as f:
+with open(os.path.join('jsons', 'top_10s_data.json')) as f:
 	link_data = json.load(f)
 
 with open(os.path.join('jsons', 'all_songs.json')) as f:
@@ -67,7 +67,7 @@ for link in link_data:
 			break
 	link_dump += link['link'] + '\n'
 
-with open(os.path.join('jsons', 'top_10s_links.json'), 'w') as f:
+with open(os.path.join('jsons', 'top_10s_data.json'), 'w') as f:
 	json.dump(link_data, f, indent = 4)
 
 with open(os.path.join('jsons', 'link_dump.txt'), 'w') as f:

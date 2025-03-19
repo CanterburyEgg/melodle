@@ -359,6 +359,7 @@
 			width: 19px;
 			height: auto;
 			position: static;
+			cursor: pointer;
 		}
 		.answer-box {
 			display: grid;
@@ -567,11 +568,8 @@
 		var timer = 4000;
 		var totalSongs = 10;
 		var wrongAnswers = 0;
-		var playing = false;
-		var buffering = false;
 
 		let timeRunning = null;
-		let firstQuiz = true;
 
 		let json_top10 = [];
 		let dates = [];
@@ -581,6 +579,8 @@
 		let quizSongs = [ null, null, null, null, null, null, null, null, null, null ];
 		let quizNames = [ null, null, null, null, null, null, null, null, null, null ];
 		let quizLinks = [ null, null, null, null, null, null, null, null, null, null ];
+
+		let songVal = -1;
 
 		/*
 		document.addEventListener('visibilitychange', function() {
@@ -592,7 +592,7 @@
 
 		document.addEventListener("DOMContentLoaded", async function() {
 			try {
-				const response = await fetch('./jsons/top_10s_linked.json');
+				const response = await fetch('./jsons/data/top_10s_linked.json');
 				json_top10 = await response.json();
 			}
 			catch(error) {
@@ -600,7 +600,7 @@
 			}
 
 			try {
-				const response = await fetch('./jsons/chart_dates.json');
+				const response = await fetch('./jsons/data/chart_dates.json');
 				datesJSON = await response.json();
 				dates = datesJSON.dates;
 			}
@@ -628,14 +628,11 @@
 		});
 
 		audio.addEventListener("loadeddata", function() {
-			if (playing)
-			{
-				startPlayback();
-			}
-			else
-			{
-				playClip();
-			}
+			playClip();
+		});
+
+		audio.addEventListener("ended", function() {
+			flipIcons(false);
 		});
 
 		chart_date.onchange = function() {
@@ -644,64 +641,25 @@
 			createTopTen();
 		}
 
-		/*
-		document.getElementById("volume-slider").addEventListener("input", function(e) {
-			setVolume();
-		});
-
-		function setVolume() {
-			audio.volume = document.getElementById("volume-slider").value / 100;
-		}
-
-		function incrementVolume(i) {
-			let slider = document.getElementById("volume-slider");
-			
-			let vol = parseInt(slider.value) + i;
-			if (vol > slider.max)
-			{
-				vol = slider.max;
-			}
-			if (vol < slider.min)
-			{
-				vol = slider.min;
-			}
-
-			slider.value = vol;
-			setVolume();
-		}
-		*/
-
-		function loadAudio() {
-			playing = true;
-			clearTimeout(timeRunning);
-			audio.src = quizLinks[songVal];
-		}
-
-		function startPlayback() {
-			audio.currentTime = Math.min(timestamps[songVal], audio.duration - 4);
-			audio.play();
-			
-			timeRunning = setTimeout(function() {
-				if (songVal != totalSongs - 1)
-				{
-					incrementSong(1);
-				}
-				else
-				{
-					pausePlayback();
-					incrementSong(-1 * (totalSongs - 1));
-				}
-			}, timer);
+		function flipIcons(startingPlayback = true) {
+			document.getElementById("pauseBtn" + (songVal + 1)).style.display = startingPlayback ? '' : 'none';
+			document.getElementById("speaker" + (songVal + 1)).style.display = startingPlayback ? 'none' : '';
 		}
 
 		function loadClip(link, i) {
+			if (songVal != -1 && songVal != i)
+			{
+				flipIcons(false);
+			}
+
 			songVal = i;
-			playing = false;
 			clearTimeout(timeRunning);
 			audio.src = link;
 		}
 
 		function playClip() {
+			flipIcons();
+
 			if (difficulty.checked)
 			{
 				audio.play();
@@ -713,6 +671,7 @@
 							
 				timeRunning = setTimeout(function() {
 					audio.pause();
+					flipIcons(false);
 				}, timer);
 			}
 		}
@@ -720,22 +679,6 @@
 		function pausePlayback() {
 			clearTimeout(timeRunning);
 			audio.pause();
-			playing = false;
-		}
-
-		function incrementSong(i) {
-			if (playing)
-			{
-				clearTimeout(timeRunning);
-			}
-
-			songVal = songVal + i;
-			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;
-
-			if (playing)
-			{
-				loadAudio();				
-			}
 		}
 
 		async function createTopTen() {
@@ -769,24 +712,36 @@
 															// length of Spotify previews
 				timestamps.push(Math.floor(Math.random() * (30 - (timer / 1000))));
 
-				let songBox = document.getElementById("guess" + (i + 1));
-				let songTitleBox = document.createElement("div");
+				const songBox = document.getElementById("guess" + (i + 1));
+				const songTitleBox = document.createElement("div");
 				songTitleBox.classList.add('answer-box');
-				let blankContainer = document.createElement("div");
-				let blank = document.createElement("text");
+				songTitleBox.id = "answerBox" + (i + 1);
+				const blankContainer = document.createElement("div");
+				const blank = document.createElement("text");
 				blank.id = "guessText" + (i + 1);
 
 				const speakerIcon = document.createElement("img");
 				speakerIcon.src = "img/speaker.png";
 				speakerIcon.classList.add("inline-img");
-				speakerIcon.style.cursor = "pointer";
+				speakerIcon.id = "speaker" + (i + 1);
 				speakerIcon.onclick = function () {
 					loadClip(quizSongs[i].link, i);
 				};
 
+				const pauseBtn = document.createElement("img");
+				pauseBtn.id = "pauseBtn" + (i + 1);
+				pauseBtn.src = "img/clear_pause.png";
+				pauseBtn.classList.add("inline-img");
+				pauseBtn.onclick = function () {
+					flipIcons(false);
+					pausePlayback();
+				};
+				pauseBtn.style.display = 'none';
+
 				blankContainer.appendChild(blank);
 				songTitleBox.appendChild(blankContainer);
 				songTitleBox.appendChild(speakerIcon);
+				songTitleBox.appendChild(pauseBtn);
 
 				songBox.appendChild(songTitleBox);
 			}
@@ -827,7 +782,7 @@
 			document.getElementById("game-over-section-2").innerText = "" + songsFound + " of " + totalSongs + " songs found.";
 			document.getElementById("giveUpBtn").disabled = true;
 
-			songVal = 0;
+			songVal = -1;
 		}
 
 		function checkAnswer() {
@@ -899,7 +854,6 @@
 			timestamps = [];
 			
 			wrongAnswers = 0;
-			playing = false;
 
 			for (let i = 1; i <= 5; i++)
 			{

@@ -3,11 +3,29 @@
 	<title>Melodle Timeline</title>
 	<link rel="icon" type="image/x-icon" href="img/logo.png">
 	<style>
+		@font-face {
+			font-family: 'Lato';
+			src: url('/resources/Lato-Regular.ttf');
+		}
+		@font-face {
+			font-family: 'Lato-Bold';
+			src: url('/resources/Lato-Bold.ttf');
+		}
+		@font-face {
+			font-family: 'Lato-Black';
+			src: url('/resources/Lato-Black.ttf');
+		}
+		body {
+			font-family: Helvetica;
+			background-color: #f6f6f6;
+			overscroll-behavior: none;
+		}
 		.page-container {
 			display: grid;
 			grid-template-columns: 1fr;
 			gap: 50px;
 			width: 90%;
+			min-width: 1000px;
 			position: absolute;
 			top: 50%;
 			left: 50%;
@@ -15,9 +33,20 @@
 			justify-items: center;
 			align-items: center;
 		}
+		.title-row {
+			width: 750px;
+			padding: 5px;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 60px;
+			margin: auto;
+			text-align: center;
+			border-bottom: solid;
+		}
 		.now-playing-container {
 			display: flex;
-			width: 60%;
+			gap: 20px;
+			width: 650px;
 		}
 		.album-container {
 			overflow: hidden;
@@ -27,6 +56,70 @@
 			height: 300px;
 			min-width: 300px;
 			min-height: 300px;
+		}
+		.song-data-container {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+			text-align: center;
+			width: 100%;
+			align-items: center;
+			margin: auto;
+		}
+		.song-data {
+			width: 100%;
+			display: grid;
+			grid-template-columns: 4fr 1fr;
+			gap: 10px;
+			justify-content: center;
+		}
+		.song-specs {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+		.data-row {
+			font-family: "Lato";
+		}
+		#qm {
+			font-family: "Lato-Bold";
+			font-size: 84px;
+			padding-bottom: 10px;
+		}
+		#song-title {
+			font-size: 20px;
+		}
+		#song-artist {
+			font-size: 18px;
+		}
+		#song-year {
+			font-family: "Lato-Black";
+			font-size: 24px;
+			padding: 10px 0;
+		}
+		.next-arrow {
+			align-content: center;
+		}
+		.next-arrow img {
+			width: 30px;
+			cursor: pointer;
+		}
+		.wrong-answer {
+			border: 2px solid black;
+			border-radius: 5px;
+			width: 45px;
+			height: 45px;
+			align-content: center;
+		}
+		.wrong-answer img {
+			width: 35px;
+			height: 35px;
+		}
+		#wrong-answer-boxes {
+			display: grid;
+			grid-template-columns: repeat(5, 1fr);
+			gap: 8px;
+			justify-items: center;
 		}
 		.timeline-container {
 			display: flex;
@@ -39,32 +132,77 @@
 			width: 50px;
 			cursor: pointer;
 		}
-		.timeline-container .album-art {
+		.timeline-container .a-container {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
 			width: 9%;
+			text-align: center;
+			font-size: 20px;
+			font-weight: bold;
+			font-family: "Lato-Black";
+			line-height: 1;
+		}
+		.timeline-container .a-container .album-art {
+			width: 100%;
 		}
 		.node {
-			display: flex;
-			align-content: center;
-			justify-content: center;
+			text-align: center;
 			width: 1%;
 			height: 100%;
 			cursor: default;
 		}
 		.node-img {
-			width: 0%;
+			max-width: 70%;
+			max-height: 70%;
 			object-fit: scale-down;
 			cursor: pointer;
+			padding-top: 2%;
+		}
+		audio::-webkit-media-controls-enclosure {
+			border-radius: 0;
+			background-color: #f6f6f6;
 		}
 	</style>
 </head>
 
 <body>
 	<div class="page-container">
+		<div class="title-row">
+			<div id="title">
+				<b>Melodle Timeline</b>
+			</div>
+		</div>
 		<div class="now-playing-container" id="np-container">
 			<div class="album-container" id="album-container">
 				<img id="np-album">
 			</div>
-			<button onclick="goToNextSong()">Next Song</button>
+			<div class="song-data-container" id="song-data-container">
+				<div class="data-row" id="qm">
+					?
+				</div>
+				<div class="song-data" id="song-data">
+					<div class="song-specs" id="song-specs">
+						<div class="data-row" id="song-title">
+						</div>
+						<div class="data-row" id="song-artist">
+						</div>
+						<div class="data-row" id="song-year">
+						</div>
+					</div>
+					<div class="next-arrow" id="next">
+						<img src="img/double_next.png" onclick="goToNextSong()">
+					</div>
+				</div>
+				<audio controls id="audio"></audio>
+				<div class="data-row" id="wrong-answer-boxes">
+					<div class="wrong-answer" id="wrong-answer-1"></div>
+					<div class="wrong-answer" id="wrong-answer-2"></div>
+					<div class="wrong-answer" id="wrong-answer-3"></div>
+					<div class="wrong-answer" id="wrong-answer-4"></div>
+					<div class="wrong-answer" id="wrong-answer-5"></div>
+				</div>
+			</div>
 		</div>
 		<div class="timeline-container" id="tl-container">
 		</div>
@@ -74,6 +212,7 @@
 		let song_data = [];
 		let index = 0;
 		let insert_index = 0;
+		let wrongAnswers = 0;
 		let active_song = {};
 		let albums = [];
 		let years = [];
@@ -96,26 +235,32 @@
 		});
 
 		function startQuiz() {
-			const circle = document.createElement("img");
-			circle.src = "img/circle.png";
-			circle.classList.add("pick-me");
-			circle.onclick = function () {
-				redrawTimeline();
-			};
-			document.getElementById("tl-container").appendChild(circle);
-
 			goToNextSong();
+			redrawTimeline();
 		}
 
 		function goToNextSong() {
 			active_song = song_data[index++];
 			np_album.src = active_song.picture;
 			np_album.style.filter = "blur(2rem)";
-			console.log(active_song.year);
 			guessing = true;
+
+			console.log(active_song.year);
+
+			document.getElementById("qm").style.display = '';
+			document.getElementById("song-data").style.display = 'none';
+
+			audio.src = active_song.link;
 		}
 
 		function redrawTimeline() {
+			document.getElementById("qm").style.display = 'none';
+
+			document.getElementById("song-data").style.display = '';
+			document.getElementById("song-title").innerText = active_song.title;
+			document.getElementById("song-artist").innerText = active_song.artist;
+			document.getElementById("song-year").innerText = active_song.year;
+
 			let correctGuess = false;
 			if (years.length == 0)
 			{
@@ -138,6 +283,13 @@
 				albums.splice(insert_index, 0, active_song.picture);
 				years.splice(insert_index, 0, active_song.year);				
 			}
+			else
+			{
+				wrongAnswers++;
+				let xImg = document.createElement("img");
+				xImg.src = "img/x.png";
+				document.getElementById("wrong-answer-" + wrongAnswers).appendChild(xImg);
+			}
 
 			np_album.style.filter = "";
 			guessing = false;
@@ -149,12 +301,21 @@
 			spacer.classList.add("node");
 			document.getElementById("tl-container").appendChild(spacer);
 
-			for (const album of albums)
+			for (let i = 0; i < albums.length; i++)
 			{
+				let album = albums[i];
+				let year = years[i];
+
+				let aContainer = document.createElement("div");
+				aContainer.classList.add("a-container");
 				let aElem = document.createElement("img");
 				aElem.src = album;
 				aElem.classList.add("album-art");
-				document.getElementById("tl-container").appendChild(aElem);
+				let aDate = document.createElement("text");
+				aDate.innerText = year;
+				aContainer.appendChild(aElem);
+				aContainer.appendChild(aDate);
+				document.getElementById("tl-container").appendChild(aContainer);
 
 				spacer = document.createElement("div");
 				spacer.classList.add("node");
@@ -167,19 +328,20 @@
 			elements.forEach(element => {
 				let nodeImg = document.createElement("img");
 				nodeImg.classList.add("node-img");
-				nodeImg.src = "img/circle.png";
+				nodeImg.src = "img/insert.png";
 				nodeImg.value = ++nodeVal;
 				nodeImg.onclick = function() {
 					insert_index = nodeImg.value;
 					redrawTimeline();
 				}
 				element.appendChild(nodeImg);
+				element.querySelectorAll("img")[0].style.width = "0%";
 
 				element.onmouseenter = function() {
 					if (guessing)
 					{
-						element.style.width = "4%";
-						element.querySelectorAll("img")[0].style.width = "80%";
+						element.style.width = "5%";
+						element.querySelectorAll("img")[0].style.width = "";
 					}
 				};
 

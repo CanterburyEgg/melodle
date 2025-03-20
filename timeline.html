@@ -1,0 +1,207 @@
+<html>
+<head>
+	<title>Melodle Timeline</title>
+	<link rel="icon" type="image/x-icon" href="img/logo.png">
+	<style>
+		.page-container {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 50px;
+			width: 90%;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			justify-items: center;
+			align-items: center;
+		}
+		.now-playing-container {
+			display: flex;
+			width: 60%;
+		}
+		.album-container {
+			overflow: hidden;
+			border: 8px double #171717;
+			border-radius: 8px;
+			width: 300px;
+			height: 300px;
+			min-width: 300px;
+			min-height: 300px;
+		}
+		.timeline-container {
+			display: flex;
+			width: 100%;
+			height: 100%;
+			align-items: center;
+			justify-content: center;
+		}
+		.timeline-container .pick-me {
+			width: 50px;
+			cursor: pointer;
+		}
+		.timeline-container .album-art {
+			width: 9%;
+		}
+		.node {
+			display: flex;
+			align-content: center;
+			justify-content: center;
+			width: 1%;
+			height: 100%;
+			cursor: default;
+		}
+		.node-img {
+			width: 0%;
+			object-fit: scale-down;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="page-container">
+		<div class="now-playing-container" id="np-container">
+			<div class="album-container" id="album-container">
+				<img id="np-album">
+			</div>
+			<button onclick="goToNextSong()">Next Song</button>
+		</div>
+		<div class="timeline-container" id="tl-container">
+		</div>
+	</div>
+
+	<script>
+		let song_data = [];
+		let index = 0;
+		let insert_index = 0;
+		let active_song = {};
+		let albums = [];
+		let years = [];
+		let guessing = true;
+
+		const np_album = document.getElementById("np-album");
+
+		document.addEventListener("DOMContentLoaded", async function() {
+			try {
+				const response = await fetch('./jsons/data/top_10s_data.json');
+				song_data = await response.json();
+			}
+			catch(error) {
+				console.error('Error:', error);
+			}
+
+			shuffle(song_data);
+
+			startQuiz();
+		});
+
+		function startQuiz() {
+			const circle = document.createElement("img");
+			circle.src = "img/circle.png";
+			circle.classList.add("pick-me");
+			circle.onclick = function () {
+				redrawTimeline();
+			};
+			document.getElementById("tl-container").appendChild(circle);
+
+			goToNextSong();
+		}
+
+		function goToNextSong() {
+			active_song = song_data[index++];
+			np_album.src = active_song.picture;
+			np_album.style.filter = "blur(2rem)";
+			console.log(active_song.year);
+			guessing = true;
+		}
+
+		function redrawTimeline() {
+			let correctGuess = false;
+			if (years.length == 0)
+			{
+				correctGuess = true;
+			}
+			else if (insert_index == 0)
+			{
+				correctGuess = (active_song.year <= years[0]);
+			}
+			else if (insert_index == years.length)
+			{
+				correctGuess = (active_song.year >= years[years.length - 1]);
+			}
+			else
+			{
+				correctGuess = (active_song.year >= years[insert_index - 1]) && (active_song.year <= years[insert_index]);
+			}
+			if (correctGuess)
+			{
+				albums.splice(insert_index, 0, active_song.picture);
+				years.splice(insert_index, 0, active_song.year);				
+			}
+
+			np_album.style.filter = "";
+			guessing = false;
+
+			let timeline = document.getElementById("tl-container");
+			timeline.innerHTML = "";
+
+			let spacer = document.createElement("div");
+			spacer.classList.add("node");
+			document.getElementById("tl-container").appendChild(spacer);
+
+			for (const album of albums)
+			{
+				let aElem = document.createElement("img");
+				aElem.src = album;
+				aElem.classList.add("album-art");
+				document.getElementById("tl-container").appendChild(aElem);
+
+				spacer = document.createElement("div");
+				spacer.classList.add("node");
+				document.getElementById("tl-container").appendChild(spacer);
+			}
+
+			const elements = document.querySelectorAll(".node");
+			let nodeVal = -1;
+
+			elements.forEach(element => {
+				let nodeImg = document.createElement("img");
+				nodeImg.classList.add("node-img");
+				nodeImg.src = "img/circle.png";
+				nodeImg.value = ++nodeVal;
+				nodeImg.onclick = function() {
+					insert_index = nodeImg.value;
+					redrawTimeline();
+				}
+				element.appendChild(nodeImg);
+
+				element.onmouseenter = function() {
+					if (guessing)
+					{
+						element.style.width = "4%";
+						element.querySelectorAll("img")[0].style.width = "80%";
+					}
+				};
+
+				element.onmouseleave = function() {
+					if (guessing)
+					{
+						element.style.width = "1%";
+						element.querySelectorAll("img")[0].style.width = "0%";
+					}
+				};
+			});
+		}
+
+		function shuffle(array) {
+			for (var i = array.length - 1; i >= 0; i--) {
+				var j = Math.floor(Math.random() * (i + 1));
+				var temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
+			}
+		}
+	</script>
+</body>
+
+</html>

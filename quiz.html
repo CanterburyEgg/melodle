@@ -188,7 +188,7 @@
 			justify-items: center;
 		}
 
-		.slider {
+		.volume-slider {
 			padding: 0;
 		}
 
@@ -201,6 +201,7 @@
 
 		#main-section-1 {
 			padding-top: 4%;
+			padding-bottom: 2%;
 			display: grid;
 			grid-template-columns: 4fr 0.5fr 1fr 0.5fr 1fr 4fr;
 			justify-items: center;
@@ -340,7 +341,7 @@
 		input {
 			border: 1px solid #000;
 			background-color: #f1f1f1;
-			padding: 10px;
+			padding: 10px 35px 10px 10px;
 			font-size: 16px;
 		}
 
@@ -398,9 +399,81 @@
 			align-items: center;
 		}
 
-	.hidden-item {
-		display: none;
-	}
+		.hidden-item {
+			display: none;
+		}
+
+		.submit {
+			position: absolute;
+			height: 16px;
+			width: auto;
+			left: 93%;
+			top: 50%;
+			transform: translate(0, -50%);
+			cursor: pointer;
+		}
+
+		.modals-subcontainer {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+			align-items: center;
+		}
+
+		/* this entire section is for the difficulty toggle */
+
+		/* The switch - the box around the slider */
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 50px;
+			height: 22px;
+		}
+		/* Hide default HTML checkbox */
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+		/* The slider */
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+		}
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 16px;
+			width: 16px;
+			left: 3px;
+			bottom: 3px;
+			background-color: white;
+		}
+		input:checked + .slider {
+			background-color: #171717;
+		}
+		input:focus + .slider {
+			box-shadow: 0 0 1px #171717;
+		}
+		input:checked + .slider:before {
+			-webkit-transform: translateX(28px);
+			-ms-transform: translateX(28px);
+			transform: translateX(28px);
+		}
+		/* Rounded sliders */
+		.slider.round {
+			border-radius: 34px;
+		}
+		.slider.round:before {
+			border-radius: 50%;
+		}
+
+		/* end section for difficulty toggle */
 </style>
 </head>
 
@@ -434,7 +507,7 @@
 			<div></div> <!-- empty div for spacing -->
 			<div class="slider-container" id="volume-container">
 				<img src="img/mute.png" class="volume-icon" onclick="incrementVolume(-10)">
-				<input type="range" min="0" max="100" value="80" class="slider" id="volume-slider" step="1">
+				<input type="range" min="0" max="100" value="80" class="volume-slider" id="volume-slider" step="1">
 				<img src="img/speaker.png" class="volume-icon" onclick="incrementVolume(10)">
 			</div>
 		</div>
@@ -442,15 +515,24 @@
 			<div class="auto-container" autocomplete="off">
 				<div class="autocomplete">
 					<input id="myInput" type="text" name="myInput" placeholder="Type a song name ...">
+					<img class="submit" src="img/submit.png" onclick="checkAnswer()">
 				</div>
 			</div>
-			<button class="submit" onclick="checkAnswer()">Submit</button>
+			<div class="modals-subcontainer">
+				<label class="switch">
+					<input type="checkbox" id="difficulty">
+					<span class="slider round"></span>
+				</label>
+				<div>
+					Easy Mode
+				</div>
+			</div>
 		</div>
 		<div class="container-row" id="game-over-section-1">
 			<b>GAME OVER</b>
 		</div>
 		<div class="container-row" id="game-over-section-2">
-			24 of 30 songs identified.
+			? of 30 songs identified.
 		</div>
 		<div class="container-row" id="main-section-3">
 			<div id="wrong-answer-boxes">
@@ -769,13 +851,19 @@
 		}
 
 		function playClip() {
-			audio.currentTime = Math.min(timestamps[songVal], audio.duration - 4);
-			audio.play();
-			toggleButtons();
-						
-			timeRunning = setTimeout(function() {
-				audio.pause();
-			}, timer);
+			if (difficulty.checked)
+			{
+				audio.play();
+			}
+			else
+			{
+				audio.currentTime = Math.min(timestamps[songVal], audio.duration - 4);
+				audio.play();
+							
+				timeRunning = setTimeout(function() {
+					audio.pause();
+				}, timer);
+			}
 		}
 
 		function pausePlayback() {

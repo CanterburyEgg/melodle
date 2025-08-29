@@ -540,13 +540,14 @@
 		{
 			clearTimeout(timeout);
 			controller.togglePlay();
+
+			startTimer = true;
 			controller.loadUri(links[songVal]);
 			document.getElementById('progressbar').innerHTML = "";
 			
 			document.getElementById("play-button").removeEventListener('click', resetPlayState);
 			document.getElementById("play-button").src = "img/play.png";
 			document.getElementById("play-button").addEventListener('click', playAudio);
-			startTimer = true;
 		}
 
 		async function setDailySongVal(fDay = firstDay, playlist = defaultPlaylist) {
@@ -731,11 +732,15 @@
 		}
 
 		function displayCorrectSong() {
+			clearTimeout(timeout);
+
 			document.getElementById('player-iframe').style.width = '100%';
 			document.getElementById('player-iframe').style.height = 'auto';
 			document.getElementById('main-section-completed').style.display = 'flex';
 			document.getElementById('main-section-3').style.display = 'none';
 			document.getElementById('main-section-4').style.display = 'none';
+
+			controller.loadUri(links[songVal]);
 			startTimer = false;
 		}
 

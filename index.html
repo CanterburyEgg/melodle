@@ -438,9 +438,10 @@
 				controller = EmbedController;
 
 				EmbedController.addListener('playback_update', e => {
-					if (e.data.isPaused)
+					if (e.data.isPaused && !startTimer)
 					{
-						console.log("PAUSED");
+						controller.loadUri(links[songVal]);
+						startTimer = true;
 					}
 
 					if (!e.data.isPaused && !e.data.isBuffering && startTimer)
@@ -545,7 +546,6 @@
 		{
 			clearTimeout(timeout);
 			controller.togglePlay();
-			//controller.loadUri(links[songVal]);
 
 			document.getElementById('progressbar').innerHTML = "";			
 			document.getElementById("play-button").removeEventListener('click', resetPlayState);

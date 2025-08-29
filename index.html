@@ -438,14 +438,17 @@
 				controller = EmbedController;
 
 				EmbedController.addListener('playback_update', e => {
+					console.log(e.data);
 					if (e.data.isPaused && !startTimer)
 					{
+						console.log("check1");
 						controller.loadUri(links[songVal]);
 						startTimer = true;
 					}
 
 					if (!e.data.isPaused && !e.data.isBuffering && startTimer)
 					{
+						console.log("check2");
 						startTimer = false;
 						createProgressbar('progressbar', (timer / 1000).toString() + 's');
 						document.getElementById("play-button").src = "img/stop.png";

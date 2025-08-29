@@ -445,13 +445,16 @@
 					}
 				});
 				EmbedController.addListener('playback_started', e => {
-					createProgressbar('progressbar', (timer / 1000).toString() + 's');
-					document.getElementById("play-button").src = "img/stop.png";
-    				document.getElementById("play-button").addEventListener('click', resetPlayState);
+					if (!songVisible)
+					{
+						createProgressbar('progressbar', (timer / 1000).toString() + 's');
+						document.getElementById("play-button").src = "img/stop.png";
+	    				document.getElementById("play-button").addEventListener('click', resetPlayState);
 
-					timeout = setTimeout(function() {
-						resetPlayState();
-					}, timer);
+						timeout = setTimeout(function() {
+							resetPlayState();
+						}, timer);
+					}
 				});
 
 				document.querySelectorAll('.date-picker').forEach(

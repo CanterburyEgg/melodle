@@ -471,6 +471,7 @@
 							currentDate.innerHTML = date.toLocaleString('default', { month: 'long' }) + " " + date.getDate() + "<br><div class='quiz-year'>" + date.getFullYear() + "</div>";
 							songVal = getSongDay(date);
 							EmbedController.loadUri(links[songVal]);
+							startTimer = true;
 						});
 					}
 				);

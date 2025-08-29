@@ -445,8 +445,7 @@
 						controller.loadUri(links[songVal]);
 						startTimer = true;
 					}
-
-					if (!e.data.isPaused && !e.data.isBuffering && startTimer)
+					else if (!e.data.isPaused && !e.data.isBuffering && startTimer)
 					{
 						console.log("check2");
 						startTimer = false;

@@ -412,7 +412,7 @@
 		var songs = [];
 		var controller;
 		var timer = 2000;
-		var startTimer = true;
+		var startTimer = false;
 		var increment = 1000;
 		var guess = 1;
 		var songVal = 0;
@@ -438,16 +438,13 @@
 				controller = EmbedController;
 
 				EmbedController.addListener('playback_update', e => {
-					console.log(e.data);
 					if (e.data.isPaused && !startTimer)
 					{
-						console.log("check1");
 						controller.loadUri(links[songVal]);
 						startTimer = true;
 					}
 					else if (!e.data.isPaused && !e.data.isBuffering && startTimer)
 					{
-						console.log("check2");
 						startTimer = false;
 						createProgressbar('progressbar', (timer / 1000).toString() + 's');
 						document.getElementById("play-button").src = "img/stop.png";
@@ -603,6 +600,7 @@
 			currentDate.innerHTML = date.toLocaleString('default', { month: 'long' }) + " " + date.getDate() + "<br><div class='quiz-year'>" + date.getFullYear() + "</div>";
 
 			controller.loadUri(links[songVal]);
+			startTimer = true;
 		}
 
 		function sortBySongName(a, b) {

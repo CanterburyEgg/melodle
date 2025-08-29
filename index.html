@@ -544,7 +544,8 @@
 			clearTimeout(timeout);
 			controller.togglePlay();
 
-			startTimer = true;
+			console.log("reset");
+			//startTimer = true;
 			controller.loadUri(links[songVal]);
 			document.getElementById('progressbar').innerHTML = "";
 			

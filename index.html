@@ -443,17 +443,16 @@
 						controller.loadUri(links[songVal]);
 						startTimer = true;
 					}
-					else if (!e.data.isPaused && !e.data.isBuffering && startTimer)
-					{
-						startTimer = false;
-						createProgressbar('progressbar', (timer / 1000).toString() + 's');
-						document.getElementById("play-button").src = "img/stop.png";
-        				document.getElementById("play-button").addEventListener('click', resetPlayState);
+				});
+				EmbedController.addListener('playback_started', e => {
+					startTimer = false;
+					createProgressbar('progressbar', (timer / 1000).toString() + 's');
+					document.getElementById("play-button").src = "img/stop.png";
+    				document.getElementById("play-button").addEventListener('click', resetPlayState);
 
-						timeout = setTimeout(function() {
-							resetPlayState();
-						}, timer);
-					}
+					timeout = setTimeout(function() {
+						resetPlayState();
+					}, timer);
 				});
 
 				document.querySelectorAll('.date-picker').forEach(
@@ -471,7 +470,6 @@
 							currentDate.innerHTML = date.toLocaleString('default', { month: 'long' }) + " " + date.getDate() + "<br><div class='quiz-year'>" + date.getFullYear() + "</div>";
 							songVal = getSongDay(date);
 							EmbedController.loadUri(links[songVal]);
-							startTimer = true;
 						});
 					}
 				);

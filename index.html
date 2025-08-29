@@ -855,6 +855,8 @@
 		}
 
 		function skip() {
+			resetPlayState();
+
 			document.getElementById('myInput').value = "";
 			document.getElementById('guess' + guess).innerHTML = "-- Skipped --";
 			document.getElementById('x' + guess).innerHTML = '<img src="img/x.png" style="width:25px; margin:auto;"></img>';

@@ -417,13 +417,13 @@
 		var guess = 1;
 		var songVal = 0;
 		var timeout;
+		var timestamp = 0;
 		const dateParts = '2025-08-27'.split('-');
 		const firstDay = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
 		firstDay.setHours(0, 0, 0, 0);
 		const defaultPlaylist = 'startup-playlist';
 		const url = new URL(window.location.href);
 		const urlParams = new URLSearchParams(url);
-
 
 		window.onSpotifyIframeApiReady = (IFrameAPI) => {
 			setMinAndMaxDates('datepicker');
@@ -438,7 +438,10 @@
 				controller = EmbedController;
 
 				EmbedController.addListener('playback_update', e => {
-					console.log(e.data);
+					if (e.data.isPaused)
+					{
+						console.log("PAUSED");
+					}
 
 					if (!e.data.isPaused && !e.data.isBuffering && startTimer)
 					{

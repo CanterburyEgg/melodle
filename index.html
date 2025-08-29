@@ -112,6 +112,19 @@
 			display: none;
 			padding-bottom: 45px;
 		}
+		.songpicker {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+		.prev-next-btns {
+			display: flex;
+		}
+		.prev-next-btns img {
+			cursor: pointer;
+			width: 25px;
+			height: auto;
+		}
 		.submit {
 			position: absolute;
 			height: 16px !important;
@@ -349,7 +362,13 @@
 			</div>
 			<div></div> <!-- empty div for space in the grid -->
 			<div class="date-text" id="currentDate"></div>
-			<input type="date" class="date-picker" id="datepicker"/>
+			<div class="songpicker">
+				<input type="date" class="date-picker" id="datepicker"/>
+				<div class="prev-next-btns">
+					<img id="prev" src="img/prev.png">
+					<img id="next" src="img/next.png">
+				</div>
+			</div>
 		</div>
 
 		<div class="container-row" id="main-section-2">
@@ -413,6 +432,7 @@
 		var controller;
 		var timer = 2000;
 		var songVisible = false;
+		var playing = false;
 		var increment = 1000;
 		var guess = 1;
 		var songVal = 0;
@@ -438,7 +458,7 @@
 				controller = EmbedController;
 
 				EmbedController.addListener('playback_update', e => {
-					if (e.data.isPaused)
+					if (e.data.isPaused && !e.data.position == 0)
 					{
 						console.log("loading instance of song ...");
 						controller.loadUri(links[songVal]);
@@ -461,16 +481,19 @@
 					x => {
 						let today = getFormattedDate(new Date());
 						x.value = today;
+						updatePrevNextBtns();
 						dateparts = today.split('-');
 						date = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
 						songVal = getSongDay(date);
 
 						x.addEventListener('change', () => {
 							resetHTML();
+							updatePrevNextBtns();
 							dateparts = x.value.split('-');
 							date = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
 							currentDate.innerHTML = date.toLocaleString('default', { month: 'long' }) + " " + date.getDate() + "<br><div class='quiz-year'>" + date.getFullYear() + "</div>";
 							songVal = getSongDay(date);
+
 							EmbedController.loadUri(links[songVal]);
 						});
 					}
@@ -485,6 +508,48 @@
 
 			const today = new Date();
 			document.getElementById(datepicker).setAttribute('max', getFormattedDate(today));
+		}
+
+		function updatePrevNextBtns() {
+			if (datepicker.value == getFormattedDate(new Date()))
+			{
+				next.src = "img/next-disabled.png";
+				next.style.cursor = "auto";
+				next.removeEventListener('click', nextDay);
+			}
+			else
+			{
+				next.src = "img/next.png";
+				next.style.cursor = "pointer";
+				next.addEventListener('click', nextDay);
+			}
+			if (datepicker.value == getFormattedDate(firstDay))
+			{
+				prev.src = "img/prev-disabled.png";
+				prev.style.cursor = "auto";
+				prev.removeEventListener('click', previousDay);
+			}
+			else
+			{
+				prev.src = "img/prev.png";
+				prev.style.cursor = "pointer";
+				prev.addEventListener('click', previousDay);
+			}
+		}
+
+		function previousDay() {
+			incrementDay(-1);
+		}
+
+		function nextDay() {
+			incrementDay(1);
+		}
+
+		function incrementDay(x) {
+			tmpDate = new Date();
+			tmpDate.setDate(date.getDate() + x);
+			datepicker.value = getFormattedDate(tmpDate);
+			datepicker.dispatchEvent(new Event('change'));
 		}
 
 		function getSongDay(date) {
@@ -509,6 +574,7 @@
 		function playAudio() {
 			document.getElementById("play-button").removeEventListener('click', playAudio);
 			controller.togglePlay();
+			playing = true;
 		}
 
 		function seededRandomFunc(seed) {
@@ -545,7 +611,11 @@
 		function resetPlayState()
 		{
 			clearTimeout(timeout);
-			controller.togglePlay();
+			if (playing)
+			{
+				playing = false;
+				controller.togglePlay();
+			}
 
 			document.getElementById('progressbar').innerHTML = "";			
 			document.getElementById("play-button").removeEventListener('click', resetPlayState);

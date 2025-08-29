@@ -438,17 +438,15 @@
 				controller = EmbedController;
 
 				EmbedController.addListener('playback_update', e => {
-					console.log("outside the if");
 					if (!e.data.isPaused && !e.data.isBuffering && startTimer)
 					{
-						console.log("inside the if");
+						console.log(e.data);
 						startTimer = false;
 						createProgressbar('progressbar', (timer / 1000).toString() + 's');
 						document.getElementById("play-button").src = "img/stop.png";
         				document.getElementById("play-button").addEventListener('click', resetPlayState);
 
 						timeout = setTimeout(function() {
-							console.log("timeout");
 							resetPlayState();
 						}, timer);
 					}
@@ -544,9 +542,8 @@
 			clearTimeout(timeout);
 			controller.togglePlay();
 
-			console.log("reset");
-			//startTimer = true;
 			controller.loadUri(links[songVal]);
+			startTimer = true;
 			document.getElementById('progressbar').innerHTML = "";
 			
 			document.getElementById("play-button").removeEventListener('click', resetPlayState);

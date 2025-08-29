@@ -412,7 +412,7 @@
 		var songs = [];
 		var controller;
 		var timer = 2000;
-		var startTimer = false;
+		var songVisible = false;
 		var increment = 1000;
 		var guess = 1;
 		var songVal = 0;
@@ -438,24 +438,20 @@
 				controller = EmbedController;
 
 				EmbedController.addListener('playback_update', e => {
-					if (e.data.isPaused && !startTimer)
+					if (e.data.isPaused)
 					{
+						console.log("loading instance of song ...");
 						controller.loadUri(links[songVal]);
-						startTimer = true;
 					}
 				});
 				EmbedController.addListener('playback_started', e => {
-					if (startTimer)
-					{
-						startTimer = false;
-						createProgressbar('progressbar', (timer / 1000).toString() + 's');
-						document.getElementById("play-button").src = "img/stop.png";
-	    				document.getElementById("play-button").addEventListener('click', resetPlayState);
+					createProgressbar('progressbar', (timer / 1000).toString() + 's');
+					document.getElementById("play-button").src = "img/stop.png";
+    				document.getElementById("play-button").addEventListener('click', resetPlayState);
 
-						timeout = setTimeout(function() {
-							resetPlayState();
-						}, timer);
-					}
+					timeout = setTimeout(function() {
+						resetPlayState();
+					}, timer);
 				});
 
 				document.querySelectorAll('.date-picker').forEach(
@@ -602,7 +598,6 @@
 			currentDate.innerHTML = date.toLocaleString('default', { month: 'long' }) + " " + date.getDate() + "<br><div class='quiz-year'>" + date.getFullYear() + "</div>";
 
 			controller.loadUri(links[songVal]);
-			startTimer = true;
 		}
 
 		function sortBySongName(a, b) {
@@ -711,6 +706,8 @@
 			document.getElementById('main-section-completed').style.display = 'none';
 			document.getElementById('player-iframe').style.width = '0%';
 			document.getElementById('player-iframe').style.height = '0%';
+
+			songVisible = false;
 		}
 
 		function createProgressbar(id, duration, callback) {
@@ -739,6 +736,7 @@
 
 		function displayCorrectSong() {
 			clearTimeout(timeout);
+			songVisible = true;
 
 			document.getElementById('player-iframe').style.width = '100%';
 			document.getElementById('player-iframe').style.height = 'auto';
@@ -747,7 +745,6 @@
 			document.getElementById('main-section-4').style.display = 'none';
 
 			controller.loadUri(links[songVal]);
-			startTimer = false;
 		}
 
 		function checkForSimilarArtist(str1, str2) {

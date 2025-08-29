@@ -741,13 +741,13 @@
 			clearTimeout(timeout);
 			songVisible = true;
 
+			controller.loadUri(links[songVal]);
+
 			document.getElementById('player-iframe').style.width = '100%';
 			document.getElementById('player-iframe').style.height = 'auto';
 			document.getElementById('main-section-completed').style.display = 'flex';
 			document.getElementById('main-section-3').style.display = 'none';
 			document.getElementById('main-section-4').style.display = 'none';
-
-			controller.loadUri(links[songVal]);
 		}
 
 		function checkForSimilarArtist(str1, str2) {

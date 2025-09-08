@@ -2,10 +2,10 @@ import json
 import os
 import re
 
-with open(os.path.join('jsons', 'all_songs.json')) as f:
+with open(os.path.join('jsons', 'data', 'all_songs.json'), encoding='utf-8-sig') as f:
 	js_data = json.load(f)
 
-with open(os.path.join('jsons', 'top-10s.json')) as f:
+with open(os.path.join('jsons', 'data', 'top_10s.json'), encoding='utf-8-sig') as f:
 	t10_data = json.load(f)
 
 t10_data_linked = []
@@ -40,6 +40,6 @@ for song in t10_data:
 	else:
 		print('ERROR: link not found for ' + str(song['title']) + '.')
 
-with open(os.path.join('jsons', 'top_10s_linked.json'), 'w') as f:
+with open(os.path.join('jsons', 'data', 'top_10s_linked.json'), 'w', encoding='utf-8-sig') as f:
 	json.dump(t10_data_linked, f)
 

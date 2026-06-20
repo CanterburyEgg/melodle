@@ -724,9 +724,14 @@
 			{
 				if (i.trackLink)
 				{
+					let trackUri = i.trackLink.replace("\\/", "/");
+					if (trackUri.includes("open.spotify.com/track/")) {
+						let trackId = trackUri.split("track/")[1].split("?")[0];
+						trackUri = "spotify:track:" + trackId;
+					}
 					tmpDict = {
 						"songStats": i.title + " - " + i.artist,
-						"trackLink": i.trackLink.replace("\\/", "/")
+						"trackLink": trackUri
 					};
 					tmpArr.push(tmpDict);
 				}

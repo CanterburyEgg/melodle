@@ -1134,7 +1134,12 @@
 			{
 				if (i.trackLink)
 				{
-					tmpArr.push([i.title + " - " + i.artist, i.preview.replace("\\/", "/"), i.trackLink.replace("\\/", "/")]);
+					let trackUri = i.trackLink.replace("\\/", "/");
+					if (trackUri.includes("open.spotify.com/track/")) {
+						let trackId = trackUri.split("track/")[1].split("?")[0];
+						trackUri = "spotify:track:" + trackId;
+					}
+					tmpArr.push([i.title + " - " + i.artist, i.preview.replace("\\/", "/"), trackUri]);
 				}
 			}
 

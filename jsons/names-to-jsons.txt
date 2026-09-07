@@ -10,3 +10,4 @@ christmas	Christmas	Genres
 disney	Disney	Genres
 kpop	K-Pop	Genres
 musicals	Musicals	Genres
+bts	BTS	Genres

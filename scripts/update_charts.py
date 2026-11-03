@@ -151,6 +151,20 @@ class SpotifyResolver:
                         if len(parts) == 2:
                             self.fuzzy_cache.setdefault(normalize_match_key(parts[0], parts[1]), cur)
 
+        # Cross-link preview -> uri/sp_title/sp_artist across all loaded caches so entries from
+        # top_10s_linked.json inherit URIs already known in decade/genre playlists
+        by_preview: dict[str, dict[str, Any]] = {}
+        for v in self.exact_cache.values():
+            if isinstance(v, dict) and v.get("preview") and v.get("uri"):
+                by_preview.setdefault(v["preview"], v)
+        for v in self.exact_cache.values():
+            if isinstance(v, dict) and v.get("preview") and not v.get("uri"):
+                donor = by_preview.get(v["preview"])
+                if donor:
+                    v["uri"] = donor["uri"]
+                    v["sp_title"] = donor.get("sp_title") or v.get("sp_title", "")
+                    v["sp_artist"] = donor.get("sp_artist") or v.get("sp_artist", "")
+
     def _register_known(
         self,
         title: str,
@@ -249,6 +263,7 @@ class SpotifyResolver:
         if self.checkpoint_path and self.dirty_count > 0:
             atomic_write_json(self.checkpoint_path, self.exact_cache, indent=2)
             self.dirty_count = 0
+            print(f"[CHECKPOINT] Saved ({len(self.exact_cache)} cached entries)", flush=True)
 
     def _get_token(self) -> str:
         now = time.time()
@@ -542,7 +557,9 @@ class SpotifyResolver:
                     return f_hit
 
         if self.offline:
-            return cached if (cached and cached.get("preview") and not need_uri) else None
+            if cached and cached.get("preview") and not need_uri:
+                return cached
+            return {"uncached_offline": True}
 
         search_title = uncensor_title(re.sub(r'\s*\(from\s+"[^"]+"\)', "", t, flags=re.I).strip())
         q_title = search_title.replace('"', "")
@@ -687,10 +704,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dry-run", action="store_true", help="Compute updates without writing to jsons/.")
     args = parser.parse_args(argv)
 
-    if args.offline and args.cull_unplayable and not args.dry_run:
-        print("[ERROR] --offline cannot be combined with --cull-unplayable unless --dry-run is set.", file=sys.stderr)
-        return 1
-
     raw_charts = load_billboard_feed(args.billboard_source)
     existing_dates_list = read_json(DATA_DIR / "chart_dates.json").get("dates", [])
     existing_dates = set(existing_dates_list)
@@ -809,6 +822,10 @@ def main(argv: list[str] | None = None) -> int:
                 if hit and hit.get("banned"):
                     had_promotion = True
                     continue
+                if hit and hit.get("uncached_offline") and args.cull_unplayable and not args.dry_run:
+                    raise RuntimeError(
+                        f"Cannot cull unqueried song {t!r} — {a!r} ({date_str}) in --offline mode."
+                    )
                 prev_url = (hit or {}).get("preview", "")
                 if args.cull_unplayable and not prev_url:
                     had_promotion = True

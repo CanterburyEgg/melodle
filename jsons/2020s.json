@@ -2044,5 +2044,425 @@
         "artist": "Justin Bieber",
         "trackLink": "spotify:track:16wAOAZ2OkqoIDN7TpChjR",
         "preview": "https://p.scdn.co/mp3-preview/b8d634383ba2f287c054193d32c9b10f33ed8336"
+    },
+    {
+        "title": "DÁKITI",
+        "artist": "Bad Bunny, JHAYCO",
+        "trackLink": "spotify:track:4MzXwWMhyBbmu6hOcLVD49",
+        "preview": "https://p.scdn.co/mp3-preview/78f5e89d6384301b40fd9e5a659152a33dac6646"
+    },
+    {
+        "title": "Leave The Door Open",
+        "artist": "Bruno Mars, Anderson .Paak, Silk Sonic",
+        "trackLink": "spotify:track:4pryE6cN2gFL1FVF5fYINl",
+        "preview": "https://p.scdn.co/mp3-preview/8865b4381616f5b24184f2e59032ca585fc1eda3"
+    },
+    {
+        "title": "Smokin Out The Window",
+        "artist": "Bruno Mars, Anderson .Paak, Silk Sonic",
+        "trackLink": "spotify:track:1oERlssLrpssCAY6Yqqs6c",
+        "preview": "https://p.scdn.co/mp3-preview/e5799e50ce3c803433f2e92ed871cf2715a1154a"
+    },
+    {
+        "title": "Yonaguni",
+        "artist": "Bad Bunny",
+        "trackLink": "spotify:track:2JPLbjOn0wPCngEot2STUS",
+        "preview": "https://p.scdn.co/mp3-preview/cbade9b0e669565ac8c7c07490f961e4c471b9ee"
+    },
+    {
+        "title": "Moscow Mule",
+        "artist": "Bad Bunny",
+        "trackLink": "spotify:track:6Xom58OOXk2SoU711L2IXO",
+        "preview": "https://p.scdn.co/mp3-preview/77b12f38abcff65705166d67b5657f70cd890635"
+    },
+    {
+        "title": "Enemy (with JID) - from the series Arcane League of Legends",
+        "artist": "Imagine Dragons, JID, Arcane, League of Legends",
+        "trackLink": "spotify:track:3CIyK1V4JEJkg02E4EJnDl",
+        "preview": "https://p.scdn.co/mp3-preview/7f4f896ba1b8bca78a515778f0ee0da380d198a6"
+    },
+    {
+        "title": "Después de la Playa",
+        "artist": "Bad Bunny",
+        "trackLink": "spotify:track:1dm6z1fWB0cErMszU25dy2",
+        "preview": "https://p.scdn.co/mp3-preview/e2024fddb76898adc88450c9fb5f107be33ec687"
+    },
+    {
+        "title": "Me Porto Bonito",
+        "artist": "Bad Bunny, Chencho Corleone",
+        "trackLink": "spotify:track:6Sq7ltF9Qa7SNFBsV5Cogx",
+        "preview": "https://p.scdn.co/mp3-preview/5c80aedfe75d2bc15aa0e803993c43395d8054fe"
+    },
+    {
+        "title": "MONACO",
+        "artist": "Bad Bunny",
+        "trackLink": "spotify:track:4MjDJD8cW7iVeWInc2Bdyj",
+        "preview": "https://p.scdn.co/mp3-preview/f80c7cc394457fc77cd6668a715b039fd86404f9"
+    },
+    {
+        "title": "un x100to",
+        "artist": "Grupo Frontera, Bad Bunny",
+        "trackLink": "spotify:track:6pD0ufEQq0xdHSsRbg9LBK",
+        "preview": "https://p.scdn.co/mp3-preview/15117af933a505dd75ecd33d15f2d4d3e13bdf9a"
+    },
+    {
+        "title": "WHERE SHE GOES",
+        "artist": "Bad Bunny",
+        "trackLink": "spotify:track:7ro0hRteUMfnOioTFI5TG1",
+        "preview": "https://p.scdn.co/mp3-preview/b9b7e4c982b33ee23c4867f7a3025e3598c35760"
+    },
+    {
+        "title": "The Fate of Ophelia",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:53iuhJlwXhSER5J2IYYv1W",
+        "preview": "https://p.scdn.co/mp3-preview/08d084852368db5ef64c30ae9281d66a610b0605"
+    },
+    {
+        "title": "Elizabeth Taylor",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:1jgTiNob5cVyXeJ3WgX5bL",
+        "preview": "https://p.scdn.co/mp3-preview/f9e0ae031c0f6a0eaf11ef790ccf2d3cb67ec063"
+    },
+    {
+        "title": "Tears",
+        "artist": "Sabrina Carpenter",
+        "trackLink": "spotify:track:42VUCXerQ5qTr4Qp6PhKo4",
+        "preview": "https://p.scdn.co/mp3-preview/bfa3ce20858ad8e435ea582f049ef0c38d245c2e"
+    },
+    {
+        "title": "TIT FOR TAT",
+        "artist": "Tate McRae",
+        "trackLink": "spotify:track:3muQWG32iGpLth3mxfxEyv",
+        "preview": "https://p.scdn.co/mp3-preview/5efa4c04969d406cdb0c868f39ff78fd77f175dd"
+    },
+    {
+        "title": "Father Figure",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:03bTIHJElXZ0O0jqOQvAbY",
+        "preview": "https://p.scdn.co/mp3-preview/776c20aecb29b8b34822c701f29c4e8794eb1b25"
+    },
+    {
+        "title": "Wood",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:5ylJtmaWPJ33cW3En7WOu0",
+        "preview": "https://p.scdn.co/mp3-preview/84951d898bf00fa088db6213732b2b0e31a93d4f"
+    },
+    {
+        "title": "MUTT",
+        "artist": "Leon Thomas",
+        "trackLink": "spotify:track:2uvE4L5ZsYKpv8hbK4TIOt",
+        "preview": "https://p.scdn.co/mp3-preview/4eb7bf82046ddf6f51f4d1abc0ed78373f39ee00"
+    },
+    {
+        "title": "Wi$h Li$t",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:2TEQvxxQabwLQMqWMg1qGu",
+        "preview": "https://p.scdn.co/mp3-preview/92e2a9d22073147d586eda5799d2d00c59fdeea5"
+    },
+    {
+        "title": "Actually Romantic",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:2x3mwb96B6TquRqMtbxUE1",
+        "preview": "https://p.scdn.co/mp3-preview/9909f6faff7776b1a1d3e4c238be3b61df397bfa"
+    },
+    {
+        "title": "The Life of a Showgirl (feat. Sabrina Carpenter)",
+        "artist": "Taylor Swift, Sabrina Carpenter",
+        "trackLink": "spotify:track:5eXgqtg3T8Av0m1FUaGHex",
+        "preview": "https://p.scdn.co/mp3-preview/e4ca3ec561735a323a83c2535d2420d82901e06f"
+    },
+    {
+        "title": "Eldest Daughter",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:62HoDY1Km6lm47haFpUn9c",
+        "preview": "https://p.scdn.co/mp3-preview/d1a8dd207fd8a9098841d7cad1a6f2f7667eb2cc"
+    },
+    {
+        "title": "CANCELLED!",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:1appZ3c336FkPvCuywfmrs",
+        "preview": "https://p.scdn.co/mp3-preview/ae37afd6bbbf4aed356c07df50b1eaf20595b742"
+    },
+    {
+        "title": "Aperture",
+        "artist": "Harry Styles",
+        "trackLink": "spotify:track:1sA1DhT0bLyeICf8NalPS7",
+        "preview": "https://p.scdn.co/mp3-preview/03ba8125d62d35ab121c4f5890111a15efa4821a"
+    },
+    {
+        "title": "Choosin' Texas",
+        "artist": "Ella Langley",
+        "trackLink": "spotify:track:7scFxt9VhL4FJwuPSfRlfN",
+        "preview": "https://p.scdn.co/mp3-preview/f08d08e4bc0225289d4b15c46a846cd9e4ebc146"
+    },
+    {
+        "title": "DtMF",
+        "artist": "Bad Bunny",
+        "trackLink": "spotify:track:3sK8wGT43QFpWrvNQsrQya",
+        "preview": "https://p.scdn.co/mp3-preview/e41ce6b82410d81c08baacca2a7169e5ace4287d"
+    },
+    {
+        "title": "drop dead",
+        "artist": "Olivia Rodrigo",
+        "trackLink": "spotify:track:0yO9QD2Ga7eUzqnNYsSSPo",
+        "preview": "https://p.scdn.co/mp3-preview/bd8afbdf9b514dc1c4b46ba8ad4e165f9d725394"
+    },
+    {
+        "title": "hate that i made you love me",
+        "artist": "Ariana Grande",
+        "trackLink": "spotify:track:3pY25LQJWfvvxdHhSg8ucj",
+        "preview": "https://p.scdn.co/mp3-preview/659151baaf7511cc24de9d2e3b04376736fabf05"
+    },
+    {
+        "title": "I Just Might",
+        "artist": "Bruno Mars",
+        "trackLink": "spotify:track:6f68Ac5tt5BQOpwr0BV9oN",
+        "preview": "https://p.scdn.co/mp3-preview/0b4bf3400bc3a84a835711b4a2bd4e39d117ea74"
+    },
+    {
+        "title": "I Knew It, I Knew You",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:4cHQ0okN97O3vqAqRN9Osu",
+        "preview": "https://p.scdn.co/mp3-preview/ec32e553cf673b66aed8e20cd968a9246368cbd9"
+    },
+    {
+        "title": "Janice STFU",
+        "artist": "Drake",
+        "trackLink": "spotify:track:514joG57v4yKTsfQmz7stz",
+        "preview": "https://p.scdn.co/mp3-preview/1de9b315e1aa811aedaf905b1058b668b2d3146e"
+    },
+    {
+        "title": "Opalite",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:3yWuTOYDztXjZxdE2cIRUa",
+        "preview": "https://p.scdn.co/mp3-preview/22ad9a96a2614f4493a8e8e7660fe0f08a6ddbcb"
+    },
+    {
+        "title": "Patient Zero",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:11hcBLPtbMp4aQI6zGQLub",
+        "preview": "https://p.scdn.co/mp3-preview/3b622221c4b4a6c28ef70ed256b47ef825108142"
+    },
+    {
+        "title": "SWIM",
+        "artist": "BTS",
+        "trackLink": "spotify:track:68lbSrXDORS51pmyjZv712",
+        "preview": "https://p.scdn.co/mp3-preview/acafb81cc609de53b9687a40f214f79d828b6947"
+    },
+    {
+        "title": "BAILE INoLVIDABLE",
+        "artist": "Bad Bunny",
+        "trackLink": "spotify:track:2lTm559tuIvatlT1u0JYG2",
+        "preview": "https://p.scdn.co/mp3-preview/31078ee4e5d1705665fa46d8b68afc297031f54f"
+    },
+    {
+        "title": "Be Her",
+        "artist": "Ella Langley",
+        "trackLink": "spotify:track:51sX18p68YISuIOPRxC1KT",
+        "preview": "https://p.scdn.co/mp3-preview/7474404128264aac9f5ef7c59bee323dd2fc2fd6"
+    },
+    {
+        "title": "Boston",
+        "artist": "STELLA LEFTY",
+        "trackLink": "spotify:track:2QihEF7BIfPCJjkB0c4Rrv",
+        "preview": "https://p.scdn.co/mp3-preview/5e240eae62eb7f9f78af1dcd6196e8fb40c1258f"
+    },
+    {
+        "title": "Housewife",
+        "artist": "Tate McRae",
+        "trackLink": "spotify:track:2sFepQNyl1WjpROruP8bJ0",
+        "preview": "https://p.scdn.co/mp3-preview/724b097d9dc53e0541de27d199adfe3f610944ba"
+    },
+    {
+        "title": "Man I Need",
+        "artist": "Olivia Dean",
+        "trackLink": "spotify:track:0mYXRQpTGjaLJt1l9MY4ps",
+        "preview": "https://p.scdn.co/mp3-preview/40bcf10e0f80094095d6e0be0ff1b85268dda0b7"
+    },
+    {
+        "title": "Ran To Atlanta (feat. Future & Molly Santana)",
+        "artist": "Drake, Future, Molly Santana",
+        "trackLink": "spotify:track:3DK90400cDlV5WUJPraMph",
+        "preview": "https://p.scdn.co/mp3-preview/36e7d15ff2525b759a46e9cc718df27c6c9a08f1"
+    },
+    {
+        "title": "Cleveland!",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:7uxkx8HPBYkJKcimOyggUM",
+        "preview": "https://p.scdn.co/mp3-preview/e8df0961de3f1db98be175efcc9d043d87cd7c55"
+    },
+    {
+        "title": "expectations (feat. Chappell Roan)",
+        "artist": "Olivia Rodrigo, Chappell Roan",
+        "trackLink": "spotify:track:3XmwAZpIMNpTJy8faw3ajD",
+        "preview": "https://p.scdn.co/mp3-preview/cc5b59142bd150799f61068e522f8aaa120d28c9"
+    },
+    {
+        "title": "stupid song",
+        "artist": "Olivia Rodrigo",
+        "trackLink": "spotify:track:4LfCY65LvojKjWEnU7fNN4",
+        "preview": "https://p.scdn.co/mp3-preview/894b272aa0422aeebe856825b55e5c736a9bc5ee"
+    },
+    {
+        "title": "Whisper My Name",
+        "artist": "Drake",
+        "trackLink": "spotify:track:7KGHenqXZofXNm5MKDbT3J",
+        "preview": "https://p.scdn.co/mp3-preview/ec237b02261f114cb41c4549eb3234ef494ce7ab"
+    },
+    {
+        "title": "American Girls",
+        "artist": "Harry Styles",
+        "trackLink": "spotify:track:7gtG45ieyQzKtNKobfLd49",
+        "preview": "https://p.scdn.co/mp3-preview/b727b069e1fd5864ffa3c61edca662f87298231f"
+    },
+    {
+        "title": "Babylon",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:2j7wI9QWrP8cjKDdOLVQTU",
+        "preview": "https://p.scdn.co/mp3-preview/8b617943d74c6fba6b6ec65186c98c5db4c89687"
+    },
+    {
+        "title": "petal",
+        "artist": "Ariana Grande",
+        "trackLink": "spotify:track:70pVCVMGjmIWPbWXDwf11e",
+        "preview": "https://p.scdn.co/mp3-preview/30dc1adb43c170165bb8091e788b55f26f2fc672"
+    },
+    {
+        "title": "Risk It All",
+        "artist": "Bruno Mars",
+        "trackLink": "spotify:track:5y2ijHECwFYWqcAHKTZgzD",
+        "preview": "https://p.scdn.co/mp3-preview/2467ff71a7508c57a62112ee5beb996bd6b9e957"
+    },
+    {
+        "title": "Shabang",
+        "artist": "Drake",
+        "trackLink": "spotify:track:6vjpQIdABqntoe3zPazPec",
+        "preview": "https://p.scdn.co/mp3-preview/306dfed2c87a5869e1d35be1d03e44123086836a"
+    },
+    {
+        "title": "Dracula (with JENNIE)",
+        "artist": "Tame Impala, JENNIE",
+        "trackLink": "spotify:track:5yvVYFDUpbnjcnRBgjwTzM",
+        "preview": "https://p.scdn.co/mp3-preview/631b9cec18551169382ef4be4f01e40bc5523441"
+    },
+    {
+        "title": "NUEVAYoL",
+        "artist": "Bad Bunny",
+        "trackLink": "spotify:track:5TFD2bmFKGhoCRbX61nXY5",
+        "preview": "https://p.scdn.co/mp3-preview/7a3b57ab0ac75e0b0b46072bea45826de80b7e1a"
+    },
+    {
+        "title": "Pink Clouding",
+        "artist": "Taylor Swift",
+        "trackLink": "spotify:track:3gyJbNBTRVRdZDA1yO3clm",
+        "preview": "https://p.scdn.co/mp3-preview/a1bbb13eb767e81c7b59a8e58a25e22f8d89d74a"
+    },
+    {
+        "title": "So Easy (To Fall In Love)",
+        "artist": "Olivia Dean",
+        "trackLink": "spotify:track:6sGIMrtIzQjdzNndVxe397",
+        "preview": "https://p.scdn.co/mp3-preview/e0ea7353932017364bdb12dc776e89b360abac42"
+    },
+    {
+        "title": "Solar Eclipse (feat. Don Toliver)",
+        "artist": "Drake, Don Toliver",
+        "trackLink": "spotify:track:4IAWZw00ZI9DLKDjesx86u",
+        "preview": "https://p.scdn.co/mp3-preview/4feadd4524eee165380031ed90bdff09daacb902"
+    },
+    {
+        "title": "the cure",
+        "artist": "Olivia Rodrigo",
+        "trackLink": "spotify:track:55pBIZO1cqoldeqpp5WR7H",
+        "preview": "https://p.scdn.co/mp3-preview/cb81ba83e65dc3ec82c8a85d2dca61adeda847fe"
+    },
+    {
+        "title": "BbY WOW",
+        "artist": "KAROL G, Judeline, rusowsky",
+        "trackLink": "spotify:track:3h5T5JypYU7huFiVYhv1dr",
+        "preview": "https://p.scdn.co/mp3-preview/f6ab45a8375c5bcf6f03161edd9f44c1fad501c8"
+    },
+    {
+        "title": "End of Beginning",
+        "artist": "Djo",
+        "trackLink": "spotify:track:6491IiPC0Xu2Tng8DgQPhq",
+        "preview": "https://p.scdn.co/mp3-preview/f28b990ac62c2d9a1dbe6938792cca969609ea05"
+    },
+    {
+        "title": "Folded",
+        "artist": "Kehlani",
+        "trackLink": "spotify:track:5cdA1RgRhQtETGtPBYSe5x",
+        "preview": "https://p.scdn.co/mp3-preview/3543e7f70b0462599a9e2f1e255c14b796429fd8"
+    },
+    {
+        "title": "National Treasures",
+        "artist": "Drake",
+        "trackLink": "spotify:track:393OFJFZKIIv66JmJcNm9D",
+        "preview": "https://p.scdn.co/mp3-preview/5afd123bd4453cb0d4b5b63949747b938427f70e"
+    },
+    {
+        "title": "Nicole Kidman",
+        "artist": "ADÉLA",
+        "trackLink": "spotify:track:70cHKK8bHAfJrOGVnfRG9J",
+        "preview": "https://p.scdn.co/mp3-preview/68bc3cb0611cfe6569ce56eeb025359233168a69"
+    },
+    {
+        "title": "Stateside",
+        "artist": "PinkPantheress",
+        "trackLink": "spotify:track:5UBfLYnkImP1RKMMy4TGs8",
+        "preview": "https://p.scdn.co/mp3-preview/8273f8b4d38279e499d3800d3f1e4939dd2dbd5e"
+    },
+    {
+        "title": "The Great Divide",
+        "artist": "Noah Kahan",
+        "trackLink": "spotify:track:4ck9vo0gEmjVHWUb5q2rYe",
+        "preview": "https://p.scdn.co/mp3-preview/d6dd4dc5b10db13bb4702b25c9d5cae507a2186f"
+    },
+    {
+        "title": "back to friends",
+        "artist": "sombr",
+        "trackLink": "spotify:track:7qjZnBKE73H4Oxkopwulqe",
+        "preview": "https://p.scdn.co/mp3-preview/daf5f9aeeab319f4cf5c17682d75c18cc1e2ae93"
+    },
+    {
+        "title": "Make Them Cry",
+        "artist": "Drake",
+        "trackLink": "spotify:track:55wlsNYqcfiQsHuX8l0jmF",
+        "preview": "https://p.scdn.co/mp3-preview/8105d9400dfaed5be56afa8961587d01c7fe9a85"
+    },
+    {
+        "title": "Dust",
+        "artist": "Drake",
+        "trackLink": "spotify:track:4eE16RJFDKf2WxBTqqfylu",
+        "preview": "https://p.scdn.co/mp3-preview/d82e57e5fb25ade12137c9d2c7c7f9f9f9f777a6"
+    },
+    {
+        "title": "2 Hard 4 The Radio",
+        "artist": "Drake",
+        "trackLink": "spotify:track:7COiiObIVJIdBcW3J43Iy2",
+        "preview": "https://p.scdn.co/mp3-preview/afcb65976c26874c1de272f067b4a78a579261c1"
+    },
+    {
+        "title": "Doors",
+        "artist": "Noah Kahan",
+        "trackLink": "spotify:track:3iU2qsthCTo5EeTE03l3Si",
+        "preview": "https://p.scdn.co/mp3-preview/0f730628dbcee974aefe883578d0aa74b06febf7"
+    },
+    {
+        "title": "honeybee",
+        "artist": "Olivia Rodrigo",
+        "trackLink": "spotify:track:407LgLkk1uM3wMO6jVRe0a",
+        "preview": "https://p.scdn.co/mp3-preview/4792ca094924abda5b957b492621049a233b8e0b"
+    },
+    {
+        "title": "Babydoll",
+        "artist": "Dominic Fike",
+        "trackLink": "spotify:track:5AEfX1a64m9eLnxGLa3NSm",
+        "preview": "https://p.scdn.co/mp3-preview/b607107cef9a31f1eca79d10e18c4120b68444c3"
+    },
+    {
+        "title": "Make Them Pay",
+        "artist": "Drake",
+        "trackLink": "spotify:track:57rkFdhoKjgkg16fsS4pgg",
+        "preview": "https://p.scdn.co/mp3-preview/4ae3a0736bd840aaa498e85388dcef50112f63c7"
     }
 ]

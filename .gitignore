@@ -2,5 +2,12 @@
 jsons/boy-bops.json
 jsons/bailey-bops.json
 /data
+.cache/
+__pycache__/
+*creds*.json
+.env
+/all.json
+billboard*.json
+*.tmp
 jsons/.DS_Store
 .DS_Store

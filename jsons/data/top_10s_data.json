@@ -5627,7 +5627,7 @@
     },
     {
         "title": "Ronnie",
-        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli",
+        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli\"",
         "link": "https://p.scdn.co/mp3-preview/6b33e17f618950dc86023b3e419c09639b511f45?cid=ab89d005ca4846da8ab4d60076ebc676",
         "year": "1964",
         "picture": "https://i.scdn.co/image/ab67616d00001e02b96c21e15c091eb98a6c88a4"
@@ -5753,7 +5753,7 @@
     },
     {
         "title": "Rag Doll",
-        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli",
+        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli\"",
         "link": "https://p.scdn.co/mp3-preview/9824ac65e42289f32372e35204342210b90d1281?cid=ab89d005ca4846da8ab4d60076ebc676",
         "year": "1964",
         "picture": "https://i.scdn.co/image/ab67616d00001e02719da63af6072078bb73536d"
@@ -5928,7 +5928,7 @@
     },
     {
         "title": "Save It For Me",
-        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli",
+        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli\"",
         "link": "https://p.scdn.co/mp3-preview/fb19c83303413d98ff5396b6734e95b8bb86d5d2?cid=ab89d005ca4846da8ab4d60076ebc676",
         "year": "1964",
         "picture": "https://i.scdn.co/image/ab67616d00001e02b96c21e15c091eb98a6c88a4"
@@ -6803,9 +6803,9 @@
     },
     {
         "title": "Let's Hang On!",
-        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli",
+        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli\"",
         "link": "https://p.scdn.co/mp3-preview/bcd79048696605d0bf81208ccb1c4c491c00026b?cid=ab89d005ca4846da8ab4d60076ebc676",
-        "year": "1966",
+        "year": "1965",
         "picture": "https://i.scdn.co/image/ab67616d00001e02b96c21e15c091eb98a6c88a4"
     },
     {
@@ -7047,7 +7047,7 @@
     },
     {
         "title": "Working My Way Back To You",
-        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli",
+        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli\"",
         "link": "https://p.scdn.co/mp3-preview/299a544c9ebe64109dbb6cd37cc1dba83f68a948?cid=ab89d005ca4846da8ab4d60076ebc676",
         "year": "1966",
         "picture": "https://i.scdn.co/image/ab67616d00001e02719da63af6072078bb73536d"
@@ -7544,7 +7544,7 @@
     },
     {
         "title": "I've Got You Under My Skin",
-        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli",
+        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli\"",
         "link": "https://p.scdn.co/mp3-preview/a6d42c7a09712eb86939a33244a4973c2ab30636?cid=ab89d005ca4846da8ab4d60076ebc676",
         "year": "1966",
         "picture": "https://i.scdn.co/image/ab67616d00001e02b96c21e15c091eb98a6c88a4"
@@ -7768,7 +7768,7 @@
     },
     {
         "title": "Tell It To The Rain",
-        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli",
+        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli\"",
         "link": "https://p.scdn.co/mp3-preview/541b2f94c0c82317008d1ece4b6260edf75344b8?cid=ab89d005ca4846da8ab4d60076ebc676",
         "year": "1966",
         "picture": "https://i.scdn.co/image/ab67616d00001e025c535d46dccb0a6e919116a8"
@@ -8146,7 +8146,7 @@
     },
     {
         "title": "C'mon Marianne",
-        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli",
+        "artist": "The 4 Seasons Featuring the \"Sound of Frankie Valli\"",
         "link": "https://p.scdn.co/mp3-preview/c7f78d44232fe91641b96ce435539d326c808a23?cid=ab89d005ca4846da8ab4d60076ebc676",
         "year": "1967",
         "picture": "https://i.scdn.co/image/ab67616d00001e02b96c21e15c091eb98a6c88a4"
@@ -36253,5 +36253,19 @@
         "link": "https://p.scdn.co/mp3-preview/139cb8ff941ae246da1ab9ace8406042ab5dc431?cid=ab89d005ca4846da8ab4d60076ebc676",
         "year": "2021",
         "picture": "https://i.scdn.co/image/ab67616d00001e02f50e15b08574eb5b9dda1890"
+    },
+    {
+        "title": "808",
+        "artist": "Blaque",
+        "link": "https://p.scdn.co/mp3-preview/c223fd21e89c0b4cd13b8d5fb76202de9aeab483",
+        "year": "1999",
+        "picture": "https://i.scdn.co/image/ab67616d00001e02403477ae0a5f14c83097d7ec"
+    },
+    {
+        "title": "679",
+        "artist": "Fetty Wap Featuring Remy Boyz",
+        "link": "https://p.scdn.co/mp3-preview/a5e4cc1818969ad61ef99074c0dc821493b16b46",
+        "year": "2015",
+        "picture": "https://i.scdn.co/image/ab67616d00001e021769fa68b9643ca67c4d44ce"
     }
 ]

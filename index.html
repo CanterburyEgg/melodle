@@ -1,6 +1,8 @@
+<!DOCTYPE html>
 <html>
 
 <head>
+	<meta charset="UTF-8">
 	<title>Melodle</title>
 	<link rel="icon" type="image/x-icon" href="img/logo.png">
 	<style>
@@ -8,6 +10,11 @@
 			font-family: Helvetica;
 			background-color: #f6f6f6;
 			overscroll-behavior: none;
+			margin: 0;
+			min-height: 100vh;
+			display: flex;
+			padding: 5vh 16px;
+			box-sizing: border-box;
 		}
 		table {
 			border-collapse: collapse;
@@ -51,14 +58,10 @@
 			text-align: center;
 		}
 		.container {
-			position: absolute;
+			position: relative;
 			margin: auto;
 			display: block;
 			width: 750px;
-			height: 88%;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
 		}
 		.container-row {
 			width: 100%;
@@ -92,7 +95,7 @@
 			padding: 25px 0;
 		}
 		#main-section-3 {
-			justify-self: center;
+			margin: 0 auto;
 			width: 95%;
 			display: flex;
 			gap: 20px;
@@ -101,11 +104,12 @@
 		#main-section-3 img {
 			width: auto;
 			height: 30px;
+			flex-shrink: 0;
 			cursor: pointer;
 		}
 		#main-section-4 {
 			width: 95%;
-			justify-self: center;
+			margin: 0 auto;
 			display: flex;
 		}
 		#main-section-completed {
@@ -128,18 +132,23 @@
 		.submit {
 			position: absolute;
 			height: 16px !important;
-			left: 575px;
+			right: 12px;
 			top: 50%;
 			transform: translate(0, -50%);
+			cursor: pointer;
 		}
 		#playlist {
 			text-align: center;
-	  	  	padding-right: 13;
+	  	  	padding-right: 13px;
 	    	font-size: 15.5px;
 		}
 		#player-iframe {
-			width: 0%;
-			height: 0%;
+			width: 0;
+			height: 0;
+			overflow: hidden;
+			padding: 0;
+			box-sizing: border-box;
+			display: block;
 		}
 		form {
 			padding-bottom: 5px;
@@ -192,8 +201,9 @@
 		input {
 			border: 1px solid #000;
 			background-color: #f1f1f1;
-			padding: 10px;
+			padding: 10px 35px 10px 10px;
 			font-size: 16px;
+			box-sizing: border-box;
 		}
 		input[type=text] {
 			background-color: #f1f1f1;
@@ -320,18 +330,38 @@
 			from {opacity: 0;}
 			to {opacity:1 ;}
 		}
+		.date-picker-wrap {
+			position: relative;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 28px;
+			height: 28px;
+			overflow: hidden;
+		}
+		.date-picker-wrap:focus-within {
+			outline: 2px solid #191414;
+			outline-offset: 2px;
+			border-radius: 4px;
+		}
+		.date-picker-wrap svg {
+			width: 26px;
+			height: 26px;
+			pointer-events: none;
+		}
 		.date-picker {
-			border: none;
-			background: none;
-			padding: 0;
-		}
-		.date-picker::-webkit-calendar-picker-indicator {
+			-webkit-appearance: none;
+			appearance: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
 			cursor: pointer;
-			height: 30px;
-			width: 30px;
-		}
-		.date-picker::-webkit-datetime-edit {
-			display: none;
+			border: none;
+			padding: 0;
+			margin: 0;
 		}
 		.date-text {
 			text-align: center;
@@ -340,12 +370,63 @@
 		.quiz-year {
 			font-size: 40px;
 		}
+		.mode-nav {
+			position: fixed;
+			top: 20px;
+			left: 16px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			z-index: 100;
+			font-family: Helvetica, Arial, sans-serif;
+		}
+		.mode-nav a {
+			display: block;
+			padding: 7px 14px;
+			border-radius: 8px;
+			font-size: 13px;
+			font-weight: bold;
+			text-decoration: none;
+			text-align: center;
+			color: #191414;
+			background-color: #ffffff;
+			border: 1px solid #cccccc;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+			cursor: pointer;
+		}
+		.mode-nav a:hover {
+			background-color: #e8e8e8;
+		}
+		.mode-nav a.active {
+			background-color: #191414;
+			color: #ffffff;
+			border-color: #191414;
+		}
+		@media (max-width: 1260px) {
+			body {
+				flex-direction: column;
+				align-items: center;
+				gap: 16px;
+			}
+			.mode-nav {
+				position: static;
+				flex-direction: row;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+		}
 	</style>
 </head>
 
 <body onload="setDailySongVal()">
+	<nav class="mode-nav">
+		<a href="index.html" class="active">Daily Melodle</a>
+		<a href="quiz.html">Song Quiz</a>
+		<a href="billboard.html">Billboard</a>
+		<a href="timeline.html">Timeline</a>
+	</nav>
 	<div class="container">
-		<div id="decades">
+		<div id="decades" style="text-align: center;">
 			<a onclick="switchPlaylist('1960s')">1960s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('1970s')">1970s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('1980s')">1980s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('1990s')">1990s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('2000s')">2000s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('2010s')">2010s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('2020s')">2020s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('billboard-no-1s')">Billboard #1 Hits</a>
 		</div>
 		<div class="container-row" id="title-row">
@@ -363,7 +444,7 @@
 			<div></div> <!-- empty div for space in the grid -->
 			<div class="date-text" id="currentDate"></div>
 			<div class="songpicker">
-				<input type="date" class="date-picker" id="datepicker"/>
+				<div class="date-picker-wrap" title="Pick a date"><svg viewBox="0 0 24 24" fill="none" stroke="#191414" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><input type="date" class="date-picker" id="datepicker" aria-label="Pick a date" title="Pick a date" onclick="if(this.showPicker)try{this.showPicker()}catch(e){}" onkeydown="if((event.key==='Enter'||event.key===' ')&&this.showPicker){event.preventDefault();try{this.showPicker()}catch(e){}}"/></div>
 				<div class="prev-next-btns">
 					<img id="prev" src="img/prev.png">
 					<img id="next" src="img/next.png">
@@ -424,30 +505,95 @@
 		</div>	
 	</div>
 
-	<script src="https://open.spotify.com/embed-podcast/iframe-api/v1" async>
-	</script>
 	<script type="text/javascript">
 		var links = [];
 		var songs = [];
-		var controller;
+		var baseLinks = [];
+		var baseSongs = [];
+		var loadedCycles = 0;
+		var controller = null;
 		var timer = 2000;
 		var songVisible = false;
 		var playing = false;
 		var increment = 1000;
 		var guess = 1;
 		var songVal = 0;
-		var timeout;
+		var timeout = null;
 		var timestamp = 0;
+		var clipStarted = false;
+		var clipStartPos = 0;
+		var remainingMs = 0;
+		var lastResumeTime = 0;
+		var lastKnownPosition = 0;
+		var awaitingZeroSeek = false;
+		var seekRequestTime = 0;
+		var seekRetried = false;
+		var date = new Date();
+		date.setHours(0, 0, 0, 0);
+		var datePickerInitialized = false;
+		let playlistGeneration = 0;
+		let artistBySong = new Map();
 		const dateParts = '2025-08-27'.split('-');
 		const firstDay = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
 		firstDay.setHours(0, 0, 0, 0);
 		const defaultPlaylist = 'startup-playlist';
 		const url = new URL(window.location.href);
-		const urlParams = new URLSearchParams(url);
+		const urlParams = new URLSearchParams(url.search);
+
+		function ensureSongsUpTo(targetIdx) {
+			if (!baseSongs.length) return;
+			while (songs.length <= targetIdx)
+			{
+				const seed = getDailySeed(firstDay) + loadedCycles;
+				songs.push(...shuffleArraySeeded(baseSongs, seededRandomFunc(seed)));
+				links.push(...shuffleArraySeeded(baseLinks, seededRandomFunc(seed)));
+				loadedCycles++;
+			}
+		}
+
+		function initDatePicker() {
+			if (datePickerInitialized) return;
+			datePickerInitialized = true;
+			setMinAndMaxDates('datepicker');
+
+			document.querySelectorAll('.date-picker').forEach(
+				x => {
+					let today = getFormattedDate(new Date());
+					x.value = today;
+					updatePrevNextBtns();
+					let dateparts = today.split('-');
+					date = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
+					songVal = getSongDay(date);
+					currentDate.innerHTML = date.toLocaleString('default', { month: 'long' }) + " " + date.getDate() + "<br><div class='quiz-year'>" + date.getFullYear() + "</div>";
+
+					x.addEventListener('change', () => {
+						if (!x.value) return;
+						let dp = x.value.split('-');
+						let picked = new Date(Number(dp[0]), Number(dp[1]) - 1, Number(dp[2]));
+						if (isNaN(picked.getTime())) return;
+						const todayDate = new Date();
+						todayDate.setHours(0, 0, 0, 0);
+						if (picked < firstDay) picked = new Date(firstDay);
+						if (picked > todayDate) picked = new Date(todayDate);
+						x.value = getFormattedDate(picked);
+						date = picked;
+						resetHTML();
+						updatePrevNextBtns();
+						currentDate.innerHTML = date.toLocaleString('default', { month: 'long' }) + " " + date.getDate() + "<br><div class='quiz-year'>" + date.getFullYear() + "</div>";
+						songVal = getSongDay(date);
+						ensureSongsUpTo(songVal);
+
+						if (controller && links[songVal])
+						{
+							controller.loadUri(links[songVal]);
+						}
+					});
+				}
+			);
+		}
 
 		window.onSpotifyIframeApiReady = (IFrameAPI) => {
-			setMinAndMaxDates('datepicker');
-			document.getElementById("play-button").addEventListener('click', playAudio);
+			initDatePicker();
 
 			const element = document.getElementById('embed-iframe');
 			const options = {
@@ -458,46 +604,141 @@
 				controller = EmbedController;
 
 				EmbedController.addListener('playback_update', e => {
-					if (e.data.isPaused && !e.data.position == 0)
+					lastKnownPosition = e.data.position || 0;
+					if (!songVisible && !playing && e.data.isPaused && e.data.position !== 0)
 					{
-						console.log("loading instance of song ...");
-						controller.loadUri(links[songVal]);
+						awaitingZeroSeek = false;
+						if (typeof controller.seek !== 'function' && links[songVal])
+						{
+							lastKnownPosition = 0;
+							controller.loadUri(links[songVal]);
+						}
+						return;
+					}
+
+					if (!songVisible && !playing && !e.data.isPaused)
+					{
+						if (typeof controller.pause === 'function')
+						{
+							controller.pause();
+						}
+						return;
+					}
+
+					if (!playing || songVisible)
+					{
+						return;
+					}
+
+					if (awaitingZeroSeek)
+					{
+						const pos = e.data.position || 0;
+						const elapsedSinceSeek = performance.now() - seekRequestTime;
+						if (pos === 0 || (!e.data.isPaused && pos < timer && pos <= elapsedSinceSeek + 250))
+						{
+							awaitingZeroSeek = false;
+							seekRetried = false;
+						}
+						else
+						{
+							if (!e.data.isPaused && !seekRetried && elapsedSinceSeek > 400 && pos > elapsedSinceSeek + 250)
+							{
+								seekRetried = true;
+								seekRequestTime = performance.now();
+								if (typeof controller.seek === 'function')
+								{
+									controller.seek(0);
+								}
+								else if (links[songVal])
+								{
+									controller.loadUri(links[songVal]);
+									controller.play();
+								}
+							}
+							else if (pos >= timer && elapsedSinceSeek > 500)
+							{
+								resetPlayState();
+							}
+							return;
+						}
+					}
+
+					const activelyPlaying = !e.data.isPaused && !e.data.isBuffering && e.data.position > 0;
+
+					if (!clipStarted)
+					{
+						if (activelyPlaying)
+						{
+							if (e.data.position >= timer)
+							{
+								if (typeof controller.seek === 'function')
+								{
+									awaitingZeroSeek = true;
+									seekRequestTime = performance.now();
+									controller.seek(0);
+								}
+								else if (links[songVal])
+								{
+									controller.loadUri(links[songVal]);
+									controller.play();
+								}
+								return;
+							}
+							clipStarted = true;
+							clipStartPos = 0;
+							remainingMs = Math.max(100, timer - e.data.position);
+							lastResumeTime = performance.now();
+
+							createProgressbar('progressbar', (remainingMs / 1000).toString() + 's');
+							timeout = setTimeout(function() {
+								resetPlayState();
+							}, remainingMs);
+						}
+					}
+					else
+					{
+						if (e.data.position >= timer)
+						{
+							resetPlayState();
+							return;
+						}
+
+						if (e.data.isBuffering || e.data.isPaused)
+						{
+							if (timeout)
+							{
+								clearTimeout(timeout);
+								timeout = null;
+								remainingMs = Math.max(50, remainingMs - (performance.now() - lastResumeTime));
+								const inner = document.querySelector('#progressbar .inner');
+								if (inner) inner.style.animationPlayState = 'paused';
+							}
+						}
+						else if (!timeout)
+						{
+							lastResumeTime = performance.now();
+							const inner = document.querySelector('#progressbar .inner');
+							if (inner) inner.style.animationPlayState = 'running';
+							timeout = setTimeout(function() {
+								resetPlayState();
+							}, remainingMs);
+						}
 					}
 				});
 				EmbedController.addListener('playback_started', e => {
-					if (!songVisible)
+					if (!songVisible && playing)
 					{
-						createProgressbar('progressbar', (timer / 1000).toString() + 's');
 						document.getElementById("play-button").src = "img/stop.png";
-	    				document.getElementById("play-button").addEventListener('click', resetPlayState);
-
-						timeout = setTimeout(function() {
-							resetPlayState();
-						}, timer);
+						document.getElementById("play-button").addEventListener('click', resetPlayState);
 					}
 				});
 
-				document.querySelectorAll('.date-picker').forEach(
-					x => {
-						let today = getFormattedDate(new Date());
-						x.value = today;
-						updatePrevNextBtns();
-						dateparts = today.split('-');
-						date = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
-						songVal = getSongDay(date);
+				document.getElementById("play-button").addEventListener('click', playAudio);
 
-						x.addEventListener('change', () => {
-							resetHTML();
-							updatePrevNextBtns();
-							dateparts = x.value.split('-');
-							date = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
-							currentDate.innerHTML = date.toLocaleString('default', { month: 'long' }) + " " + date.getDate() + "<br><div class='quiz-year'>" + date.getFullYear() + "</div>";
-							songVal = getSongDay(date);
-
-							EmbedController.loadUri(links[songVal]);
-						});
-					}
-				);
+				if (links[songVal])
+				{
+					EmbedController.loadUri(links[songVal]);
+				}
 			};
 
 			IFrameAPI.createController(element, options, callback);
@@ -511,7 +752,7 @@
 		}
 
 		function updatePrevNextBtns() {
-			if (datepicker.value == getFormattedDate(new Date()))
+			if (datepicker.value >= getFormattedDate(new Date()))
 			{
 				next.src = "img/next-disabled.png";
 				next.style.cursor = "auto";
@@ -523,7 +764,7 @@
 				next.style.cursor = "pointer";
 				next.addEventListener('click', nextDay);
 			}
-			if (datepicker.value == getFormattedDate(firstDay))
+			if (datepicker.value <= getFormattedDate(firstDay))
 			{
 				prev.src = "img/prev-disabled.png";
 				prev.style.cursor = "auto";
@@ -546,17 +787,19 @@
 		}
 
 		function incrementDay(x) {
-			tmpDate = new Date();
-			tmpDate.setDate(date.getDate() + x);
+			const today = new Date();
+			today.setHours(0, 0, 0, 0);
+			let tmpDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + x);
+			if (tmpDate < firstDay) tmpDate = new Date(firstDay);
+			if (tmpDate > today) tmpDate = today;
 			datepicker.value = getFormattedDate(tmpDate);
 			datepicker.dispatchEvent(new Event('change'));
 		}
 
 		function getSongDay(date) {
-			const differenceInMilliseconds = date.getTime() - firstDay.getTime();
-			const dayIndex = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-
-			return dayIndex;
+			const utcTarget = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+			const utcStart = Date.UTC(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate());
+			return Math.max(0, Math.round((utcTarget - utcStart) / 86400000));
 		}
 
 		function getFormattedDate(date) {
@@ -567,14 +810,58 @@
 		}
 
 		function switchPlaylist(listName) {
-			resetHTML();
-			setDailySongVal(firstDay, listName);
+			if (songVisible && controller && typeof controller.pause === 'function')
+			{
+				controller.pause();
+			}
+			resetPlayState();
+			setDailySongVal(firstDay, listName, true);
 		}
 
+		window.addEventListener("popstate", function() {
+			if (songVisible && controller && typeof controller.pause === 'function')
+			{
+				controller.pause();
+			}
+			resetPlayState();
+			setDailySongVal(firstDay, null, false);
+		});
+
 		function playAudio() {
+			if (!controller || !links[songVal]) return;
 			document.getElementById("play-button").removeEventListener('click', playAudio);
-			controller.togglePlay();
+			document.getElementById("play-button").src = "img/stop.png";
+			document.getElementById("play-button").addEventListener('click', resetPlayState);
+			clipStarted = false;
+			clipStartPos = 0;
+			remainingMs = timer;
 			playing = true;
+			awaitingZeroSeek = false;
+			seekRetried = false;
+			if (lastKnownPosition > 0)
+			{
+				if (typeof controller.restart === 'function')
+				{
+					awaitingZeroSeek = true;
+					seekRequestTime = performance.now();
+					controller.restart();
+					return;
+				}
+				if (typeof controller.seek === 'function')
+				{
+					awaitingZeroSeek = true;
+					seekRequestTime = performance.now();
+					controller.seek(0);
+				}
+			}
+			if (typeof controller.play === 'function')
+			{
+				controller.play();
+			}
+			else
+			{
+				controller.togglePlay();
+			}
 		}
 
 		function seededRandomFunc(seed) {
@@ -590,7 +877,7 @@
 		}
 
 		function getDailySeed(date) {
-		    return (date.getUTCFullYear()) * 10000 + date.getUTCMonth() * 100 + date.getUTCDate();
+		    return date.getFullYear() * 10000 + date.getMonth() * 100 + date.getDate();
 		}
 
 		function shuffleArraySeeded(array, randomFunc) {
@@ -610,11 +897,28 @@
 
 		function resetPlayState()
 		{
-			clearTimeout(timeout);
+			if (timeout)
+			{
+				clearTimeout(timeout);
+				timeout = null;
+			}
+			clipStarted = false;
+			awaitingZeroSeek = false;
+			seekRetried = false;
 			if (playing)
 			{
 				playing = false;
-				controller.togglePlay();
+				if (controller)
+				{
+					if (typeof controller.pause === 'function')
+					{
+						controller.pause();
+					}
+					else
+					{
+						controller.togglePlay();
+					}
+				}
 			}
 
 			document.getElementById('progressbar').innerHTML = "";			
@@ -623,63 +927,93 @@
 			document.getElementById("play-button").addEventListener('click', playAudio);
 		}
 
-		async function setDailySongVal(fDay = firstDay, playlist = defaultPlaylist) {
+		async function setDailySongVal(fDay = firstDay, playlist = null, pushHistory = false) {
+			initDatePicker();
+			const gen = ++playlistGeneration;
+			const currentUrl = new URL(window.location.href);
+
+			let playlistTitles = {};
+			try {
+				const names = await fetch('jsons/names-to-jsons.txt');
+				if (!names.ok) return;
+				const ntjText = await names.text();
+				if (gen !== playlistGeneration) return;
+				const ntjSplit = ntjText.split('\n');
+				for (const ntj of ntjSplit)
+				{
+					const ntjParts = ntj.split('\t');
+					if (ntjParts[0] && ntjParts[1])
+					{
+						playlistTitles[ntjParts[0].trim()] = ntjParts[1].trim();
+					}
+				}
+			} catch (err) {
+				console.error('Failed to load playlist index:', err);
+				return;
+			}
+
+			if (playlist === null)
+			{
+				const requested = currentUrl.searchParams.get("playlist");
+				playlist = (requested && Object.prototype.hasOwnProperty.call(playlistTitles, requested)) ? requested : defaultPlaylist;
+			}
+
 			if (playlist != defaultPlaylist)
 			{
-				url.searchParams.set("playlist", playlist);
-				history.pushState({}, "", url);
+				currentUrl.searchParams.set("playlist", playlist);
 			}
 			else
 			{
-				url.searchParams.delete("playlist");
-				history.pushState({}, "", url);
+				currentUrl.searchParams.delete("playlist");
 			}
-
-			const file = await fetch(`jsons/${playlist}.json`);
-			var fileText = await file.text();
-			parseStringToJsonToArrays(fileText, false);
-
-			songs = shuffleArraySeeded(songs, seededRandomFunc(getDailySeed(firstDay)));
-			links = shuffleArraySeeded(links, seededRandomFunc(getDailySeed(firstDay)));
-
-			// now with alphabetical powers
-			let sortedSongs = songs.slice();
-			sortedSongs.sort(sortBySongName);
-			autocomplete(document.getElementById("myInput"), sortedSongs);
-
-			while (songVal >= songs.length)
+			if (currentUrl.href !== window.location.href)
 			{
-				let tmp = shuffleArraySeeded(songs, seededRandomFunc(getDailySeed(firstDay)));
-				songs.push(...tmp);
-				tmp = shuffleArraySeeded(links, seededRandomFunc(getDailySeed(firstDay)));
-				links.push(...tmp);
-			}
-
-			const names = await fetch('jsons/names-to-jsons.txt');
-			const ntjText = await names.text();
-			const ntjSplit = ntjText.split('\n');
-
-			for (const ntj of ntjSplit)
-			{
-				ntjParts = ntj.split('\t');
-				if (ntjParts[0] == playlist)
+				if (pushHistory)
 				{
-					document.getElementById('playlist-name').innerText = ntjParts[1];
+					history.pushState({}, "", currentUrl);
+				}
+				else
+				{
+					history.replaceState({}, "", currentUrl);
 				}
 			}
 
+			try {
+				const file = await fetch(`jsons/${playlist}.json`);
+				if (!file.ok) return;
+				var fileText = await file.text();
+				if (gen !== playlistGeneration) return;
+				if (!parseStringToJsonToArrays(fileText, false)) return;
+			} catch (err) {
+				console.error('Failed to load playlist JSON:', err);
+				return;
+			}
+
+			resetHTML();
+			baseSongs = songs.slice();
+			baseLinks = links.slice();
+			loadedCycles = 0;
+			songs = [];
+			links = [];
+			ensureSongsUpTo(songVal);
+
+			// now with alphabetical powers
+			let sortedSongs = Array.from(new Set(baseSongs));
+			sortedSongs.sort(sortBySongName);
+			autocomplete(document.getElementById("myInput"), sortedSongs);
+
+			document.getElementById('playlist-name').innerText = (playlist === defaultPlaylist) ? "Spotify's Most Streamed" : (playlistTitles[playlist] || playlist);
+
 			currentDate.innerHTML = date.toLocaleString('default', { month: 'long' }) + " " + date.getDate() + "<br><div class='quiz-year'>" + date.getFullYear() + "</div>";
 
-			controller.loadUri(links[songVal]);
+			if (controller && links[songVal])
+			{
+				controller.loadUri(links[songVal]);
+			}
 		}
 
 		function sortBySongName(a, b) {
-			if (a[0].toLowerCase() === b[0].toLowerCase()) {
-					return 0;
-			}
-			else {
-				return (a[0].toLowerCase() < b[0].toLowerCase()) ? -1 : 1;
-			}
+			return a.localeCompare(b, undefined, { sensitivity: 'base' });
 		}
 
 		function showPopup() {
@@ -690,51 +1024,81 @@
 		function uploadPlaylist() {
 			let input = document.createElement('input');
 			input.type = 'file';
+			input.accept = '.json';
 			input.onchange = _ => {
 				let file = input.files[0];
+				if (!file) return;
 				let reader = new FileReader();
 
-				reader.readAsText(file);
-				var fileText = "";
-
 				reader.onload = function() {
-					fileText = reader.result;
+					try {
+						if (!parseStringToJsonToArrays(reader.result, false)) return;
+					} catch (err) {
+						console.error('Invalid playlist JSON:', err);
+						return;
+					}
 
-					parseStringToJsonToArrays(fileText, true);
+					++playlistGeneration;
+					resetHTML();
+					const cleanUrl = new URL(window.location.href);
+					cleanUrl.searchParams.delete("playlist");
+					if (cleanUrl.href !== window.location.href)
+					{
+						history.pushState({}, "", cleanUrl);
+					}
 
-					let tmpArr = songs.slice();
-					tmpArr = shuffle(tmpArr);
-					autocomplete(document.getElementById("myInput"), tmpArr);
-					document.getElementById('songNum').max = tmpArr.length;
-					document.getElementById('songNum').value = 1;
-					document.getElementById('playlist').innerHTML = "<b>Current Playlist:</b><br/>" + file.name.substr(0,file.name.indexOf('.json'));
-				}
+					baseSongs = songs.slice();
+					baseLinks = links.slice();
+					loadedCycles = 0;
+					songs = [];
+					links = [];
+					ensureSongsUpTo(songVal);
+
+					let sortedSongs = Array.from(new Set(baseSongs));
+					sortedSongs.sort(sortBySongName);
+					autocomplete(document.getElementById("myInput"), sortedSongs);
+
+					document.getElementById('playlist-name').innerText = file.name.replace(/\.json$/i, '');
+					if (controller && links[songVal])
+					{
+						controller.loadUri(links[songVal]);
+					}
+				};
+
+				reader.readAsText(file);
 			};
 			input.click();
 		}
 
 		function parseStringToJsonToArrays(str, rand) {
 			const fileJSON = JSON.parse(str.toString());
+			if (!Array.isArray(fileJSON))
+			{
+				throw new Error("Playlist JSON must be an array");
+			}
 
-			links = [];
-			songs = [];
-			tmpArr = [];
+			let tmpArr = [];
 
 			for (let i of fileJSON)
 			{
-				if (i.trackLink)
+				if (i && i.trackLink)
 				{
 					let trackUri = i.trackLink.replace("\\/", "/");
 					if (trackUri.includes("open.spotify.com/track/")) {
 						let trackId = trackUri.split("track/")[1].split("?")[0];
 						trackUri = "spotify:track:" + trackId;
 					}
-					tmpDict = {
+					tmpArr.push({
 						"songStats": i.title + " - " + i.artist,
+						"artist": String(i.artist || ""),
 						"trackLink": trackUri
-					};
-					tmpArr.push(tmpDict);
+					});
 				}
+			}
+
+			if (!tmpArr.length)
+			{
+				return false;
 			}
 
 			if (rand)
@@ -742,11 +1106,16 @@
 				tmpArr = shuffle(tmpArr);
 			}
 
+			songs = [];
+			links = [];
+			artistBySong = new Map();
 			for (let i = 0; i < tmpArr.length; i++)
 			{
 				songs.push(tmpArr[i].songStats);
 				links.push(tmpArr[i].trackLink);
+				artistBySong.set(tmpArr[i].songStats, tmpArr[i].artist);
 			}
+			return true;
 		}
 
 		function shuffle(array) {
@@ -767,7 +1136,15 @@
 		}
 
 		function resetHTML() {
+			if (songVisible && controller && typeof controller.pause === 'function')
+			{
+				controller.pause();
+			}
 			resetPlayState();
+			lastKnownPosition = 0;
+
+			document.getElementById("myInput").value = "";
+			document.querySelectorAll(".autocomplete-items").forEach(function(el) { el.remove(); });
 
 			guess = 1;
 			timer = 2000;
@@ -782,8 +1159,10 @@
 			document.getElementById('main-section-3').style.display = 'flex';
 			document.getElementById('main-section-4').style.display = 'flex';
 			document.getElementById('main-section-completed').style.display = 'none';
-			document.getElementById('player-iframe').style.width = '0%';
-			document.getElementById('player-iframe').style.height = '0%';
+			document.getElementById('player-iframe').style.width = '0';
+			document.getElementById('player-iframe').style.height = '0';
+			document.getElementById('player-iframe').style.overflow = 'hidden';
+			document.getElementById('player-iframe').style.padding = '0';
 
 			songVisible = false;
 		}
@@ -813,57 +1192,76 @@
 		}
 
 		function displayCorrectSong() {
-			clearTimeout(timeout);
+			resetPlayState();
 			songVisible = true;
+			lastKnownPosition = 0;
 
-			controller.loadUri(links[songVal]);
+			if (controller && links[songVal])
+			{
+				controller.loadUri(links[songVal]);
+			}
 
 			document.getElementById('player-iframe').style.width = '100%';
 			document.getElementById('player-iframe').style.height = 'auto';
+			document.getElementById('player-iframe').style.overflow = 'visible';
+			document.getElementById('player-iframe').style.padding = '5px';
 			document.getElementById('main-section-completed').style.display = 'flex';
 			document.getElementById('main-section-3').style.display = 'none';
 			document.getElementById('main-section-4').style.display = 'none';
 		}
 
 		function checkForSimilarArtist(str1, str2) {
-			var str1dashless = str1.substr(str1.lastIndexOf('-') + 2);
-			var str2dashless = str2.substr(str2.lastIndexOf('-') + 2);
+			const COMMA_ARTISTS = [
+				"earth, wind & fire",
+				"tyler, the creator",
+				"crosby, stills, nash & young",
+				"crosby, stills & nash",
+				"blood, sweat & tears",
+				"emerson, lake & palmer",
+				"peter, paul and mary",
+				"10,000 maniacs"
+			];
+			const extractArtists = function(s) {
+				let raw = "";
+				if (artistBySong.has(s))
+				{
+					raw = artistBySong.get(s);
+				}
+				else
+				{
+					const sep = s.lastIndexOf(' - ');
+					if (sep === -1) return [];
+					raw = s.slice(sep + 3);
+				}
+				let norm = raw.normalize("NFD").replace(/[\u0300-\u036f]/g, "").normalize("NFC").toLowerCase();
+				const found = [];
+				for (const ca of COMMA_ARTISTS)
+				{
+					if (norm.includes(ca))
+					{
+						found.push(ca);
+						norm = norm.split(ca).join(",");
+					}
+				}
+				for (const part of norm.split(","))
+				{
+					const trimmed = part.trim();
+					if (trimmed) found.push(trimmed);
+				}
+				return found;
+			};
 
-			var artists1 = str1dashless.split(",");
-			var artists2 = str2dashless.split(",");
-
-			for (let i = 0; i < artists1.length; i++)
-			{
-				if (artists1[i].charAt(0) == ' ')
-					artists1[i] = artists1[i].substr(1);
-			}
-
-			for (let i = 0; i < artists2.length; i++)
-			{
-				if (artists2[i].charAt(0) == ' ')
-					artists2[i] = artists2[i].substr(1);
-			}
-
-			for (let i = 0; i < artists1.length; i++)
-			{
-				if (artists2.includes(artists1[i]))
-					return true;
-			}
-
-			for (let i = 0; i < artists2.length; i++)
-			{
-				if (artists1.includes(artists2[i]))
-					return true;
-			}
-
-			return false;
+			const artists1 = extractArtists(str1);
+			const artists2 = extractArtists(str2);
+			return artists1.some(function(a) { return artists2.includes(a); });
 		}
 
 		function skip() {
+			if (!songs.length || songVisible) return;
 			resetPlayState();
 
 			document.getElementById('myInput').value = "";
-			document.getElementById('guess' + guess).innerHTML = "-- Skipped --";
+			document.getElementById('guess' + guess).innerText = "-- Skipped --";
 			document.getElementById('x' + guess).innerHTML = '<img src="img/x.png" style="width:25px; margin:auto;"></img>';
 			if (guess == 6)
 			{
@@ -883,8 +1281,9 @@
 
 			if (songs.includes(input))
 			{
+				resetPlayState();
 				document.getElementById('myInput').value = "";
-				document.getElementById('guess' + guess).innerHTML = input;
+				document.getElementById('guess' + guess).innerText = input;
 
 				if (songs[songVal] == input)
 				{
@@ -915,106 +1314,99 @@
 		}
 
 		function autocomplete(inp, arr) {
-		  /*the autocomplete function takes two arguments,
-		  the text field element and an array of possible autocompleted values:*/
-			var currentFocus;
-	  		/*execute a function when someone writes in the text field:*/
+			if (inp._autocompleteAbort)
+			{
+				inp._autocompleteAbort.abort();
+			}
+			const ac = new AbortController();
+			inp._autocompleteAbort = ac;
+			const sig = { signal: ac.signal };
+
+			var currentFocus = -1;
 			inp.addEventListener("input", function(e) {
-				var a, b, i, val = this.value;
-	      		/*close any already open lists of autocompleted values*/
+				var a = null, b, i, val = this.value;
 				closeAllLists();
-				if (!val) { return false;}
 				currentFocus = -1;
-	      		/*create a DIV element that will contain the items (values):*/
-				a = document.createElement("DIV");
-				a.setAttribute("id", this.id + "autocomplete-list");
-				a.setAttribute("class", "autocomplete-items");
-	      		/*append the DIV element as a child of the autocomplete container:*/
-				this.parentNode.appendChild(a);
-	      		/*for each item in the array...*/
+				if (!val || val.length < 2) { return false; }
 				searchResults = 0;
 				for (i = 0; i < arr.length; i++) {
-	        		/*check if the item starts with the same letters as the text field value:*/
-					if (val.length >= 2 && arr[i].toUpperCase().includes(val.toUpperCase())) {
-	          			/*create a DIV element for each matching element:*/
+					if (arr[i].toUpperCase().includes(val.toUpperCase())) {
+						if (!a) {
+							a = document.createElement("DIV");
+							a.setAttribute("id", this.id + "autocomplete-list");
+							a.setAttribute("class", "autocomplete-items");
+							this.parentNode.appendChild(a);
+						}
+						const itemValue = arr[i];
 						b = document.createElement("DIV");
-						index = arr[i].toUpperCase().indexOf(val.toUpperCase());
-	          			/*make the matching letters bold:*/
-						b.innerHTML = arr[i].substr(0,index);
-						b.innerHTML += "<strong>" + arr[i].substr(index, val.length) + "</strong>";
-						b.innerHTML += arr[i].substr(index+val.length);
-	          			/*insert a input field that will hold the current array item's value:*/
-						b.innerHTML += '<input type="hidden" value="' + arr[i].replaceAll('"', '&quot;') + '">';
-	          			/*execute a function when someone clicks on the item value (DIV element):*/
+						index = itemValue.toUpperCase().indexOf(val.toUpperCase());
+						b.appendChild(document.createTextNode(itemValue.substr(0, index)));
+						const strongEl = document.createElement("STRONG");
+						strongEl.textContent = itemValue.substr(index, val.length);
+						b.appendChild(strongEl);
+						b.appendChild(document.createTextNode(itemValue.substr(index + val.length)));
 						b.addEventListener("click", function(e) {
-	              			/*insert the value for the autocomplete text field:*/
-							inp.value = this.getElementsByTagName("input")[0].value;
-	              			/*close the list of autocompleted values,
-	              			(or any other open lists of autocompleted values:*/
+							inp.value = itemValue;
+							currentFocus = -1;
 							closeAllLists();
 						});
 						a.appendChild(b);
-
 						searchResults++;
 					}
 				}
-			});
-	  		/*execute a function presses a key on the keyboard:*/
+			}, sig);
 			inp.addEventListener("keydown", function(e) {
 				var x = document.getElementById(this.id + "autocomplete-list");
 				if (x) x = x.getElementsByTagName("div");
 				if (e.keyCode == 40) {
-	        		/*If the arrow DOWN key is pressed,
-	        		increase the currentFocus variable:*/
-					currentFocus++;
-	        		/*and and make the current item more visible:*/
-					addActive(x);
-	      		} else if (e.keyCode == 38) { //up
-	        		/*If the arrow UP key is pressed,
-	        		decrease the currentFocus variable:*/
-	      			currentFocus--;
-	        		/*and and make the current item more visible:*/
-	      			addActive(x);
-	      		} else if (e.keyCode == 13) {
-        			/*If the ENTER key is pressed, prevent the form from being submitted,*/
-	      			e.preventDefault();
-	      			if (currentFocus > -1) {
-	          			/*and simulate a click on the "active" item:*/
-	      				if (x) x[currentFocus].click();
-	      			}
-	    		}
-	    	});
+					if (x && x.length) {
+						e.preventDefault();
+						currentFocus++;
+						addActive(x);
+					}
+				} else if (e.keyCode == 38) {
+					if (x && x.length) {
+						e.preventDefault();
+						currentFocus--;
+						addActive(x);
+					}
+				} else if (e.keyCode == 13) {
+					e.preventDefault();
+					if (currentFocus > -1 && x && x[currentFocus]) {
+						x[currentFocus].click();
+					} else {
+						closeAllLists();
+						checkAnswer();
+					}
+				}
+			}, sig);
 			function addActive(x) {
-	    		/*a function to classify an item as "active":*/
-				if (!x) return false;
-		    	/*start by removing the "active" class on all items:*/
+				if (!x || !x.length) return false;
 				removeActive(x);
 				if (currentFocus >= x.length) currentFocus = 0;
 				if (currentFocus < 0) currentFocus = (x.length - 1);
-		    	/*add class "autocomplete-active":*/
 				x[currentFocus].classList.add("autocomplete-active");
+				x[currentFocus].scrollIntoView({ block: "nearest" });
 			}
 			function removeActive(x) {
-		    	/*a function to remove the "active" class from all autocomplete items:*/
 				for (var i = 0; i < x.length; i++) {
 					x[i].classList.remove("autocomplete-active");
 				}
 			}
 			function closeAllLists(elmnt) {
-		    	/*close all autocomplete lists in the document,
-		    	except the one passed as an argument:*/
 				var x = document.getElementsByClassName("autocomplete-items");
 				for (var i = 0; i < x.length; i++) {
 					if (elmnt != x[i] && elmnt != inp) {
 						x[i].parentNode.removeChild(x[i]);
+						currentFocus = -1;
 					}
 				}
 			}
-			/*execute a function when someone clicks in the document:*/
 			document.addEventListener("click", function (e) {
 				closeAllLists(e.target);
-			});
+			}, sig);
 		}
 	</script>
+	<script src="https://open.spotify.com/embed-podcast/iframe-api/v1" async></script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 billboard-no-1s	#1 Hits (All-Time)	Default
 1960s	1960s	Billboard Hits
 1970s	1970s	Billboard Hits
-1980s	1980s 	Billboard Hits
-1990s	1990s 	Billboard Hits
-2000s	2000s 	Billboard Hits
-2010s	2010s 	Billboard Hits
-2020s	2020s 	Billboard Hits
+1980s	1980s	Billboard Hits
+1990s	1990s	Billboard Hits
+2000s	2000s	Billboard Hits
+2010s	2010s	Billboard Hits
+2020s	2020s	Billboard Hits
 christmas	Christmas	Genres
 disney	Disney	Genres
 kpop	K-Pop	Genres

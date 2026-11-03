@@ -1,6 +1,8 @@
+<!DOCTYPE html>
 <html>
 
 <head>
+	<meta charset="UTF-8">
 	<title>Melodle Song Quiz</title>
 	<link rel="icon" type="image/x-icon" href="img/logo.png">
 	<style>
@@ -8,6 +10,11 @@
 			font-family: Helvetica;
 			background-color: #f6f6f6;
 			overscroll-behavior: none;
+			margin: 0;
+			min-height: 100vh;
+			display: flex;
+			padding: 5vh 16px;
+			box-sizing: border-box;
 		}
 
 		table {
@@ -82,8 +89,7 @@
 			gap: 5px;
 			margin-top: 3%;
 			border: 1px solid black;
-			padding-left: 2%;
-			padding-right: 2%;
+			padding: 10px 2%;
 		}
 
 		.checkboxes {
@@ -124,14 +130,10 @@
 		}
 
 		.container {
-			position: absolute;
+			position: relative;
 			margin: auto;
 			display: block;
 			width: 750px;
-			height: 90%;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
 		}
 
 		.container-row {
@@ -159,6 +161,7 @@
 
 		#new-quiz-section {
 			position: absolute;
+			box-sizing: border-box;
 			border: 1px solid black;
 			background: #D3CCCA;
 			padding: 0px;
@@ -252,6 +255,7 @@
 			width: 130%;
 			left: -15%;
 			position: relative;
+			box-sizing: border-box;
 		}
 
 		#game-over-section-1 {
@@ -269,17 +273,24 @@
 
 		#playlist {
 			text-align: center;
-			padding-right: 13;
+			padding-right: 13px;
 			font-size: 17px;
 		}
 
 		#player-iframe {
-			width: 0%;
-			height: 0%;
+			width: 0;
+			height: 0;
+			overflow: hidden;
+			padding: 0;
+			box-sizing: border-box;
+			display: block;
 		}
 
 		#seedInput {
 			text-align: center;
+			width: 100%;
+			padding: 10px 6px;
+			box-sizing: border-box;
 		}
 
 		/* Chrome, Safari, Edge, Opera -- to remove arrows*/
@@ -343,6 +354,7 @@
 			background-color: #f1f1f1;
 			padding: 10px 35px 10px 10px;
 			font-size: 16px;
+			box-sizing: border-box;
 		}
 
 		input[type=text] {
@@ -392,11 +404,54 @@
 			position: static;
 		}
 
+		.row-pause-wrap {
+			position: relative;
+			width: 22px;
+			height: 22px;
+			margin: auto;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+		}
+
+		.clip-ring-svg {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 22px;
+			height: 22px;
+			transform: rotate(-90deg);
+		}
+
+		.clip-ring-bg {
+			fill: none;
+			stroke: #d4d4d4;
+			stroke-width: 2.2;
+		}
+
+		.clip-ring-fg {
+			fill: none;
+			stroke: #191414;
+			stroke-width: 2.2;
+			stroke-linecap: round;
+			stroke-dasharray: 56.5487;
+			stroke-dashoffset: 56.5487;
+		}
+
+		.row-pause-icon {
+			width: 8px;
+			height: 8px;
+			position: static;
+			pointer-events: none;
+		}
+
 		.answer-box {
 			display: grid;
 			grid-template-columns: 7fr 1fr;
 			gap: 2px;
 			align-items: center;
+			min-height: 22px;
 		}
 
 		.hidden-item {
@@ -407,7 +462,9 @@
 			position: absolute;
 			height: 16px;
 			width: auto;
-			left: 93%;
+			left: auto;
+			right: 12px;
+			margin: 0;
 			top: 50%;
 			transform: translate(0, -50%);
 			cursor: pointer;
@@ -474,10 +531,67 @@
 		}
 
 		/* end section for difficulty toggle */
-</style>
+		.mode-nav {
+			position: fixed;
+			top: 20px;
+			left: 16px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			z-index: 100;
+			font-family: Helvetica, Arial, sans-serif;
+		}
+		.mode-nav a {
+			display: block;
+			padding: 7px 14px;
+			border-radius: 8px;
+			font-size: 13px;
+			font-weight: bold;
+			text-decoration: none;
+			text-align: center;
+			color: #191414;
+			background-color: #ffffff;
+			border: 1px solid #cccccc;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+			cursor: pointer;
+		}
+		.mode-nav a:hover {
+			background-color: #e8e8e8;
+		}
+		.mode-nav a.active {
+			background-color: #191414;
+			color: #ffffff;
+			border-color: #191414;
+		}
+		@media (max-width: 1260px) {
+			body {
+				flex-direction: column;
+				align-items: center;
+				gap: 16px;
+			}
+			.mode-nav {
+				position: static;
+				flex-direction: row;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+		}
+		@media (max-width: 1010px) {
+			#main-section-4 {
+				width: 100%;
+				left: 0;
+			}
+		}
+	</style>
 </head>
 
 <body>
+	<nav class="mode-nav">
+		<a href="index.html">Daily Melodle</a>
+		<a href="quiz.html" class="active">Song Quiz</a>
+		<a href="billboard.html">Billboard</a>
+		<a href="timeline.html">Timeline</a>
+	</nav>
 	<div class="container">
 		<div class="container-row" id="title-row">
 			<div id="title">
@@ -491,9 +605,9 @@
 			<div id="checkboxes" class="checkboxes">
 			</div>
 			<div class="new-quiz-btn-container" id="new-quiz-buttons">
-				<button id="newQuizBtn" class="newQuizBtn" onclick="createSongQuiz()">New Quiz</button>
-				<input id="seedInput" type="text" placeholder="Seed ...">
-				<button id="newSeedBtn" class="short-button" onclick="generateSeed()">New Seed</button>
+				<button id="newQuizBtn" class="newQuizBtn" onclick="startRandomQuiz()">New Quiz</button>
+				<input id="seedInput" type="text" placeholder="Seed ..." onkeydown="if(event.key==='Enter'){event.preventDefault();createSongQuiz();}">
+				<button id="newSeedBtn" class="short-button" onclick="createSongQuiz()">Load Seed</button>
 			</div>
 		</div>
 		<div class="container-row" id="main-section-1">
@@ -518,7 +632,7 @@
 					<img class="submit" src="img/submit.png" onclick="checkAnswer()">
 				</div>
 			</div>
-			<div class="modals-subcontainer">
+			<div class="modals-subcontainer" id="difficulty-container">
 				<label class="switch">
 					<input type="checkbox" id="difficulty">
 					<span class="slider round"></span>
@@ -638,8 +752,6 @@
 		</div>
 	</div>
 
-	<script src="https://open.spotify.com/embed-podcast/iframe-api/v1" async>
-	</script>
 	<script type="text/javascript">
 		var quizLinks = [];
 		var songLinks = [];
@@ -657,29 +769,80 @@
 
 		let timeRunning = null;
 		let firstQuiz = true;
+		let playbackToken = 0;
+		let pendingLoadToken = -1;
+		let clipEndTime = null;
+		let clipOriginSec = 0;
+		let clipStartSec = 0;
+		let clipTotalSec = 4;
+		let activeRowIndex = -1;
+		let quizEmbedController = null;
+		let embedIsPlaying = false;
+		let embedPauseIgnoreUntil = 0;
+		let quizTitles = [];
+		let quizGeneration = 0;
+		const RING_CIRCUMFERENCE = 2 * Math.PI * 9;
+		let clipRafId = null;
+		let guessedSongs = new Set();
+		const preloadAudio = new Audio();
+		preloadAudio.preload = "auto";
 
 		window.onSpotifyIframeApiReady = (IFrameAPI) => {
 			const element = document.getElementById('embed-iframe');
-			songVal = 0;
 			const options = {
 				width: '100%',
 				height: '200px'
 			};
 			const callback = (EmbedController) => {
-			document.querySelectorAll('#hiddenPlayBtn').forEach(
-				hiddenPlayBtn => {
-					hiddenPlayBtn.addEventListener('click', () => {
-						EmbedController.loadUri(songLinks[songVal]);
-					});
-				})
+				quizEmbedController = EmbedController;
+				EmbedController.addListener('playback_update', function(e) {
+					if (!e || !e.data) return;
+					embedIsPlaying = !e.data.isPaused;
+					if (e.data.isPaused)
+					{
+						embedPauseIgnoreUntil = 0;
+						return;
+					}
+					if (performance.now() < embedPauseIgnoreUntil) return;
+					if (playing || activeRowIndex !== -1)
+					{
+						pausePlayback();
+					}
+				});
+				document.querySelectorAll('#hiddenPlayBtn').forEach(
+					hiddenPlayBtn => {
+						hiddenPlayBtn.addEventListener('click', () => {
+							pausePlayback();
+							if (songLinks[songVal]) {
+								EmbedController.loadUri(songLinks[songVal]);
+							}
+						});
+					}
+				);
+				if (document.getElementById("giveUpBtn").disabled && songLinks[songVal])
+				{
+					EmbedController.loadUri(songLinks[songVal]);
+				}
 			};
 
 			IFrameAPI.createController(element, options, callback);
 		};
 
+		function pauseQuizEmbed() {
+			if (quizEmbedController && typeof quizEmbedController.pause === "function")
+			{
+				if (embedIsPlaying)
+				{
+					embedPauseIgnoreUntil = performance.now() + 1000;
+				}
+				quizEmbedController.pause();
+			}
+		}
+
 		document.addEventListener('visibilitychange', function() {
 			if (document.visibilityState == 'hidden') {
 				document.getElementById("pause-button").click();
+				pauseQuizEmbed();
 			}
 		});
 
@@ -697,13 +860,16 @@
 			jsonList = [];
 			for (let i = 0; i < tmp.length; i++)
 			{
-				jsonList.push(tmp[i].split('\t'));
+				const line = tmp[i].trim();
+				if (!line) continue;
+				const cols = line.split('\t').map(function(c) { return c.trim(); });
+				if (cols.length >= 3) jsonList.push(cols);
 			}
 
 			let categories = [];
 			for (const json of jsonList)
 			{
-				category = json[2].replace('\r','');
+				category = json[2];
 				if (!categories.includes(category))
 				{
 					categories.push(category);
@@ -761,6 +927,9 @@
 				document.getElementById("checkboxes").appendChild(cat[1]);
 			}
 
+			document.getElementById("checkboxes").addEventListener("change", updateNewQuizBtn);
+			updateNewQuizBtn();
+
 			generateSeed();
 			setVolume();
 			createSongQuiz();
@@ -768,14 +937,77 @@
 			firstQuiz = false;
 		});
 
-		audio.addEventListener("loadeddata", function() {
+		function updateNewQuizBtn() {
+			const checkedCount = document.querySelectorAll('#checkboxes input[type="checkbox"]:checked').length;
+			document.getElementById("newQuizBtn").disabled = (checkedCount === 0);
+			document.getElementById("newSeedBtn").disabled = (checkedCount === 0);
+		}
+
+		audio.addEventListener("loadedmetadata", function() {
+			const token = pendingLoadToken;
+			pendingLoadToken = -1;
+			if (token !== playbackToken) return;
 			if (playing)
 			{
-				startPlayback();
+				startPlayback(token);
 			}
 			else
 			{
-				playClip();
+				playClip(token);
+			}
+		});
+
+		audio.addEventListener("timeupdate", function() {
+			if (clipEndTime !== null && !audio.paused && !audio.seeking && audio.currentTime >= clipEndTime)
+			{
+				finishCurrentClip(playbackToken);
+			}
+		});
+
+		audio.addEventListener("ended", function() {
+			if (playing || clipEndTime !== null || activeRowIndex !== -1)
+			{
+				finishCurrentClip(playbackToken);
+			}
+		});
+
+		audio.addEventListener("error", function() {
+			if (audio.getAttribute("src"))
+			{
+				pausePlayback();
+			}
+		});
+
+		audio.addEventListener("pause", function() {
+			if (pendingLoadToken === -1 && activeRowIndex !== -1 && !audio.ended && !audio.seeking)
+			{
+				pausePlayback();
+			}
+		});
+
+		difficulty.addEventListener("change", function() {
+			if (activeRowIndex === -1 || audio.paused) return;
+			const dur = (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : 30;
+			if (difficulty.checked)
+			{
+				clipEndTime = null;
+				clipStartSec = clipOriginSec;
+				clipTotalSec = Math.max(0.1, dur - clipOriginSec);
+			}
+			else
+			{
+				const clipSec = timer / 1000;
+				const endSec = Math.min(clipOriginSec + clipSec, dur - 0.03);
+				if (audio.currentTime < endSec)
+				{
+					clipStartSec = clipOriginSec;
+					clipEndTime = endSec;
+					clipTotalSec = Math.max(0.1, clipEndTime - clipStartSec);
+				}
+				else
+				{
+					finishCurrentClip(playbackToken);
+				}
 			}
 		});
 
@@ -804,87 +1036,222 @@
 			setVolume();
 		}
 
-		function showNewQuizDialog() {
+		let fadeoutTimer = null;
+		function showNewQuizDialog(msg = "New quiz generated!") {
 			dialog = document.getElementById("new-quiz-section");
 			header = document.getElementById("header");
+			dialog.innerHTML = "<b>" + msg + "</b>";
 
+			if (fadeoutTimer) clearTimeout(fadeoutTimer);
 			dialog.className = "dialog-visible";
-			dialog.style.width = header.offsetWidth - 1;
-			dialog.style.height = header.offsetHeight - 1;
-			dialog.style.top = header.offsetTop - 1;
-			dialog.style.left = header.offsetLeft - 1;
+			dialog.style.width = header.offsetWidth + "px";
+			dialog.style.height = header.offsetHeight + "px";
+			dialog.style.top = header.offsetTop + "px";
+			dialog.style.left = header.offsetLeft + "px";
 
-			const fadeoutTimer = setTimeout(function() {
+			fadeoutTimer = setTimeout(function() {
 				dialog.className = "dialog-invisible";
 			}, 2000);
 		}
 
-		function loadAudio() {
-			playing = true;
+		function cancelClipMonitor() {
+			playbackToken++;
+			clipEndTime = null;
+			if (clipRafId !== null)
+			{
+				cancelAnimationFrame(clipRafId);
+				clipRafId = null;
+			}
 			clearTimeout(timeRunning);
-			audio.src = quizLinks[songVal];
+			timeRunning = null;
 		}
 
-		function startPlayback() {
-			audio.currentTime = Math.min(timestamps[songVal], audio.duration - 4);
-			audio.play();
-			toggleButtons();
-			
-			timeRunning = setTimeout(function() {
-				if (songVal != totalSongs - 1)
+		function preloadNextTrack(idx) {
+			if (idx >= 0 && idx < quizLinks.length && quizLinks[idx])
+			{
+				preloadAudio.src = quizLinks[idx];
+			}
+		}
+
+		function showRowPlaying(idx) {
+			if (activeRowIndex !== -1 && activeRowIndex !== idx)
+			{
+				clearRowPlaying();
+			}
+			activeRowIndex = idx;
+			const spk = document.getElementById("speaker" + (idx + 1));
+			const wrap = document.getElementById("pauseWrap" + (idx + 1));
+			const fg = document.getElementById("ringFg" + (idx + 1));
+			if (fg) fg.style.strokeDashoffset = String(RING_CIRCUMFERENCE);
+			if (spk) spk.style.display = "none";
+			if (wrap) wrap.style.display = "inline-flex";
+		}
+
+		function clearRowPlaying() {
+			if (activeRowIndex === -1) return;
+			const idx = activeRowIndex;
+			activeRowIndex = -1;
+			const spk = document.getElementById("speaker" + (idx + 1));
+			const wrap = document.getElementById("pauseWrap" + (idx + 1));
+			const fg = document.getElementById("ringFg" + (idx + 1));
+			if (fg) fg.style.strokeDashoffset = String(RING_CIRCUMFERENCE);
+			if (wrap) wrap.style.display = "none";
+			if (spk) spk.style.display = "";
+		}
+
+		function finishCurrentClip(token) {
+			if (token !== playbackToken)
+			{
+				return;
+			}
+			clipEndTime = null;
+			if (clipRafId !== null)
+			{
+				cancelAnimationFrame(clipRafId);
+				clipRafId = null;
+			}
+			clearRowPlaying();
+			if (playing)
+			{
+				const activeCount = quizSongs.length || totalSongs;
+				if (songVal < activeCount - 1)
 				{
 					incrementSong(1);
 				}
 				else
 				{
 					pausePlayback();
-					incrementSong(-1 * (totalSongs - 1));
+					incrementSong(-1 * songVal);
 				}
-			}, timer);
-		}
-
-		function loadClip(i) {
-			clipIndex = i;
-			playing = false;
-			clearTimeout(timeRunning);
-			audio.src = quizLinks[clipIndex];
-		}
-
-		function playClip() {
-			if (difficulty.checked)
-			{
-				audio.play();
 			}
 			else
 			{
-				audio.currentTime = Math.min(timestamps[songVal], audio.duration - 4);
-				audio.play();
-							
-				timeRunning = setTimeout(function() {
-					audio.pause();
-				}, timer);
+				audio.pause();
 			}
 		}
 
+		function monitorClipProgress(token) {
+			if (token !== playbackToken || activeRowIndex === -1)
+			{
+				return;
+			}
+			if (!audio.paused && !audio.seeking)
+			{
+				const fg = document.getElementById("ringFg" + (activeRowIndex + 1));
+				if (fg && clipTotalSec > 0)
+				{
+					const frac = Math.max(0, Math.min(1, (audio.currentTime - clipStartSec) / clipTotalSec));
+					fg.style.strokeDashoffset = String(RING_CIRCUMFERENCE * (1 - frac));
+				}
+				if (clipEndTime !== null && audio.currentTime >= clipEndTime)
+				{
+					finishCurrentClip(token);
+					return;
+				}
+			}
+			clipRafId = requestAnimationFrame(function() {
+				monitorClipProgress(token);
+			});
+		}
+
+		function beginTrackAt(targetIdx, token) {
+			if (token !== playbackToken) return;
+			showRowPlaying(targetIdx);
+			const dur = (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : 30;
+			if (difficulty.checked)
+			{
+				clipOriginSec = 0;
+				clipStartSec = 0;
+				clipEndTime = null;
+				clipTotalSec = dur;
+				audio.currentTime = 0;
+			}
+			else
+			{
+				const clipSec = timer / 1000;
+				const maxStart = Math.max(0, dur - clipSec);
+				clipStartSec = Math.min(timestamps[targetIdx] || 0, maxStart);
+				clipOriginSec = clipStartSec;
+				clipEndTime = Math.min(clipStartSec + clipSec, dur - 0.03);
+				clipTotalSec = Math.max(0.1, clipEndTime - clipStartSec);
+				audio.currentTime = clipStartSec;
+			}
+			const playPromise = audio.play();
+			if (playPromise && typeof playPromise.catch === "function")
+			{
+				playPromise.catch(function(err) {
+					if (token === playbackToken && (!err || err.name !== "AbortError"))
+					{
+						pausePlayback();
+					}
+				});
+			}
+			monitorClipProgress(token);
+		}
+
+		function loadAudio() {
+			if (!quizLinks.length || !quizLinks[songVal]) return;
+			pauseQuizEmbed();
+			cancelClipMonitor();
+			pendingLoadToken = playbackToken;
+			showRowPlaying(songVal);
+			playing = true;
+			toggleButtons();
+			audio.src = quizLinks[songVal];
+			audio.load();
+		}
+
+		function startPlayback(token) {
+			if (token !== playbackToken) return;
+			toggleButtons();
+			preloadNextTrack(songVal + 1);
+			beginTrackAt(songVal, token);
+		}
+
+		function loadClip(i) {
+			if (!quizLinks[i]) return;
+			pauseQuizEmbed();
+			cancelClipMonitor();
+			pendingLoadToken = playbackToken;
+			clipIndex = i;
+			showRowPlaying(i);
+			playing = false;
+			toggleButtons();
+			audio.src = quizLinks[clipIndex];
+			audio.load();
+		}
+
+		function playClip(token) {
+			if (token !== playbackToken) return;
+			beginTrackAt(clipIndex, token);
+		}
+
 		function pausePlayback() {
-			clearTimeout(timeRunning);
+			cancelClipMonitor();
+			pendingLoadToken = -1;
+			clearRowPlaying();
 			audio.pause();
 			playing = false;
 			toggleButtons();
 		}
 
 		function incrementSong(i) {
-			if (playing)
+			const wasPlaying = playing;
+			cancelClipMonitor();
+			clearRowPlaying();
+			if (!wasPlaying)
 			{
-				clearTimeout(timeRunning);
+				pendingLoadToken = -1;
+				audio.pause();
 			}
 
-			songVal = songVal + i;
-			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;
+			const activeCount = quizSongs.length || totalSongs;
+			songVal = Math.max(0, Math.min(activeCount - 1, songVal + i));
+			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + activeCount;
 
 			toggleButtons();
 
-			if (playing)
+			if (wasPlaying)
 			{
 				loadAudio();				
 			}
@@ -894,30 +1261,54 @@
 			document.getElementById("seedInput").value = Math.floor(Math.random() * (900000) + 100000);
 		}
 
+		function startRandomQuiz() {
+			generateSeed();
+			createSongQuiz();
+		}
+
 		async function createSongQuiz() {
-			seed = document.getElementById("seedInput").value;
-			if (!/^\d+$/.test(seed))
+			const rawSeed = document.getElementById("seedInput").value.trim();
+			if (!/^\d+$/.test(rawSeed))
 			{
-				console.log("Seeds should be numeric only.");
+				showNewQuizDialog("Numeric seeds only!");
 				return;
 			}
 
+			const selectedInputs = Array.from(document.querySelectorAll('#checkboxes input[type="checkbox"]:checked'));
+			if (selectedInputs.length === 0)
+			{
+				updateNewQuizBtn();
+				return;
+			}
+
+			const gen = ++quizGeneration;
+			pausePlayback();
+			pauseQuizEmbed();
 			if (!firstQuiz)
 			{
 				showNewQuizDialog();
 			}
+
+			const rawFiles = [];
+			for (let i = 0; i < selectedInputs.length; i++)
+			{
+				const file = await fetch(`jsons/${selectedInputs[i].id}.json`);
+				const fileText = await file.text();
+				if (gen !== quizGeneration) return;
+				rawFiles.push([selectedInputs[i], fileText]);
+			}
+			if (gen !== quizGeneration) return;
+
+			seed = Number(rawSeed);
 			resetHTML();
 			let songStats = [];
 
-			const checkedBoxes = shuffle(Array.from(document.querySelectorAll('input[type="checkbox"]:checked')));
+			const shuffledFiles = shuffle(rawFiles);
 
 			let maxListLength = 0;
-			for (let i = 0; i < checkedBoxes.length; i++)
+			for (let i = 0; i < shuffledFiles.length; i++)
 			{
-				const file = await fetch(`jsons/${checkedBoxes[i].id}.json`);
-				const fileText = await file.text();
-
-				const fileArr = parseStringToJsonToArrays(fileText);
+				const fileArr = parseStringToJsonToArrays(shuffledFiles[i][1]);
 				maxListLength = fileArr.length > maxListLength ? fileArr.length : maxListLength;
 				songStats.push(shuffle(fileArr));
 			}
@@ -934,19 +1325,24 @@
 				}
 			}
 
-			let songNames = [];
-			for (let i = 0; i < songStatsEqualized.length; i++)
-			{
-				songNames.push(songStatsEqualized[i][0]);
-			}
-
+			const seenUris = new Set();
+			const seenPreviews = new Set();
+			const seenNormKeys = new Set();
 			let songStatsCleaned = [];
 			for (let i = 0; i < songStatsEqualized.length; i++)
 			{
-				if (songNames.indexOf(songStatsEqualized[i][0]) == i)
+				const stat = songStatsEqualized[i];
+				const uriKey = stat[2] || "";
+				const prevKey = (stat[1] || "").split("?")[0];
+				const normKey = normalizeSongKey(stat[3] || stat[0], stat[4] || "");
+				if ((uriKey && seenUris.has(uriKey)) || (prevKey && seenPreviews.has(prevKey)) || (normKey && seenNormKeys.has(normKey)))
 				{
-					songStatsCleaned.push(songStatsEqualized[i]);
+					continue;
 				}
+				if (uriKey) seenUris.add(uriKey);
+				if (prevKey) seenPreviews.add(prevKey);
+				if (normKey) seenNormKeys.add(normKey);
+				songStatsCleaned.push(stat);
 			}
 
 			let quizStats = [];
@@ -966,6 +1362,7 @@
 					blank.id = "guessText" + (i + 1);
 
 					const speakerIcon = document.createElement("img");
+					speakerIcon.id = "speaker" + (i + 1);
 					speakerIcon.src = "img/speaker.png";
 					speakerIcon.classList.add("inline-img");
 					speakerIcon.style.cursor = "pointer";
@@ -973,9 +1370,18 @@
 						loadClip(i);
 					};
 
+					const pauseWrap = document.createElement("div");
+					pauseWrap.id = "pauseWrap" + (i + 1);
+					pauseWrap.classList.add("row-pause-wrap");
+					pauseWrap.innerHTML = '<svg class="clip-ring-svg" viewBox="0 0 22 22"><circle class="clip-ring-bg" cx="11" cy="11" r="9"></circle><circle class="clip-ring-fg" id="ringFg' + (i + 1) + '" cx="11" cy="11" r="9"></circle></svg><img src="img/clear_pause.png" class="row-pause-icon">';
+					pauseWrap.onclick = function () {
+						pausePlayback();
+					};
+
 					blankContainer.appendChild(blank);
 					songTitleBox.appendChild(blankContainer);
 					songTitleBox.appendChild(speakerIcon);
+					songTitleBox.appendChild(pauseWrap);
 
 					songBox.appendChild(songTitleBox);
 				}
@@ -989,20 +1395,19 @@
 				quizSongs.push(songStat[0]);
 				quizLinks.push(songStat[1]);
 				songLinks.push(songStat[2]);
+				quizTitles.push(songStat[3]);
 			}
 
 			// now with alphabetical powers
+			document.getElementById("currentSong").innerText = quizSongs.length ? ("1 of " + quizSongs.length) : "0 of 0";
+			toggleButtons();
 			songs.sort(sortBySongName);
 			autocomplete(document.getElementById("myInput"), songs);
+			preloadNextTrack(0);
 		}
 
 		function sortBySongName(a, b) {
-			if (a[0].toLowerCase() === b[0].toLowerCase()) {
-					return 0;
-			}
-			else {
-				return (a[0].toLowerCase() < b[0].toLowerCase()) ? -1 : 1;
-			}
+			return a.localeCompare(b, undefined, { sensitivity: 'base' });
 		}
 
 		function toggleButtons() {
@@ -1017,44 +1422,32 @@
 			play.style.display = playing ? 'none' : '';
 			pause.style.display = playing ? '' : 'none';
 
+			const activeCount = quizSongs.length || totalSongs;
 			prev.style.display = (songVal == 0) ? 'none' : '';
 			prevD.style.display = (songVal == 0) ? '' : 'none';
-			next.style.display = (songVal == totalSongs - 1) ? 'none' : '';
-			nextD.style.display = (songVal == totalSongs - 1) ? '' : 'none';
+			next.style.display = (songVal >= activeCount - 1) ? 'none' : '';
+			nextD.style.display = (songVal >= activeCount - 1) ? '' : 'none';
 		}
 
 		function giveUp() {
-			clearTimeout(timeRunning);
+			if (!quizSongs.length) return;
+			cancelClipMonitor();
+			clearRowPlaying();
+			playing = false;
 			audio.pause();
 
-			let songsFound = totalSongs;
+			const activeCount = quizSongs.length;
+			let songsFound = activeCount;
 
-			for (let i = 0; i < totalSongs; i++)
+			for (let i = 0; i < activeCount; i++)
 			{
 				let songTitleText = document.getElementById("guessText" + (i + 1));
+				if (!songTitleText) continue;
 
 				if (songTitleText.innerText == "")
 				{
 					songsFound--;
-					inParens = false;
-					dashIndex = -1;
-					for (let j = 0; j < quizSongs[i].length; j++)
-					{
-						if (quizSongs[i].charAt(j) == '(')
-						{
-							inParens = true;
-						}
-						if (quizSongs[i].charAt(j) == ')')
-						{
-							inParens = false;
-						}
-						if (!inParens && quizSongs[i].substring(j, j + 3) == " - ")
-						{
-							dashIndex = j;
-							break;
-						}
-					}
-					songTitleText.innerText = quizSongs[i].substring(0, dashIndex);
+					songTitleText.innerText = quizTitles[i];
 					songTitleText.style.color = "red";
 					songTitleText.style.fontWeight = "bold";
 				}
@@ -1067,15 +1460,20 @@
 				songTitleText.style.cursor = "pointer";
 			}
 
+			document.getElementById("game-over-section-1").innerHTML = (songsFound === activeCount) ? "<b>YOU WIN</b>" : "<b>GAME OVER</b>";
 			document.getElementById("game-over-section-1").style.display = 'block';
 			document.getElementById("game-over-section-2").style.display = 'block';
 			document.getElementById("main-section-1").style.display = 'none';
 			document.getElementById("main-section-2").style.display = 'none';
-			document.getElementById("game-over-section-2").innerText = "" + songsFound + " of " + totalSongs + " songs found.";
+			document.getElementById("game-over-section-2").innerText = (songsFound === activeCount) ? "All songs found!" : ("" + songsFound + " of " + activeCount + " songs found.");
 			document.getElementById("giveUpBtn").disabled = true;
+			document.getElementById("giveUpBtn").style.display = 'none';
+			document.getElementById("main-section-3").appendChild(document.getElementById("difficulty-container"));
 
-			document.getElementById("player-iframe").style.width = "auto";
+			document.getElementById("player-iframe").style.width = "100%";
 			document.getElementById("player-iframe").style.height = "auto";
+			document.getElementById("player-iframe").style.overflow = "visible";
+			document.getElementById("player-iframe").style.padding = "5px";
 
 			songVal = 0;
 			document.getElementById("hiddenPlayBtn").click();
@@ -1087,28 +1485,31 @@
 			if (songs.includes(input))
 			{
 				document.getElementById('myInput').value = '';
+				if (guessedSongs.has(input))
+				{
+					return;
+				}
+				guessedSongs.add(input);
 
 				if (quizSongs.includes(input))
 				{
-					inParens = false;
-					dashIndex = -1;
-					for (let i = 0; i < input.length; i++)
+					const matchIdx = quizSongs.indexOf(input);
+					document.getElementById("guessText" + (matchIdx + 1)).innerText = quizTitles[matchIdx];
+
+					let allFound = quizSongs.length > 0;
+					for (let i = 0; i < quizSongs.length; i++)
 					{
-						if (input.charAt(i) == '(')
+						const box = document.getElementById("guessText" + (i + 1));
+						if (!box || box.innerText == "")
 						{
-							inParens = true;
-						}
-						if (input.charAt(i) == ')')
-						{
-							inParens = false;
-						}
-						if (!inParens && input.substring(i, i + 3) == " - ")
-						{
-							dashIndex = i;
+							allFound = false;
 							break;
 						}
 					}
-					document.getElementById("guessText" + (quizSongs.indexOf(input) + 1)).innerText = input.substring(0, dashIndex);
+					if (allFound)
+					{
+						giveUp();
+					}
 				}
 				else
 				{
@@ -1139,17 +1540,28 @@
 						let trackId = trackUri.split("track/")[1].split("?")[0];
 						trackUri = "spotify:track:" + trackId;
 					}
-					tmpArr.push([i.title + " - " + i.artist, i.preview.replace("\\/", "/"), trackUri]);
+					tmpArr.push([i.title + " - " + i.artist, i.preview.replace("\\/", "/"), trackUri, i.title, i.artist]);
 				}
 			}
 
 			return tmpArr;
 		}
 
+		function normalizeSongKey(title, artist) {
+			const strip = function(s) {
+				return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").normalize("NFC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
+			};
+			const cleanTitle = String(title).replace(/\s*-\s*\d{4}\s*remaster.*|\s*\((?:from|feat\.?|with)\b.*?\)/gi, "");
+			const primaryArtist = String(artist).split(/,|\b(?:feat\.?|featuring|with)\b/i)[0];
+			return strip(cleanTitle) + "||" + strip(primaryArtist);
+		}
+
 		// stolen from https://stackoverflow.com/questions/16801687/javascript-random-ordering-with-seed
 		function seededRandom(max) {
-			var x = Math.sin(seed++) * 10000; 
-			return Math.floor((max + 1) * (x - Math.floor(x)));
+			seed = (seed + 0x6D2B79F5) | 0;
+			let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+			t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+			return Math.floor((max + 1) * (((t ^ (t >>> 14)) >>> 0) / 4294967296));
 		}
 
 		function shuffle(array) {
@@ -1170,22 +1582,28 @@
 		}
 
 		function resetHTML() {
+			cancelClipMonitor();
+			pendingLoadToken = -1;
+			clearRowPlaying();
 			audio.pause();
-			clearTimeout(timeRunning);
-			document.getElementById("hiddenPlayBtn").click();
+			pauseQuizEmbed();
 			
 			quizLinks = [];
 			songLinks = [];
 			quizSongs = [];
+			quizTitles = [];
 			timestamps = [];
 			songs = [];
 			
 			songVal = 0;
-			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;
-			toggleButtons(playing);
-
-			wrongAnswers = 0;
 			playing = false;
+			wrongAnswers = 0;
+			guessedSongs.clear();
+
+			document.getElementById("myInput").value = "";
+			document.querySelectorAll(".autocomplete-items").forEach(function(el) { el.remove(); });
+			document.getElementById("currentSong").innerText = (songVal + 1) + " of " + totalSongs;
+			toggleButtons();
 
 			for (let i = 1; i <= 5; i++)
 			{
@@ -1200,118 +1618,113 @@
 
 			document.getElementById("game-over-section-1").style.display = 'none';
 			document.getElementById("game-over-section-2").style.display = 'none';
+			document.getElementById("main-section-2").appendChild(document.getElementById("difficulty-container"));
 			document.getElementById("main-section-1").style.display = 'grid';
 			document.getElementById("main-section-2").style.display = 'grid';
 
+			document.getElementById("giveUpBtn").style.display = '';
 			document.getElementById("giveUpBtn").disabled = false;
 
-			document.getElementById("player-iframe").style.width = "0%";
-			document.getElementById("player-iframe").style.height = "0%";
+			document.getElementById("player-iframe").style.width = "0";
+			document.getElementById("player-iframe").style.height = "0";
+			document.getElementById("player-iframe").style.overflow = "hidden";
+			document.getElementById("player-iframe").style.padding = "0";
 		}
 
 		function autocomplete(inp, arr) {
-		/*the autocomplete function takes two arguments,
-		the text field element and an array of possible autocompleted values:*/
-			var currentFocus;
-		/*execute a function when someone writes in the text field:*/
+			if (inp._autocompleteAbort)
+			{
+				inp._autocompleteAbort.abort();
+			}
+			const ac = new AbortController();
+			inp._autocompleteAbort = ac;
+			const sig = { signal: ac.signal };
+
+			var currentFocus = -1;
 			inp.addEventListener("input", function(e) {
-				var a, b, i, val = this.value;
-			/*close any already open lists of autocompleted values*/
+				var a = null, b, i, val = this.value;
 				closeAllLists();
-				if (!val) { return false;}
 				currentFocus = -1;
-			/*create a DIV element that will contain the items (values):*/
-				a = document.createElement("DIV");
-				a.setAttribute("id", this.id + "autocomplete-list");
-				a.setAttribute("class", "autocomplete-items");
-			/*append the DIV element as a child of the autocomplete container:*/
-				this.parentNode.appendChild(a);
-			/*for each item in the array...*/
+				if (!val || val.length < 2) { return false; }
 				searchResults = 0;
 				for (i = 0; i < arr.length; i++) {
-			/*check if the item starts with the same letters as the text field value:*/
-					if (val.length >= 2 && arr[i].toUpperCase().includes(val.toUpperCase())) {
-				/*create a DIV element for each matching element:*/
+					if (!guessedSongs.has(arr[i]) && arr[i].toUpperCase().includes(val.toUpperCase())) {
+						if (!a) {
+							a = document.createElement("DIV");
+							a.setAttribute("id", this.id + "autocomplete-list");
+							a.setAttribute("class", "autocomplete-items");
+							this.parentNode.appendChild(a);
+						}
+						const itemValue = arr[i];
 						b = document.createElement("DIV");
-						index = arr[i].toUpperCase().indexOf(val.toUpperCase());
-				/*make the matching letters bold:*/
-						b.innerHTML = arr[i].substr(0,index);
-						b.innerHTML += "<strong>" + arr[i].substr(index, val.length) + "</strong>";
-						b.innerHTML += arr[i].substr(index+val.length);
-				/*insert a input field that will hold the current array item's value:*/
-						b.innerHTML += '<input type="hidden" value="' + arr[i].replaceAll('"', '&quot;') + '">';
-				/*execute a function when someone clicks on the item value (DIV element):*/
+						index = itemValue.toUpperCase().indexOf(val.toUpperCase());
+						b.appendChild(document.createTextNode(itemValue.substr(0, index)));
+						const strongEl = document.createElement("STRONG");
+						strongEl.textContent = itemValue.substr(index, val.length);
+						b.appendChild(strongEl);
+						b.appendChild(document.createTextNode(itemValue.substr(index + val.length)));
 						b.addEventListener("click", function(e) {
-					/*insert the value for the autocomplete text field:*/
-							inp.value = this.getElementsByTagName("input")[0].value;
-					/*close the list of autocompleted values,
-					(or any other open lists of autocompleted values:*/
+							inp.value = itemValue;
+							currentFocus = -1;
 							closeAllLists();
 						});
 						a.appendChild(b);
-
 						searchResults++;
-						/*if (searchResults == 10)
-							i = arr.length;*/
 					}
 				}
-			});
-		/*execute a function presses a key on the keyboard:*/
+			}, sig);
 			inp.addEventListener("keydown", function(e) {
 				var x = document.getElementById(this.id + "autocomplete-list");
 				if (x) x = x.getElementsByTagName("div");
 				if (e.keyCode == 40) {
-			/*If the arrow DOWN key is pressed,
-			increase the currentFocus variable:*/
-					currentFocus++;
-			/*and and make the current item more visible:*/
-					addActive(x);
-			} else if (e.keyCode == 38) { //up
-			/*If the arrow UP key is pressed,
-			decrease the currentFocus variable:*/
-				currentFocus--;
-			/*and and make the current item more visible:*/
-				addActive(x);
-			} else if (e.keyCode == 13) {
-			/*If the ENTER key is pressed, prevent the form from being submitted,*/
-				e.preventDefault();
-				if (currentFocus > -1) {
-				/*and simulate a click on the "active" item:*/
-					if (x) x[currentFocus].click();
+					if (x && x.length) {
+						e.preventDefault();
+						currentFocus++;
+						addActive(x);
+					}
+				} else if (e.keyCode == 38) {
+					if (x && x.length) {
+						e.preventDefault();
+						currentFocus--;
+						addActive(x);
+					}
+				} else if (e.keyCode == 13) {
+					e.preventDefault();
+					if (currentFocus > -1 && x && x[currentFocus]) {
+						x[currentFocus].click();
+					} else {
+						closeAllLists();
+						checkAnswer();
+					}
 				}
-			}
-		});
+			}, sig);
 			function addActive(x) {
-		/*a function to classify an item as "active":*/
-				if (!x) return false;
-		/*start by removing the "active" class on all items:*/
+				if (!x || !x.length) return false;
 				removeActive(x);
 				if (currentFocus >= x.length) currentFocus = 0;
 				if (currentFocus < 0) currentFocus = (x.length - 1);
-		/*add class "autocomplete-active":*/
 				x[currentFocus].classList.add("autocomplete-active");
+				x[currentFocus].scrollIntoView({ block: "nearest" });
 			}
 			function removeActive(x) {
-		/*a function to remove the "active" class from all autocomplete items:*/
 				for (var i = 0; i < x.length; i++) {
 					x[i].classList.remove("autocomplete-active");
 				}
 			}
 			function closeAllLists(elmnt) {
-		/*close all autocomplete lists in the document,
-		except the one passed as an argument:*/
 				var x = document.getElementsByClassName("autocomplete-items");
 				for (var i = 0; i < x.length; i++) {
 					if (elmnt != x[i] && elmnt != inp) {
 						x[i].parentNode.removeChild(x[i]);
+						currentFocus = -1;
 					}
 				}
 			}
-			/*execute a function when someone clicks in the document:*/
 			document.addEventListener("click", function (e) {
 				closeAllLists(e.target);
-			});
+			}, sig);
 		}
 	</script>
+	<script src="https://open.spotify.com/embed-podcast/iframe-api/v1" async></script>
 </body>
 </html>

@@ -34,6 +34,7 @@ from _common import (  # noqa: E402
 )
 
 HTML_FILES = ("index.html", "quiz.html", "billboard.html", "timeline.html")
+FRONTEND_LF_FILES = ("styles.css", "theme.js")
 EXPECTED_DATA_FILES = {"chart_dates.json", "top_10s.json", "top_10s_linked.json", "top_10s_data.json"}
 HTML_ENTITY_RE = re.compile(r"&(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);")
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -247,6 +248,20 @@ def audit_billboard_and_timeline(errors: list[str], *, strict_previews: bool) ->
 
 def audit_html_files(errors: list[str]) -> None:
     osascript_bin = shutil.which("osascript")
+    for lf_name in FRONTEND_LF_FILES:
+        lf_path = REPO_ROOT / lf_name
+        if not lf_path.exists():
+            errors.append(f"{lf_name}: missing required frontend asset")
+            continue
+        lf_text = check_file_formatting(lf_path, errors, check_entities=False)
+        if lf_name.endswith(".js") and osascript_bin:
+            res = subprocess.run(
+                [osascript_bin, "-l", "JavaScript", "-e", f"new Function({json.dumps(lf_text)});"],
+                capture_output=True,
+                text=True,
+            )
+            if res.returncode != 0:
+                errors.append(f"{lf_name} JS syntax error: {res.stderr.strip()}")
     for name in HTML_FILES:
         path = REPO_ROOT / name
         raw = path.read_bytes()

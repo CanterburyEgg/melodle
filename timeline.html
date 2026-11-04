@@ -1,338 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Melodle Timeline — Place Hot 100 songs in chronological order along a 10-card timeline before 5 strikes.">
 	<title>Melodle Timeline</title>
-	<link rel="icon" type="image/x-icon" href="img/logo.png">
-	<style>
-		@font-face {
-			font-family: 'Lato';
-			src: url('resources/Lato-Regular.ttf');
-		}
-		@font-face {
-			font-family: 'Lato-Bold';
-			src: url('resources/Lato-Bold.ttf');
-		}
-		@font-face {
-			font-family: 'Lato-Black';
-			src: url('resources/Lato-Black.ttf');
-		}
-		body {
-			font-family: Helvetica;
-			background-color: #f6f6f6;
-			overscroll-behavior: none;
-			margin: 0;
-			min-height: 100vh;
-			display: flex;
-			padding: 5vh 16px;
-			box-sizing: border-box;
-		}
-		.page-container {
-			display: grid;
-			grid-template-columns: 1fr;
-			gap: 40px;
-			width: 90%;
-			min-width: 1000px;
-			position: relative;
-			margin: auto;
-			justify-items: center;
-			align-items: center;
-		}
-		.title-row {
-			width: 750px;
-			padding: 5px;
-			justify-content: space-between;
-			align-items: center;
-			font-size: 60px;
-			margin: auto;
-			text-align: center;
-			border-bottom: solid;
-		}
-		.now-playing-container {
-			display: flex;
-			gap: 40px;
-			width: 650px;
-		}
-		.album-container {
-			overflow: hidden;
-			border: 8px double #171717;
-			border-radius: 8px;
-			width: 300px;
-			height: 300px;
-			min-width: 300px;
-			min-height: 300px;
-		}
-		#np-album {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			display: block;
-		}
-		.song-data-container {
-			display: flex;
-			flex-direction: column;
-			gap: 5px;
-			text-align: center;
-			width: 100%;
-			align-items: center;
-			margin: auto;
-		}
-		.song-data {
-			width: 100%;
-			display: grid;
-			grid-template-columns: 4fr 1fr;
-			gap: 10px;
-			justify-items: center;
-			align-items: center;
-		}
-		.song-specs {
-			display: flex;
-			flex-direction: column;
-			gap: 8px;
-		}
-		.data-row {
-			font-family: "Lato";
-		}
-		#qm {
-			font-family: "Lato-Bold";
-			font-size: 84px;
-			padding-bottom: 10px;
-		}
-		#song-title {
-			font-size: 20px;
-		}
-		#song-artist {
-			font-size: 18px;
-		}
-		#song-year {
-			font-family: "Lato-Black";
-			font-size: 24px;
-			padding: 10px 0;
-		}
-		#win {
-			font-family: "Lato-Bold";
-			font-size: 40px;
-			padding-top: 10px;
-		}
-		#lose {
-			font-family: "Lato-Bold";
-			font-size: 40px;
-			padding-top: 10px;
-		}
-		.next-arrow {
-			align-content: center;
-		}
-		.song-data img {
-			width: 30px;
-			cursor: pointer;
-		}
-		.wrong-answer {
-			border: 2px solid black;
-			border-radius: 5px;
-			width: 45px;
-			height: 45px;
-			align-content: center;
-		}
-		.wrong-answer img {
-			width: 35px;
-			height: 35px;
-		}
-		#wrong-answer-boxes {
-			display: grid;
-			grid-template-columns: repeat(5, 1fr);
-			gap: 8px;
-			justify-items: center;
-			padding-top: 10px;
-		}
-		.timeline-container {
-			width: 100%;
-			height: 100%;
-			display: flex;
-			flex-direction: column;
-			text-align: center;
-			font-family: "Lato-Bold";
-			font-size: 22px;
-			gap: 5px;
-		}
-		.timeline-label {
-			width: 100%;
-			padding-left: 8px; /* 5px padding + 3px border of timeline */
-			box-sizing: border-box;
-		}
-		.timeline {
-			display: flex;
-			width: 100%;
-			height: 100%;
-			align-items: center;
-			justify-content: center;
-			border: 3px solid;
-			border-radius: 5px;
-			padding: 5px;
-			box-sizing: border-box;
-		}
-		.timeline .pick-me {
-			width: 50px;
-			cursor: pointer;
-		}
-		.timeline .a-container {
-			display: flex;
-			flex-direction: column;
-			gap: 10px;
-			width: 9%;
-			text-align: center;
-			font-size: 20px;
-			font-weight: bold;
-			font-family: "Lato-Black";
-			line-height: 1;
-		}
-		.timeline .a-container .album-art {
-			width: 100%;
-			aspect-ratio: 1 / 1;
-			object-fit: cover;
-			display: block;
-		}
-		.node {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			align-self: stretch;
-			text-align: center;
-			width: 1%;
-			cursor: default;
-		}
-		.timeline.is-guessing .node {
-			cursor: pointer;
-		}
-		.node-img {
-			max-width: 70%;
-			max-height: 140px;
-			object-fit: scale-down;
-			cursor: pointer;
-		}
-		@media (hover: none) {
-			.timeline.is-guessing .node {
-				width: 4%;
-			}
-			.timeline.is-guessing .node .node-img {
-				width: auto !important;
-			}
-		}
-		audio::-webkit-media-controls-enclosure {
-			border-radius: 0;
-			background-color: #f6f6f6;
-		}
-		.mode-nav {
-			position: fixed;
-			top: 20px;
-			left: 16px;
-			display: flex;
-			flex-direction: column;
-			gap: 8px;
-			z-index: 100;
-			font-family: Helvetica, Arial, sans-serif;
-		}
-		.mode-nav a {
-			display: block;
-			padding: 7px 14px;
-			border-radius: 8px;
-			font-size: 13px;
-			font-weight: bold;
-			text-decoration: none;
-			text-align: center;
-			color: #191414;
-			background-color: #ffffff;
-			border: 1px solid #cccccc;
-			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-			cursor: pointer;
-		}
-		.mode-nav a:hover {
-			background-color: #e8e8e8;
-		}
-		.mode-nav a.active {
-			background-color: #191414;
-			color: #ffffff;
-			border-color: #191414;
-		}
-		@media (max-width: 1260px) {
-			body {
-				flex-direction: column;
-				align-items: center;
-				gap: 16px;
-			}
-			.mode-nav {
-				position: static;
-				flex-direction: row;
-				flex-wrap: wrap;
-				justify-content: center;
-			}
-		}
-		@media (max-width: 1032px) {
-			.page-container {
-				min-width: 750px;
-				width: 100%;
-			}
-		}
-	</style>
+	<link rel="icon" type="image/png" href="img/logo.png">
+	<script>(function(){try{var t=localStorage.getItem('melodle-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+	<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-	<nav class="mode-nav">
+	<nav class="mode-nav" aria-label="Game modes">
 		<a href="index.html">Daily Melodle</a>
 		<a href="quiz.html">Song Quiz</a>
 		<a href="billboard.html">Billboard</a>
 		<a href="timeline.html" class="active">Timeline</a>
+		<div class="nav-divider"></div>
+		<button type="button" class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle color theme">Dark Mode</button>
 	</nav>
 	<div class="page-container">
-		<div class="title-row">
-			<div id="title">
-				<b>Melodle Timeline</b>
-			</div>
-		</div>
-		<div class="now-playing-container" id="np-container">
-			<div class="album-container" id="album-container">
-				<img id="np-album">
-			</div>
-			<div class="song-data-container" id="song-data-container">
-				<div class="data-row" id="qm">
-					?
+		<div class="timeline-top-card">
+			<header class="masthead">
+				<img src="img/logo.png" class="masthead-logo" alt="Melodle logo">
+				<h1 id="title">Melodle Timeline</h1>
+			</header>
+			<div class="now-playing-container" id="np-container">
+				<div class="album-container is-blurred" id="album-container">
+					<img id="np-album" alt="Album cover">
 				</div>
-				<div class="song-data" id="song-data" style="display: none;">
-					<div class="song-specs" id="song-specs">
-						<div class="data-row" id="song-title">
-						</div>
-						<div class="data-row" id="song-artist">
-						</div>
-						<div class="data-row" id="song-year">
+				<div class="song-data-container" id="song-data-container">
+					<div class="tl-audio-player">
+						<button type="button" class="icon-btn primary tl-play-btn" id="tlPlayBtn" onclick="toggleTimelineAudio()" aria-label="Play preview"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6,4 20,12 6,20"></polygon></svg></button>
+						<div class="tl-scrubber-wrap">
+							<input type="range" class="tl-scrubber" id="tlScrubber" min="0" max="30" step="0.1" value="0" aria-label="Seek preview">
+							<span class="tl-time" id="tlTime">0:00</span>
 						</div>
 					</div>
-					<img src="img/double_next.png" id="next" onclick="goToNextSong()">
-					<img src="img/restart.png" id="restart" style="display: none;" onclick="startQuiz()">
-				</div>
-				<audio controls id="audio"></audio>
-				<div class="data-row" id="wrong-answer-boxes">
-					<div class="wrong-answer" id="wrong-answer-1"></div>
-					<div class="wrong-answer" id="wrong-answer-2"></div>
-					<div class="wrong-answer" id="wrong-answer-3"></div>
-					<div class="wrong-answer" id="wrong-answer-4"></div>
-					<div class="wrong-answer" id="wrong-answer-5"></div>
-				</div>
-				<div class="data-row" id="win" style="display: none;">
-					YOU WIN!
-				</div>
-				<div class="data-row" id="lose" style="display: none;">
-					GAME OVER
+					<div class="song-data" id="song-data" style="display: none;">
+						<div class="song-specs" id="song-specs">
+							<div class="data-row" id="song-title"></div>
+							<div class="data-row" id="song-artist"></div>
+							<div class="data-row" id="song-year"></div>
+						</div>
+						<button type="button" id="next" onclick="goToNextSong()"><span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg></button>
+						<button type="button" id="restart" style="display: none;" onclick="startQuiz()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg><span>Play Again</span></button>
+					</div>
+					<audio class="hidden-item" id="audio" preload="metadata"></audio>
+					<div class="tl-bottom-row">
+						<div class="data-row" id="wrong-answer-boxes">
+							<div class="wrong-answer" id="wrong-answer-1"></div>
+							<div class="wrong-answer" id="wrong-answer-2"></div>
+							<div class="wrong-answer" id="wrong-answer-3"></div>
+							<div class="wrong-answer" id="wrong-answer-4"></div>
+							<div class="wrong-answer" id="wrong-answer-5"></div>
+						</div>
+						<div class="data-row" id="win" style="display: none;">
+							YOU WIN!
+						</div>
+						<div class="data-row" id="lose" style="display: none;">
+							GAME OVER
+						</div>
+						<div class="slider-container">
+							<button type="button" class="volume-btn" onclick="incrementTimelineVolume(-10)" aria-label="Decrease volume" title="Decrease volume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="22" y1="9" x2="16" y2="15"></line><line x1="16" y1="9" x2="22" y2="15"></line></svg></button>
+							<input type="range" class="volume-slider" id="tlVolume" min="0" max="100" step="1" value="35" aria-label="Volume">
+							<button type="button" class="volume-btn" onclick="incrementTimelineVolume(10)" aria-label="Increase volume" title="Increase volume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="timeline-container">
 			<div class="timeline-label">
-				TIMELINE
+				<span>Timeline (<span id="tlCount">0</span> / 10)</span>
+				<span class="timeline-hint" id="tlHint">Click + to place the first track</span>
 			</div>
 			<div class="timeline" id="tl-container">
 			</div>
 		</div>
 	</div>
 
+	<script src="theme.js"></script>
 	<script>
 		let song_data = [];
 		let index = 0;
@@ -342,8 +90,118 @@
 		let albums = [];
 		let years = [];
 		let guessing = true;
+		let isScrubbing = false;
+		let albumLoadToken = 0;
+		let albumReady = false;
+		const BLANK_PIXEL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 		const np_album = document.getElementById("np-album");
+		const albumContainer = document.getElementById("album-container");
+		const tlPlayBtn = document.getElementById("tlPlayBtn");
+		const tlScrubber = document.getElementById("tlScrubber");
+		const tlTime = document.getElementById("tlTime");
+		const tlVolume = document.getElementById("tlVolume");
+
+		function formatAudioTime(sec) {
+			if (!isFinite(sec) || sec < 0) sec = 0;
+			const whole = Math.floor(sec);
+			const mins = Math.floor(whole / 60);
+			const secs = String(whole % 60).padStart(2, "0");
+			return mins + ":" + secs;
+		}
+
+		function resetTimelinePlayerUI() {
+			isScrubbing = false;
+			tlPlayBtn.innerHTML = MELODLE_ICONS.play;
+			tlPlayBtn.setAttribute("aria-label", "Play preview");
+			tlScrubber.max = 30;
+			tlScrubber.value = 0;
+			tlTime.textContent = "0:00";
+		}
+
+		function toggleTimelineAudio() {
+			if (!audio.getAttribute("src")) return;
+			if (audio.paused)
+			{
+				const p = audio.play();
+				if (p && typeof p.catch === "function")
+				{
+					p.catch(function() {});
+				}
+			}
+			else
+			{
+				audio.pause();
+			}
+		}
+
+		audio.addEventListener("play", function() {
+			tlPlayBtn.innerHTML = MELODLE_ICONS.pause;
+			tlPlayBtn.setAttribute("aria-label", "Pause preview");
+		});
+
+		audio.addEventListener("pause", function() {
+			tlPlayBtn.innerHTML = MELODLE_ICONS.play;
+			tlPlayBtn.setAttribute("aria-label", "Play preview");
+		});
+
+		audio.addEventListener("ended", function() {
+			tlPlayBtn.innerHTML = MELODLE_ICONS.play;
+			tlPlayBtn.setAttribute("aria-label", "Play preview");
+		});
+
+		audio.addEventListener("loadedmetadata", function() {
+			if (isFinite(audio.duration) && audio.duration > 0)
+			{
+				tlScrubber.max = audio.duration;
+			}
+		});
+
+		audio.addEventListener("timeupdate", function() {
+			if (!audio.seeking && !isScrubbing)
+			{
+				if (isFinite(audio.duration) && audio.duration > 0)
+				{
+					tlScrubber.max = audio.duration;
+				}
+				tlScrubber.value = audio.currentTime || 0;
+				tlTime.textContent = formatAudioTime(audio.currentTime || 0);
+			}
+		});
+
+		tlScrubber.addEventListener("pointerdown", function() {
+			isScrubbing = true;
+		});
+		window.addEventListener("pointerup", function() {
+			isScrubbing = false;
+		});
+		window.addEventListener("pointercancel", function() {
+			isScrubbing = false;
+		});
+		tlScrubber.addEventListener("change", function() {
+			isScrubbing = false;
+		});
+
+		tlScrubber.addEventListener("input", function() {
+			const target = Number(tlScrubber.value);
+			if (isFinite(target))
+			{
+				audio.currentTime = target;
+				tlTime.textContent = formatAudioTime(target);
+			}
+		});
+
+		tlVolume.addEventListener("input", function() {
+			audio.volume = Number(tlVolume.value) / 100;
+		});
+
+		function incrementTimelineVolume(i) {
+			let vol = parseInt(tlVolume.value, 10) + i;
+			if (vol > Number(tlVolume.max)) vol = Number(tlVolume.max);
+			if (vol < Number(tlVolume.min)) vol = Number(tlVolume.min);
+			tlVolume.value = vol;
+			audio.volume = vol / 100;
+		}
 
 		document.addEventListener("DOMContentLoaded", async function() {
 			try {
@@ -382,9 +240,23 @@
 				element.innerHTML = "";
 			});
 
-			audio.volume = 0.25;
-			goToNextSong();
-			redrawTimeline();
+			document.getElementById("tlCount").textContent = "0";
+			const timeline = document.getElementById("tl-container");
+			timeline.innerHTML = "";
+			const firstNode = document.createElement("div");
+			firstNode.className = "node is-initial";
+			const pill = document.createElement("span");
+			pill.className = "node-pill";
+			pill.innerHTML = MELODLE_ICONS.plus;
+			firstNode.appendChild(pill);
+			firstNode.onclick = function() {
+				if (!guessing) return;
+				insert_index = 0;
+				redrawTimeline();
+			};
+			timeline.appendChild(firstNode);
+
+			audio.volume = Number(tlVolume.value) / 100;
 			goToNextSong();
 		}
 
@@ -403,24 +275,57 @@
 					break;
 				}
 			}
-			np_album.src = active_song.picture;
-			np_album.style.filter = "blur(2rem)";
 			guessing = true;
+			albumReady = false;
+			const loadToken = ++albumLoadToken;
+			np_album.style.visibility = "hidden";
+			albumContainer.classList.add("is-blurred");
+			np_album.onload = null;
+			np_album.onerror = null;
+			np_album.src = BLANK_PIXEL;
+			void albumContainer.offsetWidth;
+			const nextPic = active_song.picture;
+			np_album.onload = function() {
+				if (loadToken !== albumLoadToken) return;
+				albumReady = true;
+				if (guessing)
+				{
+					albumContainer.classList.add("is-blurred");
+				}
+				else
+				{
+					albumContainer.classList.remove("is-blurred");
+				}
+				np_album.style.visibility = "visible";
+			};
+			np_album.onerror = function() {
+				if (loadToken !== albumLoadToken) return;
+				albumReady = true;
+				np_album.style.visibility = "visible";
+			};
+			np_album.src = nextPic;
+			if (np_album.complete && np_album.naturalWidth > 1 && np_album.src !== BLANK_PIXEL)
+			{
+				albumReady = true;
+				np_album.style.visibility = "visible";
+			}
 			document.getElementById("tl-container").classList.add("is-guessing");
+			document.getElementById("tlHint").textContent = (years.length === 0) ? "Click + to place the first track" : "Click a + slot to place this track";
 
-
-			document.getElementById("qm").style.display = '';
 			document.getElementById("song-data").style.display = 'none';
 
 			audio.src = active_song.link;
+			resetTimelinePlayerUI();
 		}
 
 		function redrawTimeline() {
-			document.getElementById("qm").style.display = 'none';
-
 			document.getElementById("song-data").style.display = '';
-			document.getElementById("song-title").innerText = active_song.title;
-			document.getElementById("song-artist").innerText = active_song.artist;
+			const titleEl = document.getElementById("song-title");
+			const artistEl = document.getElementById("song-artist");
+			titleEl.innerText = active_song.title;
+			titleEl.title = active_song.title;
+			artistEl.innerText = active_song.artist;
+			artistEl.title = active_song.artist;
 			document.getElementById("song-year").innerText = active_song.year;
 
 			let correctGuess = false;
@@ -443,17 +348,18 @@
 			if (correctGuess)
 			{
 				albums.splice(insert_index, 0, active_song.picture);
-				years.splice(insert_index, 0, active_song.year);				
+				years.splice(insert_index, 0, active_song.year);
 			}
 			else
 			{
 				wrongAnswers++;
-				let xImg = document.createElement("img");
-				xImg.src = "img/x.png";
-				document.getElementById("wrong-answer-" + wrongAnswers).appendChild(xImg);
+				document.getElementById("wrong-answer-" + wrongAnswers).innerHTML = MELODLE_ICONS.x;
 			}
 
-			if (wrongAnswers == 5 || years.length == 10)
+			document.getElementById("tlCount").textContent = String(years.length);
+
+			const isGameOver = (wrongAnswers == 5 || years.length == 10);
+			if (isGameOver)
 			{
 				next.style.display = 'none';
 				document.getElementById("wrong-answer-boxes").style.display = 'none';
@@ -461,10 +367,19 @@
 				restart.style.display = '';
 				win.style.display = (years.length == 10) ? '' : 'none';
 				lose.style.display = (wrongAnswers == 5) ? '' : 'none';
+				document.getElementById("tlHint").textContent = "";
+			}
+			else
+			{
+				document.getElementById("tlHint").textContent = "Click Next to draw another track";
 			}
 
-			np_album.style.filter = "";
 			guessing = false;
+			albumContainer.classList.remove("is-blurred");
+			if (albumReady)
+			{
+				np_album.style.visibility = "visible";
+			}
 
 			let timeline = document.getElementById("tl-container");
 			timeline.classList.remove("is-guessing");
@@ -472,7 +387,7 @@
 
 			let spacer = document.createElement("div");
 			spacer.classList.add("node");
-			document.getElementById("tl-container").appendChild(spacer);
+			timeline.appendChild(spacer);
 
 			for (let i = 0; i < albums.length; i++)
 			{
@@ -483,16 +398,17 @@
 				aContainer.classList.add("a-container");
 				let aElem = document.createElement("img");
 				aElem.src = album;
+				aElem.alt = "Song from " + year;
 				aElem.classList.add("album-art");
 				let aDate = document.createElement("text");
 				aDate.innerText = year;
 				aContainer.appendChild(aElem);
 				aContainer.appendChild(aDate);
-				document.getElementById("tl-container").appendChild(aContainer);
+				timeline.appendChild(aContainer);
 
 				spacer = document.createElement("div");
 				spacer.classList.add("node");
-				document.getElementById("tl-container").appendChild(spacer);
+				timeline.appendChild(spacer);
 			}
 
 			const elements = document.querySelectorAll(".node");
@@ -500,32 +416,14 @@
 
 			elements.forEach(element => {
 				const slotIdx = ++nodeVal;
-				let nodeImg = document.createElement("img");
-				nodeImg.classList.add("node-img");
-				nodeImg.src = "img/insert.png";
-				nodeImg.value = slotIdx;
+				let pill = document.createElement("span");
+				pill.classList.add("node-pill");
+				pill.innerHTML = MELODLE_ICONS.plus;
+				element.appendChild(pill);
 				element.onclick = function() {
 					if (!guessing) return;
 					insert_index = slotIdx;
 					redrawTimeline();
-				};
-				element.appendChild(nodeImg);
-				element.querySelectorAll("img")[0].style.width = "0%";
-
-				element.onmouseenter = function() {
-					if (guessing)
-					{
-						element.style.width = "5%";
-						element.querySelectorAll("img")[0].style.width = "";
-					}
-				};
-
-				element.onmouseleave = function() {
-					if (guessing)
-					{
-						element.style.width = "";
-						element.querySelectorAll("img")[0].style.width = "0%";
-					}
 				};
 			});
 		}

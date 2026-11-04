@@ -1,582 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Melodle Billboard — Guess the Billboard Hot 100 Top 10 from any historical chart week since 1958.">
 	<title>Melodle Billboard</title>
-	<link rel="icon" type="image/x-icon" href="img/logo.png">
-	<style>
-		body {
-			font-family: Helvetica;
-			background-color: #f6f6f6;
-			overscroll-behavior: none;
-			margin: 0;
-			min-height: 100vh;
-			display: flex;
-			padding: 5vh 16px;
-			box-sizing: border-box;
-		}
-		table {
-			border-collapse: collapse;
-			table-layout: fixed;
-			width: 100%;
-
-		}
-		tr {
-			height: 45px;
-		}
-		td,
-		th {
-			border: 1px solid #000000;
-			font-size: 16px;
-			padding: 5px;
-		}
-		a {
-			cursor: pointer;
-		}
-		img {
-			width: 35px;
-			margin: auto;
-			top: 5px;
-			left: 5px;
-			position: relative;
-		}
-		label {
-			font-size: 13.5px;
-		}
-		.num-box {
-			width: 10%;
-			min-width: 50px;
-			text-align: center;
-			font-size: 18px;
-		}
-		.guess-box {
-			padding-left: 2%;
-			padding-right: 1%;
-			text-align: left;
-		}
-		.switcher {
-			display: inline-flex;
-			flex-direction: row;
-			padding: 10px;
-			justify-content: space-between;
-			flex-grow: 1;
-			width: 50%;
-			align-items: center;
-		}
-		#completed-text {
-			margin: auto;
-			font-size: 28px;
-			text-align: center;
-		}
-		#header {
-			display: grid;
-			grid-template-columns: 4fr 1fr;
-			width: 70%;
-			left: 13%;
-			position: relative;
-			gap: 5px;
-			margin-top: 3%;
-			border: 1px solid black;
-			padding-left: 2%;
-			padding-right: 2%;
-		}
-		.checkboxes {
-			display: grid;
-			grid-template-columns: 1fr;
-			padding-top: 1%;
-		}
-		.new-quiz-btn-container {
-			display: grid;
-			grid-template-columns: 1fr;
-			gap: 5px;
-			align-items: center;
-			justify-items: center;
-		}
-		.newQuizBtn {
-			margin-bottom: 10px;
-		}
-		.category-title {
-			font-weight: bold;
-		}
-		.checkbox-category {
-			display: grid;
-			grid-template-columns: 1fr 1fr 1fr;
-			gap: 2px;
-			padding-top: 1%;
-			padding-bottom: 1%;
-		}
-		.checkbox-set {
-			display: grid;
-			grid-template-columns: 0.5fr 3fr;
-			align-items: center;
-			gap: 5px;
-		}
-		.container {
-			position: relative;
-			margin: auto;
-			display: block;
-			width: 750px;
-			align-content: center;
-		}
-		.container-columns {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: 20px;
-			align-items: center;
-		}
-		.container-row {
-			width: 100%;
-			padding: 5px;
-			justify-content: space-between;
-			align-items: center;
-		}
-		#title-row {
-			 border-bottom: solid;
-		}
-		#title {
-			 font-size: 60px;
-			 margin: auto;
-			 text-align: center;
-		}
-		.wrong-answer {
-			border: 1px solid black;
-			width: 45px;
-			height: 45px;
-		}
-		#new-quiz-section {
-			position: absolute;
-			border: 1px solid black;
-			background: #D3CCCA;
-			padding: 0px;
-			z-index: 1;
-			display: grid;
-			grid-template-columns: 1fr;
-			align-items: center;
-			justify-items: center;
-			font-size: 28px;
-		}
-		.dialog-visible {
-			opacity: 1;
-		}
-		.dialog-invisible {
-			visibility: hidden;
-			opacity: 0;
-			transition: visibility 0s 2s, opacity 2s linear;
-		}
-		.slider-container {
-			display: grid;
-			grid-template-columns: 1fr 4fr 1fr;
-			gap: 5px;
-			align-items: center;
-			justify-items: center;
-		}
-		.slider {
-			padding: 0;
-		}
-		.volume-icon {
-			width: 22px;
-			height: auto;
-			position: static;
-			cursor: pointer;
-		}
-		.container-columns {
-			padding-top: 2%;
-		}
-		.container-column {
-			height: min-content;
-		}
-		#main-section-0 {
-			display: grid;
-			grid-template-columns: 1fr 5fr 1fr;
-			font-size: 22px;
-			font-weight: 500;
-			text-align: center;
-			width: 80%;
-			margin: auto;
-			margin-bottom: 20px;
-			border: 3px double #171717;
-			border-radius: 5px;
-		}
-		#main-section-0 img {
-			width: 22px;
-			top: 0;
-			left: 0;
-		}
-		#main-section-1 {
-			padding-bottom: 3.5%;
-			display: grid;
-			grid-template-columns: 4fr 1fr;
-			justify-items: center;
-			position: relative;
-			font-size: 32px;
-			text-align: center;
-			font-weight: 550;
-		}
-		#main-section-1 img {
-			position: static;
-		}
-		#main-section-1 .active-button {
-			cursor: pointer;
-		}
-		.quiz-year {
-			font-size: 100px;
-			font-weight: bold;
-		}
-		#main-section-2 {
-			justify-items: center;
-			position: relative;
-			display: flex;
-			padding: 5px 0;
-		}
-		#main-section-3 {
-			display: grid;
-			grid-template-columns: 4fr 1fr;
-			position: relative;
-			justify-items: center;
-			justify-content: center;
-			padding-top: 16px;
-			gap: 15px;
-			width: 95%;
-			justify-self: center;
-		}
-		#wrong-answer-boxes {
-			display: grid;
-			grid-template-columns: repeat(5, 1fr);
-			gap: 8px;
-			justify-items: center;
-		}
-		#main-section-4 {
-			padding-top: 5%;
-			padding-bottom: 5%;
-			margin: auto;
-			position: relative;
-		}
-		#game-over-section-1 {
-			font-size: 50px;
-			text-align: center;
-			display: none;
-		}
-		#game-over-section-2 {
-			font-size: 30px;
-			text-align: center;
-			display: none;
-		}
-		/* Chrome, Safari, Edge, Opera -- to remove arrows*/
-		input::-webkit-outer-spin-button,
-		input::-webkit-inner-spin-button {
-			-webkit-appearance: none;
-			margin: 0;
-		}
-		/* Firefox */
-		input[type=number] {
-			-moz-appearance: textfield;
-		}
-		.submit {
-			position: absolute;
-			height: 16px;
-			width: auto;
-			left: auto;
-			right: 12px;
-			margin: 0;
-			top: 50%;
-			transform: translate(0, -50%);
-			cursor: pointer;
-		}
-		button {
-			width: 70px;
-			height: 35px;
-			margin-left: 1%;
-			margin-right: 1%;
-			border-radius: 10px;
-			border: 0;
-			background: #191414;
-			color: #fff;
-			font-size: 14px;
-			cursor: pointer;
-		}
-		button:hover {
-			background: #515151;
-		}
-		button:disabled {
-			background-color: #515151;
-			cursor: auto;
-		}
-		label {
-			white-space: nowrap;
-		}
-		#playBtn img {
-			left: 0;
-			top: 0;
-		}
-		.short-button {
-			height: 110%;
-			border-radius: 5px;
-			padding: 4px;
-		}
-		.autocomplete {
-			/*the container must be positioned relative:*/
-			position: relative;
-			display: inline-block;
-			width: 100%;
-		}
-		input {
-			border: 1px solid #000;
-			background-color: #f1f1f1;
-			padding: 10px 35px 10px 10px;
-			font-size: 16px;
-			box-sizing: border-box;
-		}
-		input[type=text] {
-			background-color: #f1f1f1;
-			width: 100%;
-		}
-		.autocomplete-items {
-			position: absolute;
-			border: 1px solid #d4d4d4;
-			border-bottom: none;
-			z-index: 99;
-			/*position the autocomplete items to be the same width as the container:*/
-			bottom: 100%;
-			left: 0;
-			right: 0;
-			overflow-y: auto;
-			max-height: 317px;
-		}
-		.autocomplete-items div {
-			padding: 10px;
-			cursor: pointer;
-			background-color: #fff;
-			border-bottom: 1px solid #d4d4d4;
-		}
-		.autocomplete-items div:hover {
-			/*when hovering an item:*/
-			background-color: #e9e9e9;
-		}
-		.autocomplete-active {
-			/*when navigating through the items using the arrow keys:*/
-			background-color: DodgerBlue !important;
-			color: #ffffff;
-		}
-		.auto-container {
-			width: 100%;
-		}
-		.inline-img {
-			width: 19px;
-			height: auto;
-			position: static;
-			cursor: pointer;
-		}
-		.answer-box {
-			display: grid;
-			grid-template-columns: 7fr 1fr;
-			gap: 2px;
-			align-items: center;
-		}
-		.hidden-item {
-			display: none;
-		}
-		.date-picker-wrap {
-			position: relative;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 26px;
-			height: 26px;
-			overflow: hidden;
-		}
-		.date-picker-wrap:focus-within {
-			outline: 2px solid #191414;
-			outline-offset: 2px;
-			border-radius: 4px;
-		}
-		.date-picker-wrap svg {
-			width: 23px;
-			height: 23px;
-			pointer-events: none;
-		}
-		.date-picker {
-			-webkit-appearance: none;
-			appearance: none;
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			opacity: 0;
-			cursor: pointer;
-			border: none;
-			padding: 0;
-			margin: 0;
-		}
-		#player-audio {
-			padding: 0;
-		}
-		.modals {
-			display: grid;
-			grid-template-columns: 1fr;
-			justify-items: center;
-			align-items: center;
-			font-size: 13px;
-			line-height: 1.2;
-			gap: 25px;
-		}
-		.modals-subcontainer {
-			display: flex;
-			flex-direction: column;
-			gap: 5px;
-		}
-
-		/* this entire section is for the difficulty toggle */
-
-		/* The switch - the box around the slider */
-		.switch {
-			position: relative;
-			display: inline-block;
-			width: 40px;
-			height: 22px;
-		}
-		/* Hide default HTML checkbox */
-		.switch input {
-			opacity: 0;
-			width: 0;
-			height: 0;
-		}
-		/* The slider */
-		.slider {
-			position: absolute;
-			cursor: pointer;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background-color: #ccc;
-		}
-		.slider:before {
-			position: absolute;
-			content: "";
-			height: 16px;
-			width: 16px;
-			left: 3px;
-			bottom: 3px;
-			background-color: white;
-		}
-		input:checked + .slider {
-			background-color: #171717;
-		}
-		input:focus + .slider {
-			box-shadow: 0 0 1px #171717;
-		}
-		input:checked + .slider:before {
-			-webkit-transform: translateX(18px);
-			-ms-transform: translateX(18px);
-			transform: translateX(18px);
-		}
-		/* Rounded sliders */
-		.slider.round {
-			border-radius: 34px;
-		}
-		.slider.round:before {
-			border-radius: 50%;
-		}
-
-		/* end section for difficulty toggle */
-		.mode-nav {
-			position: fixed;
-			top: 20px;
-			left: 16px;
-			display: flex;
-			flex-direction: column;
-			gap: 8px;
-			z-index: 100;
-			font-family: Helvetica, Arial, sans-serif;
-		}
-		.mode-nav a {
-			display: block;
-			padding: 7px 14px;
-			border-radius: 8px;
-			font-size: 13px;
-			font-weight: bold;
-			text-decoration: none;
-			text-align: center;
-			color: #191414;
-			background-color: #ffffff;
-			border: 1px solid #cccccc;
-			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-			cursor: pointer;
-		}
-		.mode-nav a:hover {
-			background-color: #e8e8e8;
-		}
-		.mode-nav a.active {
-			background-color: #191414;
-			color: #ffffff;
-			border-color: #191414;
-		}
-		@media (max-width: 1260px) {
-			body {
-				flex-direction: column;
-				align-items: center;
-				gap: 16px;
-			}
-			.mode-nav {
-				position: static;
-				flex-direction: row;
-				flex-wrap: wrap;
-				justify-content: center;
-			}
-		}
-	</style>
+	<link rel="icon" type="image/png" href="img/logo.png">
+	<script>(function(){try{var t=localStorage.getItem('melodle-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+	<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-	<nav class="mode-nav">
+	<nav class="mode-nav" aria-label="Game modes">
 		<a href="index.html">Daily Melodle</a>
 		<a href="quiz.html">Song Quiz</a>
 		<a href="billboard.html" class="active">Billboard</a>
 		<a href="timeline.html">Timeline</a>
+		<div class="nav-divider"></div>
+		<button type="button" class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle color theme">Dark Mode</button>
 	</nav>
-	<div class="container">
-		<div class="container-row" id="title-row">
-			<div id="title">
-				<b>Melodle Billboard</b>
-			</div>
-		</div>
-		<div class="container-columns" id="main-columns">
-			<div class="container-column" id="main-column-1">
-				<div class="container-row" id="main-section-0"> <!-- please don't @ me -->
-					<img src="img/star.png">Chart of the Day<img src="img/star.png">
+	<div class="container billboard-container">
+		<header class="masthead" id="title-row">
+			<img src="img/logo.png" class="masthead-logo" alt="Melodle logo">
+			<h1 id="title">Melodle Billboard</h1>
+		</header>
+
+		<div class="billboard-layout" id="main-columns">
+			<div class="billboard-sidebar" id="main-column-1">
+				<div class="cotd-badge" id="main-section-0">
+					<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+					<span>Chart of the Day</span>
+					<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
 				</div>
-				<div class="container-row" id="main-section-1">
+				<div class="billboard-date-card" id="main-section-1">
 					<div id="current_date"></div>
-					<div class="modals">
-						<div class="date-picker-wrap" title="Pick a chart date"><svg viewBox="0 0 24 24" fill="none" stroke="#191414" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><input type="date" class="date-picker" id="chart_date" min="1958-08-04" aria-label="Pick a chart date" title="Pick a chart date" onclick="if(this.showPicker)try{this.showPicker()}catch(e){}" onkeydown="if((event.key==='Enter'||event.key===' ')&&this.showPicker){event.preventDefault();try{this.showPicker()}catch(e){}}"/></div>
+					<div class="billboard-modals">
+						<div class="date-picker-wrap is-disabled" id="chartDateWrap" aria-disabled="true" title="Pick a chart date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><input type="hidden" class="date-picker" id="chart_date" min="1958-08-04" aria-label="Pick a chart date"/></div>
 						<div class="modals-subcontainer">
 							<label class="switch">
 								<input type="checkbox" id="difficulty">
 								<span class="slider round"></span>
 							</label>
-							<div>
-								Easy<br>Mode
-							</div>
+							<div>Easy Mode</div>
 						</div>
 					</div>
 				</div>
-				<div class="container-row" id="main-section-2">
+				<div class="billboard-volume-row">
+					<div class="slider-container" id="volume-container">
+						<button type="button" class="volume-btn" onclick="incrementVolume(-10)" aria-label="Decrease volume" title="Decrease volume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="22" y1="9" x2="16" y2="15"></line><line x1="16" y1="9" x2="22" y2="15"></line></svg></button>
+						<input type="range" min="0" max="100" value="80" class="volume-slider" id="volume-slider" step="1" aria-label="Volume">
+						<button type="button" class="volume-btn" onclick="incrementVolume(10)" aria-label="Increase volume" title="Increase volume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>
+					</div>
+				</div>
+				<div id="main-section-2">
 					<div class="auto-container" autocomplete="off">
-						<div class="autocomplete">
+						<div class="autocomplete autocomplete-up">
 							<input id="myInput" type="text" name="myInput" placeholder="Type a song name ...">
-							<img class="submit" src="img/submit.png" onclick="checkAnswer()">
+							<button type="button" class="submit" onclick="checkAnswer()" aria-label="Submit guess"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
 						</div>
 					</div>
 				</div>
-				<div class="container-row" id="game-over-section-1">
-					<b>GAME OVER</b>
+				<div class="gameover-stack" id="game-over-stack">
+					<div id="game-over-section-1">
+						<b>GAME OVER</b>
+					</div>
+					<div id="game-over-section-2">
+						0 of 10 songs found.
+					</div>
 				</div>
-				<div class="container-row" id="game-over-section-2">
-					24 of 30 songs identified.
-				</div>
-				<div class="container-row" id="main-section-3">
+				<div class="billboard-strikes-row" id="main-section-3">
 					<div id="wrong-answer-boxes">
 						<div class="wrong-answer" id="wrong-answer-1"></div>
 						<div class="wrong-answer" id="wrong-answer-2"></div>
@@ -584,62 +77,31 @@
 						<div class="wrong-answer" id="wrong-answer-4"></div>
 						<div class="wrong-answer" id="wrong-answer-5"></div>
 					</div>
-					<button class="giveUpBtn" id="giveUpBtn" onclick="giveUp()" disabled>Give Up</button>
+					<button type="button" class="btn-danger-outline giveUpBtn" id="giveUpBtn" onclick="giveUp()" disabled>Give Up</button>
 				</div>
 			</div>
-			<div class="container-column" id="main-column-2">
-				<div class="container-row" id="main-section-4">
-					<table>
-						<tr>
-							<td class="num-box" id="num1">1.</td>
-							<td class="guess-box" id="guess1"></td>
-						</tr>
-						<tr>
-							<td class="num-box" id="num2">2.</td>
-							<td class="guess-box" id="guess2"></td>
-						</tr>
-						<tr>
-							<td class="num-box" id="num3">3.</td>
-							<td class="guess-box" id="guess3"></td>
-						</tr>
-						<tr>
-							<td class="num-box" id="num4">4.</td>
-							<td class="guess-box" id="guess4"></td>
-						</tr>
-						<tr>
-							<td class="num-box" id="num5">5.</td>
-							<td class="guess-box" id="guess5"></td>
-						</tr>
-						<tr>
-							<td class="num-box" id="num6">6.</td>
-							<td class="guess-box" id="guess6"></td>
-						</tr>
-						<tr>
-							<td class="num-box" id="num7">7.</td>
-							<td class="guess-box" id="guess7"></td>
-						</tr>
-						<tr>
-							<td class="num-box" id="num8">8.</td>
-							<td class="guess-box" id="guess8"></td>
-						</tr>
-						<tr>
-							<td class="num-box" id="num9">9.</td>
-							<td class="guess-box" id="guess9"></td>
-						</tr>
-						<tr>
-							<td class="num-box" id="num10">10.</td>
-							<td class="guess-box" id="guess10"></td>
-						</tr>
-					</table>
+			<div id="main-column-2">
+				<div class="billboard-tracklist" id="main-section-4">
+					<div class="track-slot billboard-slot" id="slot1"><span class="num-box" id="num1">1.</span><div class="guess-box" id="guess1"></div></div>
+					<div class="track-slot billboard-slot" id="slot2"><span class="num-box" id="num2">2.</span><div class="guess-box" id="guess2"></div></div>
+					<div class="track-slot billboard-slot" id="slot3"><span class="num-box" id="num3">3.</span><div class="guess-box" id="guess3"></div></div>
+					<div class="track-slot billboard-slot" id="slot4"><span class="num-box" id="num4">4.</span><div class="guess-box" id="guess4"></div></div>
+					<div class="track-slot billboard-slot" id="slot5"><span class="num-box" id="num5">5.</span><div class="guess-box" id="guess5"></div></div>
+					<div class="track-slot billboard-slot" id="slot6"><span class="num-box" id="num6">6.</span><div class="guess-box" id="guess6"></div></div>
+					<div class="track-slot billboard-slot" id="slot7"><span class="num-box" id="num7">7.</span><div class="guess-box" id="guess7"></div></div>
+					<div class="track-slot billboard-slot" id="slot8"><span class="num-box" id="num8">8.</span><div class="guess-box" id="guess8"></div></div>
+					<div class="track-slot billboard-slot" id="slot9"><span class="num-box" id="num9">9.</span><div class="guess-box" id="guess9"></div></div>
+					<div class="track-slot billboard-slot" id="slot10"><span class="num-box" id="num10">10.</span><div class="guess-box" id="guess10"></div></div>
 				</div>
 			</div>
 		</div>
 
-		<div class="container-row" id="player-audio">
+		<div id="player-audio">
 			<audio controls class="hidden-item" id="audio"></audio>
 		</div>
 	</div>
 
+	<script src="theme.js"></script>
 	<script type="text/javascript">
 		var timestamps = [];
 		var timer = 4000;
@@ -650,19 +112,23 @@
 		let playbackToken = 0;
 		let pendingLoadToken = -1;
 		let clipOriginSec = 0;
+		let clipStartSec = 0;
+		let clipTotalSec = 4;
 		let clipEndTime = null;
 		let clipRafId = null;
 		let clipPlaying = false;
+		const RING_CIRCUMFERENCE = 2 * Math.PI * 9;
 
 		let json_top10 = [];
 		let dates = [];
 
 		let date = new Date();
-		let activeChartDateStr = "";
-		let dailyChartDateStr = "";
+		let activePickedDateStr = "";
+		let dailyPickedDateStr = "";
 		let songs = [];
 		let songLinkByName = new Map();
 		let namesByLink = new Map();
+		let artistBySong = new Map();
 		let guessedSongs = new Set();
 		let quizSongs = [ null, null, null, null, null, null, null, null, null, null ];
 		let quizNames = [ null, null, null, null, null, null, null, null, null, null ];
@@ -696,7 +162,9 @@
 				console.error('Error:', error);
 			}
 
-			chart_date.max = dates.length ? dates[dates.length - 1] : formatLocalDate(new Date());
+			const todayMaxStr = formatLocalDate(new Date());
+			const lastChartMaxStr = dates.length ? dates[dates.length - 1] : todayMaxStr;
+			chart_date.max = (todayMaxStr > lastChartMaxStr) ? todayMaxStr : lastChartMaxStr;
 			
 			const seenSongNames = new Set();
 			for (const entry of json_top10)
@@ -706,6 +174,10 @@
 				{
 					seenSongNames.add(fullName);
 					songs.push(fullName);
+					if (entry.artist)
+					{
+						artistBySong.set(fullName, entry.artist);
+					}
 				}
 				if (entry.link)
 				{
@@ -723,10 +195,18 @@
 
 			songs.sort(sortBySongName);
 			autocomplete(document.getElementById("myInput"), songs);
+			setVolume();
 
 			quizYear = getRandomNumberFromDate();
-			date = new Date(quizYear, date.getMonth(), date.getDate());
+			const maxDayInMonth = new Date(quizYear, date.getMonth() + 1, 0).getDate();
+			date = new Date(quizYear, date.getMonth(), Math.min(date.getDate(), maxDayInMonth));
 			createTopTen();
+			const chartDateWrap = document.getElementById("chartDateWrap");
+			if (chartDateWrap && dates.length)
+			{
+				chartDateWrap.classList.remove("is-disabled");
+				chartDateWrap.removeAttribute("aria-disabled");
+			}
 		});
 
 		audio.addEventListener("loadedmetadata", function() {
@@ -766,31 +246,49 @@
 			}
 		});
 
+		document.getElementById("volume-slider").addEventListener("input", function() {
+			setVolume();
+		});
+
+		function setVolume() {
+			audio.volume = document.getElementById("volume-slider").value / 100;
+		}
+
+		function incrementVolume(i) {
+			const slider = document.getElementById("volume-slider");
+			let vol = parseInt(slider.value, 10) + i;
+			if (vol > Number(slider.max)) vol = Number(slider.max);
+			if (vol < Number(slider.min)) vol = Number(slider.min);
+			slider.value = vol;
+			setVolume();
+		}
+
 		difficulty.addEventListener("change", function() {
 			if (songVal === -1 || audio.paused) return;
+			const dur = (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : 30;
 			if (difficulty.checked)
 			{
 				clipEndTime = null;
-				if (clipRafId !== null)
+				clipStartSec = clipOriginSec;
+				clipTotalSec = Math.max(0.1, dur - clipOriginSec);
+				if (clipRafId === null)
 				{
-					cancelAnimationFrame(clipRafId);
-					clipRafId = null;
+					monitorClipProgress(playbackToken);
 				}
 			}
 			else
 			{
 				const clipSec = timer / 1000;
-				const dur = (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : 30;
 				const endSec = Math.min(clipOriginSec + clipSec, dur - 0.03);
 				if (audio.currentTime < endSec)
 				{
+					clipStartSec = clipOriginSec;
 					clipEndTime = endSec;
-					if (clipRafId !== null)
+					clipTotalSec = Math.max(0.1, clipEndTime - clipStartSec);
+					if (clipRafId === null)
 					{
-						cancelAnimationFrame(clipRafId);
-						clipRafId = null;
+						monitorClipProgress(playbackToken);
 					}
-					monitorClipProgress(playbackToken);
 				}
 				else
 				{
@@ -818,8 +316,14 @@
 
 		function flipIcons(startingPlayback = true) {
 			if (songVal < 0) return;
-			document.getElementById("pauseBtn" + (songVal + 1)).style.display = startingPlayback ? '' : 'none';
-			document.getElementById("speaker" + (songVal + 1)).style.display = startingPlayback ? 'none' : '';
+			const wrap = document.getElementById("pauseWrap" + (songVal + 1));
+			const spk = document.getElementById("speaker" + (songVal + 1));
+			const fg = document.getElementById("ringFg" + (songVal + 1));
+			if (fg) fg.style.strokeDashoffset = String(RING_CIRCUMFERENCE);
+			if (wrap) wrap.style.display = startingPlayback ? 'inline-flex' : 'none';
+			if (spk) spk.style.display = startingPlayback ? 'none' : '';
+			const slot = document.getElementById("slot" + (songVal + 1));
+			if (slot) slot.classList.toggle("is-playing", Boolean(startingPlayback));
 		}
 
 		function cancelClipMonitor() {
@@ -835,15 +339,24 @@
 		}
 
 		function monitorClipProgress(token) {
-			if (token !== playbackToken || clipEndTime === null)
+			if (token !== playbackToken || !clipPlaying || songVal < 0)
 			{
 				return;
 			}
-			if (!audio.paused && !audio.seeking && audio.currentTime >= clipEndTime)
+			if (!audio.paused && !audio.seeking)
 			{
-				pausePlayback();
-				if (songVal != -1) flipIcons(false);
-				return;
+				const fg = document.getElementById("ringFg" + (songVal + 1));
+				if (fg && clipTotalSec > 0)
+				{
+					const frac = Math.max(0, Math.min(1, (audio.currentTime - clipStartSec) / clipTotalSec));
+					fg.style.strokeDashoffset = String(RING_CIRCUMFERENCE * (1 - frac));
+				}
+				if (clipEndTime !== null && audio.currentTime >= clipEndTime)
+				{
+					pausePlayback();
+					if (songVal != -1) flipIcons(false);
+					return;
+				}
 			}
 			clipRafId = requestAnimationFrame(function() {
 				monitorClipProgress(token);
@@ -875,25 +388,31 @@
 				}
 			};
 
+			const dur = (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : 30;
 			if (difficulty.checked)
 			{
 				clipOriginSec = 0;
+				clipStartSec = 0;
 				clipEndTime = null;
+				clipTotalSec = dur;
+				audio.currentTime = 0;
 				clipPlaying = true;
 				const playPromise = audio.play();
 				if (playPromise && typeof playPromise.catch === "function")
 				{
 					playPromise.catch(onPlayError);
 				}
+				monitorClipProgress(token);
 			}
 			else
 			{
 				const clipSec = timer / 1000;
-				const dur = (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : 30;
 				const maxStart = Math.max(0, dur - clipSec);
 				const startSec = Math.min(timestamps[songVal] || 0, maxStart);
 				clipOriginSec = startSec;
+				clipStartSec = startSec;
 				clipEndTime = Math.min(startSec + clipSec, dur - 0.03);
+				clipTotalSec = Math.max(0.1, clipEndTime - clipStartSec);
 
 				audio.currentTime = startSec;
 				clipPlaying = true;
@@ -917,33 +436,32 @@
 			if (!dates.length || isNaN(date.getTime())) return;
 
 			const minDateStr = dates[0];
-			const maxDateStr = dates[dates.length - 1];
-			let dateString = formatLocalDate(date);
-			if (dateString < minDateStr)
+			const maxChartDateStr = dates[dates.length - 1];
+			const todayStr = formatLocalDate(new Date());
+			const maxPickerDateStr = (todayStr > maxChartDateStr) ? todayStr : maxChartDateStr;
+
+			let pickedDateStr = formatLocalDate(date);
+			if (pickedDateStr < minDateStr)
 			{
 				const minParts = minDateStr.split('-');
 				date = new Date(Number(minParts[0]), Number(minParts[1]) - 1, Number(minParts[2]));
-				dateString = minDateStr;
+				pickedDateStr = minDateStr;
 			}
-			else if (dateString > maxDateStr)
+			else if (pickedDateStr > maxPickerDateStr)
 			{
-				const maxParts = maxDateStr.split('-');
+				const maxParts = maxPickerDateStr.split('-');
 				date = new Date(Number(maxParts[0]), Number(maxParts[1]) - 1, Number(maxParts[2]));
-				dateString = maxDateStr;
+				pickedDateStr = maxPickerDateStr;
 			}
-			while (!dates.includes(dateString) && dateString > minDateStr)
+
+			chart_date.value = pickedDateStr;
+			if (pickedDateStr === activePickedDateStr) return;
+			activePickedDateStr = pickedDateStr;
+			if (!dailyPickedDateStr)
 			{
-				date.setDate(date.getDate() - 1);
-				dateString = formatLocalDate(date);
+				dailyPickedDateStr = pickedDateStr;
 			}
-			chart_date.value = dateString;
-			if (dateString === activeChartDateStr) return;
-			activeChartDateStr = dateString;
-			if (!dailyChartDateStr)
-			{
-				dailyChartDateStr = dateString;
-			}
-			document.getElementById("main-section-0").style.display = (dateString === dailyChartDateStr) ? '' : 'none';
+			document.getElementById("main-section-0").style.display = (pickedDateStr === dailyPickedDateStr) ? '' : 'none';
 			resetHTML();
 
 			let dateYear = '' + date.getFullYear();
@@ -951,6 +469,20 @@
 			let dateDay = '' + date.getDate();
 
 			current_date.innerHTML = dateMonth + " " + dateDay + "<br><div class='quiz-year'>" + dateYear + "</div>";
+
+			const lookupDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+			let dateString = formatLocalDate(lookupDate);
+			if (dateString > maxChartDateStr)
+			{
+				const mcParts = maxChartDateStr.split('-');
+				lookupDate.setFullYear(Number(mcParts[0]), Number(mcParts[1]) - 1, Number(mcParts[2]));
+				dateString = maxChartDateStr;
+			}
+			while (!dates.includes(dateString) && dateString > minDateStr)
+			{
+				lookupDate.setDate(lookupDate.getDate() - 1);
+				dateString = formatLocalDate(lookupDate);
+			}
 
 			const seenEntries = new Set();
 			const weekEntries = [];
@@ -1021,47 +553,53 @@
 				songTitleBox.classList.add('answer-box');
 				songTitleBox.id = "answerBox" + (i + 1);
 				const blankContainer = document.createElement("div");
-				const blank = document.createElement("text");
+				const blank = document.createElement("span");
 				blank.id = "guessText" + (i + 1);
 
-				const speakerIcon = document.createElement("img");
-				speakerIcon.src = "img/speaker.png";
-				speakerIcon.classList.add("inline-img");
+				const speakerIcon = document.createElement("button");
+				speakerIcon.type = "button";
+				speakerIcon.className = "row-speaker-btn";
 				speakerIcon.id = "speaker" + (i + 1);
-				if (quizSongs[i] && quizSongs[i].link)
+				speakerIcon.setAttribute("aria-label", "Play preview for rank " + (i + 1));
+				speakerIcon.innerHTML = MELODLE_ICONS.speaker;
+				if (!quizSongs[i] || !quizSongs[i].link)
 				{
-					speakerIcon.onclick = function () {
-						loadClip(quizSongs[i].link, i);
-					};
-				}
-				else
-				{
-					speakerIcon.style.opacity = "0.3";
-					speakerIcon.style.cursor = "not-allowed";
+					speakerIcon.disabled = true;
 					speakerIcon.title = "No audio preview available";
 					if (quizSongs[i])
 					{
-						blank.innerText = quizNames[i];
-						blank.style.color = "#888";
+						setFormattedSongText(blank, quizNames[i], quizSongs[i].artist);
+						blank.style.opacity = "0.65";
 						blank.title = "No audio preview available";
 						guessedSongs.add(quizNames[i]);
 					}
 				}
 
-				const pauseBtn = document.createElement("img");
-				pauseBtn.id = "pauseBtn" + (i + 1);
-				pauseBtn.src = "img/clear_pause.png";
-				pauseBtn.classList.add("inline-img");
-				pauseBtn.onclick = function () {
+				const pauseWrap = document.createElement("button");
+				pauseWrap.type = "button";
+				pauseWrap.id = "pauseWrap" + (i + 1);
+				pauseWrap.classList.add("row-pause-wrap");
+				pauseWrap.setAttribute("aria-label", "Pause preview for rank " + (i + 1));
+				pauseWrap.innerHTML = '<svg class="clip-ring-svg" viewBox="0 0 22 22"><circle class="clip-ring-bg" cx="11" cy="11" r="9"></circle><circle class="clip-ring-fg" id="ringFg' + (i + 1) + '" cx="11" cy="11" r="9"></circle></svg><span class="row-pause-icon">' + MELODLE_ICONS.pause + '</span>';
+				if (quizSongs[i] && quizSongs[i].link)
+				{
+					speakerIcon.onclick = function () {
+						const hadFocus = (document.activeElement === speakerIcon);
+						loadClip(quizSongs[i].link, i);
+						if (hadFocus && pauseWrap.style.display !== "none") pauseWrap.focus();
+					};
+				}
+				pauseWrap.onclick = function () {
+					const hadFocus = (document.activeElement === pauseWrap);
 					flipIcons(false);
 					pausePlayback();
+					if (hadFocus) speakerIcon.focus();
 				};
-				pauseBtn.style.display = 'none';
 
 				blankContainer.appendChild(blank);
 				songTitleBox.appendChild(blankContainer);
 				songTitleBox.appendChild(speakerIcon);
-				songTitleBox.appendChild(pauseBtn);
+				songTitleBox.appendChild(pauseWrap);
 
 				songBox.appendChild(songTitleBox);
 			}
@@ -1089,21 +627,23 @@
 
 				if (songTitleText.innerText == "")
 				{
-					songTitleText.innerText = quizNames[i];
-					songTitleText.style.color = "red";
-					songTitleText.style.fontWeight = "bold";
+					setFormattedSongText(songTitleText, quizNames[i], quizSongs[i].artist);
+					songTitleText.classList.add("missed-song-text");
+					const slot = document.getElementById("slot" + (i + 1));
+					if (slot) slot.classList.add("is-missed");
 				}
 				else
 				{
 					songsFound++;
 				}
-
-				songTitleText.style.cursor = "pointer";
 			}
 
-			document.getElementById("game-over-section-1").innerHTML = (validSongs > 0 && songsFound === validSongs) ? "<b>YOU WIN</b>" : "<b>GAME OVER</b>";
-			document.getElementById("game-over-section-1").style.display = 'block';
+			const isWin = (validSongs > 0 && songsFound === validSongs);
+			const go1 = document.getElementById("game-over-section-1");
+			go1.innerHTML = isWin ? "<b>YOU WIN</b>" : "<b>GAME OVER</b>";
+			go1.style.display = 'block';
 			document.getElementById("game-over-section-2").style.display = 'block';
+			document.getElementById("game-over-stack").style.display = 'flex';
 			document.getElementById("main-section-2").style.display = 'none';
 			document.getElementById("main-section-3").style.display = 'none';
 			document.getElementById("game-over-section-2").innerText = "" + songsFound + " of " + validSongs + " songs found.";
@@ -1142,7 +682,13 @@
 				{
 					const matchedName = quizNames[matchIdx];
 					guessedSongs.add(matchedName);
-					document.getElementById("guessText" + (matchIdx + 1)).innerText = matchedName;
+					setFormattedSongText(
+						document.getElementById("guessText" + (matchIdx + 1)),
+						matchedName,
+						quizSongs[matchIdx] ? quizSongs[matchIdx].artist : undefined
+					);
+					const slot = document.getElementById("slot" + (matchIdx + 1));
+					if (slot) slot.classList.add("is-solved");
 					const matchedLink = quizSongs[matchIdx] && quizSongs[matchIdx].link;
 					if (matchedLink && namesByLink.has(matchedLink))
 					{
@@ -1173,11 +719,11 @@
 							}
 						}
 
-						pausePlayback();
-						if (songVal != -1) flipIcons(false);
-						document.getElementById("game-over-section-1").innerHTML = "<b>YOU WIN</b>";
-						document.getElementById("game-over-section-1").style.display = 'block';
+						const go1 = document.getElementById("game-over-section-1");
+						go1.innerHTML = "<b>YOU WIN</b>";
+						go1.style.display = 'block';
 						document.getElementById("game-over-section-2").style.display = 'block';
+						document.getElementById("game-over-stack").style.display = 'flex';
 						document.getElementById("main-section-2").style.display = 'none';
 						document.getElementById("main-section-3").style.display = 'none';
 						document.getElementById("game-over-section-2").innerText = "All songs found!";
@@ -1188,9 +734,7 @@
 				else
 				{
 					wrongAnswers++;
-					let xImg = document.createElement("img");
-					xImg.src = "img/x.png";
-					document.getElementById("wrong-answer-" + wrongAnswers).appendChild(xImg);
+					document.getElementById("wrong-answer-" + wrongAnswers).innerHTML = MELODLE_ICONS.x;
 
 					if (wrongAnswers == 5)
 					{
@@ -1245,12 +789,15 @@
 				document.getElementById("num" + (i + 1)).innerText = (i + 1) + ".";
 				songBox = document.getElementById("guess" + (i + 1));
 				songBox.innerHTML = "";
+				const slot = document.getElementById("slot" + (i + 1));
+				if (slot) slot.className = "track-slot billboard-slot";
 			}
 
+			document.getElementById("game-over-stack").style.display = 'none';
 			document.getElementById("game-over-section-1").style.display = 'none';
 			document.getElementById("game-over-section-2").style.display = 'none';
-			document.getElementById("main-section-2").style.display = 'flex';
-			document.getElementById("main-section-3").style.display = 'grid';
+			document.getElementById("main-section-2").style.display = '';
+			document.getElementById("main-section-3").style.display = '';
 
 			document.getElementById("giveUpBtn").disabled = false;
 		}
@@ -1282,7 +829,8 @@
 				const lastDateStr = dates[dates.length - 1];
 				const lastParts = lastDateStr.split('-');
 				const lastYear = Number(lastParts[0]);
-				const candidateThisLastYear = formatLocalDate(new Date(lastYear, now.getMonth(), now.getDate()));
+				const maxLastYrDay = new Date(lastYear, now.getMonth() + 1, 0).getDate();
+				const candidateThisLastYear = formatLocalDate(new Date(lastYear, now.getMonth(), Math.min(now.getDate(), maxLastYrDay)));
 				max = (candidateThisLastYear <= lastDateStr) ? lastYear : (lastYear - 1);
 			}
 			const date_string_int = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
@@ -1319,13 +867,7 @@
 							this.parentNode.appendChild(a);
 						}
 						const itemValue = arr[i];
-						b = document.createElement("DIV");
-						index = itemValue.toUpperCase().indexOf(val.toUpperCase());
-						b.appendChild(document.createTextNode(itemValue.substr(0, index)));
-						const strongEl = document.createElement("STRONG");
-						strongEl.textContent = itemValue.substr(index, val.length);
-						b.appendChild(strongEl);
-						b.appendChild(document.createTextNode(itemValue.substr(index + val.length)));
+						b = buildAutocompleteItem(itemValue, val, artistBySong.get(itemValue));
 						b.addEventListener("click", function(e) {
 							inp.value = itemValue;
 							currentFocus = -1;

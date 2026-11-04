@@ -1,635 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Melodle Song Quiz — Identify up to 30 songs from custom decade and genre mixes before 5 strikes.">
 	<title>Melodle Song Quiz</title>
-	<link rel="icon" type="image/x-icon" href="img/logo.png">
-	<style>
-		body {
-			font-family: Helvetica;
-			background-color: #f6f6f6;
-			overscroll-behavior: none;
-			margin: 0;
-			min-height: 100vh;
-			display: flex;
-			padding: 5vh 16px;
-			box-sizing: border-box;
-		}
-
-		table {
-			border-collapse: collapse;
-			table-layout: fixed;
-			width: 100%;
-
-		}
-
-		tr {
-			height: 45px;
-		}
-
-		td,
-		th {
-			border: 1px solid #000000;
-			font-size: 16px;
-			padding: 5px;
-		}
-
-		a {
-			cursor: pointer;
-		}
-
-		img {
-			width: 35px;
-			margin: auto;
-			top: 5px;
-			left: 5px;
-			position: relative;
-		}
-
-		label {
-			font-size: 13.5px;
-		}
-
-		.num-box {
-			width: 5%;
-			min-width: 50px;
-			text-align: center;
-			font-size: 18px;
-		}
-
-		.guess-box {
-			padding-left: 1%;
-			padding-right: 1%;
-			text-align: left;
-		}
-
-		.switcher {
-			display: inline-flex;
-			flex-direction: row;
-			padding: 10px;
-			justify-content: space-between;
-			flex-grow: 1;
-			width: 50%;
-			align-items: center;
-		}
-
-		#completed-text {
-			margin: auto;
-			font-size: 28px;
-			text-align: center;
-		}
-
-		#header {
-			display: grid;
-			grid-template-columns: 4fr 1fr;
-			width: 70%;
-			left: 13%;
-			position: relative;
-			gap: 5px;
-			margin-top: 3%;
-			border: 1px solid black;
-			padding: 10px 2%;
-		}
-
-		.checkboxes {
-			display: grid;
-			grid-template-columns: 1fr;
-			padding-top: 1%;
-		}
-
-		.new-quiz-btn-container {
-			display: grid;
-			grid-template-columns: 1fr;
-			gap: 5px;
-			align-items: center;
-			justify-items: center;
-		}
-
-		.newQuizBtn {
-			margin-bottom: 10px;
-		}
-
-		.category-title {
-			font-weight: bold;
-		}
-
-		.checkbox-category {
-			display: grid;
-			grid-template-columns: 1fr 1fr 1fr;
-			gap: 2px;
-			padding-top: 1%;
-			padding-bottom: 1%;
-		}
-
-		.checkbox-set {
-			display: grid;
-			grid-template-columns: 0.5fr 3fr;
-			align-items: center;
-			gap: 5px;
-		}
-
-		.container {
-			position: relative;
-			margin: auto;
-			display: block;
-			width: 750px;
-		}
-
-		.container-row {
-			width: 100%;
-			padding: 5px;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		#title-row {
-			 border-bottom: solid;
-		}
-
-		#title {
-			 font-size: 60px;
-			 margin: auto;
-			 text-align: center;
-		}
-
-		.wrong-answer {
-			border: 1px solid black;
-			width: 45px;
-			height: 45px;
-		}
-
-		#new-quiz-section {
-			position: absolute;
-			box-sizing: border-box;
-			border: 1px solid black;
-			background: #D3CCCA;
-			padding: 0px;
-			z-index: 1;
-			display: grid;
-			grid-template-columns: 1fr;
-			align-items: center;
-			justify-items: center;
-			font-size: 28px;
-		}
-
-		.dialog-visible {
-			opacity: 1;
-		}
-
-		.dialog-invisible {
-			visibility: hidden;
-			opacity: 0;
-			transition: visibility 0s 2s, opacity 2s linear;
-		}
-
-		.slider-container {
-			display: grid;
-			grid-template-columns: 1fr 4fr 1fr;
-			gap: 5px;
-			align-items: center;
-			justify-items: center;
-		}
-
-		.volume-slider {
-			padding: 0;
-		}
-
-		.volume-icon {
-			width: 22px;
-			height: auto;
-			position: static;
-			cursor: pointer;
-		}
-
-		#main-section-1 {
-			padding-top: 4%;
-			padding-bottom: 2%;
-			display: grid;
-			grid-template-columns: 4fr 0.5fr 1fr 0.5fr 1fr 4fr;
-			justify-items: center;
-			width: 70%;
-			left: 15%;
-			position: relative;
-		}
-
-		#main-section-1 img {
-			position: static;
-		}
-
-		#main-section-1 .active-button {
-			cursor: pointer;
-		}
-
-		#main-section-2 {
-			display: grid;
-			grid-template-columns: 4fr 1fr;
-			gap: 10px;
-			justify-items: center;
-			width: 70%;
-			left: 15%;
-			position: relative;
-		}
-
-		#main-section-3 {
-			display: grid;
-			grid-template-columns: 4fr 1fr;
-			gap: 10px;
-			width: 70%;
-			left: 15%;
-			position: relative;
-			justify-items: center;
-			padding-top: 4%;
-		}
-
-		#wrong-answer-boxes {
-			width: 100%;
-			display: grid;
-			grid-template-columns: 0.5fr repeat(5, 1fr) 0.5fr;
-			justify-items: center;
-		}
-
-		#main-section-4 {
-			padding-top: 5%;
-			padding-bottom: 5%;
-			width: 130%;
-			left: -15%;
-			position: relative;
-			box-sizing: border-box;
-		}
-
-		#game-over-section-1 {
-			padding-top: 3%;
-			font-size: 60px;
-			text-align: center;
-			display: none;
-		}
-
-		#game-over-section-2 {
-			font-size: 30px;
-			text-align: center;
-			display: none;
-		}
-
-		#playlist {
-			text-align: center;
-			padding-right: 13px;
-			font-size: 17px;
-		}
-
-		#player-iframe {
-			width: 0;
-			height: 0;
-			overflow: hidden;
-			padding: 0;
-			box-sizing: border-box;
-			display: block;
-		}
-
-		#seedInput {
-			text-align: center;
-			width: 100%;
-			padding: 10px 6px;
-			box-sizing: border-box;
-		}
-
-		/* Chrome, Safari, Edge, Opera -- to remove arrows*/
-		input::-webkit-outer-spin-button,
-		input::-webkit-inner-spin-button {
-			-webkit-appearance: none;
-			margin: 0;
-		}
-
-		/* Firefox */
-		input[type=number] {
-			-moz-appearance: textfield;
-		}
-
-		button {
-			width: 110px;
-			height: 50px;
-			margin-left: 1%;
-			margin-right: 1%;
-			border-radius: 10px;
-			border: 0;
-			background: #191414;
-			color: #fff;
-			font-size: 15px;
-			cursor: pointer;
-		}
-		
-		button:hover {
-			background: #515151;
-		}
-
-		button:disabled {
-			background-color: #515151;
-			cursor: auto;
-		}
-
-		label {
-			white-space: nowrap;
-		}
-
-		#playBtn img {
-			left: 0;
-			top: 0;
-		}
-
-		.short-button {
-			height: 110%;
-			border-radius: 5px;
-			padding: 4px;
-		}
-
-		.autocomplete {
-			/*the container must be positioned relative:*/
-			position: relative;
-			display: inline-block;
-			width: 100%;
-		}
-
-		input {
-			border: 1px solid #000;
-			background-color: #f1f1f1;
-			padding: 10px 35px 10px 10px;
-			font-size: 16px;
-			box-sizing: border-box;
-		}
-
-		input[type=text] {
-			background-color: #f1f1f1;
-			width: 100%;
-		}
-
-		.autocomplete-items {
-			position: absolute;
-			border: 1px solid #d4d4d4;
-			border-bottom: none;
-			z-index: 99;
-			/*position the autocomplete items to be the same width as the container:*/
-			top: 100%;
-			left: 0;
-			right: 0;
-			overflow-y: auto;
-			max-height: 317px;
-		}
-
-		.autocomplete-items div {
-			padding: 10px;
-			cursor: pointer;
-			background-color: #fff;
-			border-bottom: 1px solid #d4d4d4;
-		}
-
-		.autocomplete-items div:hover {
-			/*when hovering an item:*/
-			background-color: #e9e9e9;
-		}
-
-		.autocomplete-active {
-			/*when navigating through the items using the arrow keys:*/
-			background-color: DodgerBlue !important;
-			color: #ffffff;
-		}
-
-		.auto-container {
-			width: 100%;
-			padding-right: 5px;
-		}
-
-		.inline-img {
-			width: 19px;
-			height: auto;
-			position: static;
-		}
-
-		.row-pause-wrap {
-			position: relative;
-			width: 22px;
-			height: 22px;
-			margin: auto;
-			display: none;
-			align-items: center;
-			justify-content: center;
-			cursor: pointer;
-		}
-
-		.clip-ring-svg {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 22px;
-			height: 22px;
-			transform: rotate(-90deg);
-		}
-
-		.clip-ring-bg {
-			fill: none;
-			stroke: #d4d4d4;
-			stroke-width: 2.2;
-		}
-
-		.clip-ring-fg {
-			fill: none;
-			stroke: #191414;
-			stroke-width: 2.2;
-			stroke-linecap: round;
-			stroke-dasharray: 56.5487;
-			stroke-dashoffset: 56.5487;
-		}
-
-		.row-pause-icon {
-			width: 8px;
-			height: 8px;
-			position: static;
-			pointer-events: none;
-		}
-
-		.answer-box {
-			display: grid;
-			grid-template-columns: 7fr 1fr;
-			gap: 2px;
-			align-items: center;
-			min-height: 22px;
-		}
-
-		.hidden-item {
-			display: none;
-		}
-
-		.submit {
-			position: absolute;
-			height: 16px;
-			width: auto;
-			left: auto;
-			right: 12px;
-			margin: 0;
-			top: 50%;
-			transform: translate(0, -50%);
-			cursor: pointer;
-		}
-
-		.modals-subcontainer {
-			display: flex;
-			flex-direction: column;
-			gap: 5px;
-			align-items: center;
-		}
-
-		/* this entire section is for the difficulty toggle */
-
-		/* The switch - the box around the slider */
-		.switch {
-			position: relative;
-			display: inline-block;
-			width: 50px;
-			height: 22px;
-		}
-		/* Hide default HTML checkbox */
-		.switch input {
-			opacity: 0;
-			width: 0;
-			height: 0;
-		}
-		/* The slider */
-		.slider {
-			position: absolute;
-			cursor: pointer;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background-color: #ccc;
-		}
-		.slider:before {
-			position: absolute;
-			content: "";
-			height: 16px;
-			width: 16px;
-			left: 3px;
-			bottom: 3px;
-			background-color: white;
-		}
-		input:checked + .slider {
-			background-color: #171717;
-		}
-		input:focus + .slider {
-			box-shadow: 0 0 1px #171717;
-		}
-		input:checked + .slider:before {
-			-webkit-transform: translateX(28px);
-			-ms-transform: translateX(28px);
-			transform: translateX(28px);
-		}
-		/* Rounded sliders */
-		.slider.round {
-			border-radius: 34px;
-		}
-		.slider.round:before {
-			border-radius: 50%;
-		}
-
-		/* end section for difficulty toggle */
-		.mode-nav {
-			position: fixed;
-			top: 20px;
-			left: 16px;
-			display: flex;
-			flex-direction: column;
-			gap: 8px;
-			z-index: 100;
-			font-family: Helvetica, Arial, sans-serif;
-		}
-		.mode-nav a {
-			display: block;
-			padding: 7px 14px;
-			border-radius: 8px;
-			font-size: 13px;
-			font-weight: bold;
-			text-decoration: none;
-			text-align: center;
-			color: #191414;
-			background-color: #ffffff;
-			border: 1px solid #cccccc;
-			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-			cursor: pointer;
-		}
-		.mode-nav a:hover {
-			background-color: #e8e8e8;
-		}
-		.mode-nav a.active {
-			background-color: #191414;
-			color: #ffffff;
-			border-color: #191414;
-		}
-		@media (max-width: 1260px) {
-			body {
-				flex-direction: column;
-				align-items: center;
-				gap: 16px;
-			}
-			.mode-nav {
-				position: static;
-				flex-direction: row;
-				flex-wrap: wrap;
-				justify-content: center;
-			}
-		}
-		@media (max-width: 1010px) {
-			#main-section-4 {
-				width: 100%;
-				left: 0;
-			}
-		}
-	</style>
+	<link rel="icon" type="image/png" href="img/logo.png">
+	<script>(function(){try{var t=localStorage.getItem('melodle-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+	<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-	<nav class="mode-nav">
+	<nav class="mode-nav" aria-label="Game modes">
 		<a href="index.html">Daily Melodle</a>
 		<a href="quiz.html" class="active">Song Quiz</a>
 		<a href="billboard.html">Billboard</a>
 		<a href="timeline.html">Timeline</a>
+		<div class="nav-divider"></div>
+		<button type="button" class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle color theme">Dark Mode</button>
 	</nav>
-	<div class="container">
-		<div class="container-row" id="title-row">
-			<div id="title">
-				<b>Melodle Song Quiz</b>
-			</div>
-		</div>
+	<div class="container quiz-container">
+		<header class="masthead" id="title-row">
+			<img src="img/logo.png" class="masthead-logo" alt="Melodle logo">
+			<h1 id="title">Melodle Song Quiz</h1>
+		</header>
+
 		<div class="dialog-invisible" id="new-quiz-section">
 			<b>New quiz generated!</b>
 		</div>
-		<div class="container-row" id="header">
-			<div id="checkboxes" class="checkboxes">
-			</div>
+
+		<div class="quiz-builder" id="header">
+			<div id="checkboxes" class="checkboxes"></div>
 			<div class="new-quiz-btn-container" id="new-quiz-buttons">
-				<button id="newQuizBtn" class="newQuizBtn" onclick="startRandomQuiz()">New Quiz</button>
-				<input id="seedInput" type="text" placeholder="Seed ..." onkeydown="if(event.key==='Enter'){event.preventDefault();createSongQuiz();}">
-				<button id="newSeedBtn" class="short-button" onclick="createSongQuiz()">Load Seed</button>
+				<button type="button" id="newQuizBtn" class="newQuizBtn" onclick="startRandomQuiz()">New Quiz</button>
+				<input id="seedInput" type="text" placeholder="Seed ..." aria-label="Quiz seed" onkeydown="if(event.key==='Enter'){event.preventDefault();createSongQuiz();}">
+				<button type="button" id="newSeedBtn" class="btn-secondary" onclick="createSongQuiz()">Load Seed</button>
 			</div>
 		</div>
-		<div class="container-row" id="main-section-1">
-			<div id="playlist"><b>Current Song:</b><br/><div id="currentSong">1 of 30</div></div>
-			<img src="img/prev.png" class="active-button" id="prev-button" onclick="incrementSong(-1)">
-			<img src="img/prev-disabled.png" id="prev-disabled-button">
-			<img src="img/play.png" class="active-button" id="play-button" onclick="loadAudio()">
-			<img src="img/pause.png" class="active-button" id="pause-button" onclick="pausePlayback()">
-			<img src="img/next.png" class="active-button" id="next-button" onclick="incrementSong(1)">
-			<img src="img/next-disabled.png" id="next-disabled-button">
-			<div></div> <!-- empty div for spacing -->
+
+		<div class="quiz-transport-bar" id="main-section-1">
+			<div class="quiz-transport-left">
+				<div id="playlist">
+					<span class="meta-eyebrow">Current Track</span>
+					<div id="currentSong">1 of 30</div>
+				</div>
+				<div class="transport-btns">
+					<button type="button" class="icon-btn" id="prev-button" onclick="incrementSong(-1)" aria-label="Previous track" title="Previous track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+					<button type="button" class="icon-btn is-disabled" id="prev-disabled-button" disabled aria-label="Previous track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+					<button type="button" class="icon-btn primary" id="play-button" onclick="loadAudio()" aria-label="Play sequence" title="Play sequence"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6,4 20,12 6,20"></polygon></svg></button>
+					<button type="button" class="icon-btn primary" id="pause-button" onclick="pausePlayback()" aria-label="Pause" title="Pause"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4.5" height="16" rx="1"></rect><rect x="13.5" y="4" width="4.5" height="16" rx="1"></rect></svg></button>
+					<button type="button" class="icon-btn" id="next-button" onclick="incrementSong(1)" aria-label="Next track" title="Next track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+					<button type="button" class="icon-btn is-disabled" id="next-disabled-button" disabled aria-label="Next track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+				</div>
+			</div>
 			<div class="slider-container" id="volume-container">
-				<img src="img/mute.png" class="volume-icon" onclick="incrementVolume(-10)">
-				<input type="range" min="0" max="100" value="80" class="volume-slider" id="volume-slider" step="1">
-				<img src="img/speaker.png" class="volume-icon" onclick="incrementVolume(10)">
+				<button type="button" class="volume-btn" onclick="incrementVolume(-10)" aria-label="Decrease volume" title="Decrease volume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="22" y1="9" x2="16" y2="15"></line><line x1="16" y1="9" x2="22" y2="15"></line></svg></button>
+				<input type="range" min="0" max="100" value="80" class="volume-slider" id="volume-slider" step="1" aria-label="Volume">
+				<button type="button" class="volume-btn" onclick="incrementVolume(10)" aria-label="Increase volume" title="Increase volume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>
 			</div>
 		</div>
-		<div class="container-row" id="main-section-2">
+
+		<div class="quiz-search-row" id="main-section-2">
 			<div class="auto-container" autocomplete="off">
-				<div class="autocomplete">
+				<div class="autocomplete autocomplete-down">
 					<input id="myInput" type="text" name="myInput" placeholder="Type a song name ...">
-					<img class="submit" src="img/submit.png" onclick="checkAnswer()">
+					<button type="button" class="submit" onclick="checkAnswer()" aria-label="Submit guess"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
 				</div>
 			</div>
 			<div class="modals-subcontainer" id="difficulty-container">
@@ -637,121 +73,81 @@
 					<input type="checkbox" id="difficulty">
 					<span class="slider round"></span>
 				</label>
-				<div>
-					Easy Mode
+				<div>Easy Mode</div>
+			</div>
+		</div>
+
+		<div class="quiz-gameover-row" id="quiz-game-over-row">
+			<div class="gameover-stack">
+				<div id="game-over-section-1">
+					<b>GAME OVER</b>
+				</div>
+				<div id="game-over-section-2">
+					? of 30 songs identified.
 				</div>
 			</div>
 		</div>
-		<div class="container-row" id="game-over-section-1">
-			<b>GAME OVER</b>
-		</div>
-		<div class="container-row" id="game-over-section-2">
-			? of 30 songs identified.
-		</div>
-		<div class="container-row" id="main-section-3">
+
+		<div class="quiz-strikes-row" id="main-section-3">
 			<div id="wrong-answer-boxes">
-				<div></div> <!-- empty div for spacing -->
 				<div class="wrong-answer" id="wrong-answer-1"></div>
 				<div class="wrong-answer" id="wrong-answer-2"></div>
 				<div class="wrong-answer" id="wrong-answer-3"></div>
 				<div class="wrong-answer" id="wrong-answer-4"></div>
 				<div class="wrong-answer" id="wrong-answer-5"></div>
-				<div></div> <!-- empty div for spacing -->
 			</div>
-			<button class="giveUpBtn" id="giveUpBtn" onclick="giveUp()">Give Up</button>
-		</div>
-		<div class="container-row" id="main-section-4">
-			<table>
-				<tr>
-					<td class="num-box" id="num1">1.</td>
-					<td class="guess-box" id="guess1"></td>
-					<td class="num-box" id="num11">11.</td>
-					<td class="guess-box" id="guess11"></td>
-					<td class="num-box" id="num21">21.</td>
-					<td class="guess-box" id="guess21"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num2">2.</td>
-					<td class="guess-box" id="guess2"></td>
-					<td class="num-box" id="num12">12.</td>
-					<td class="guess-box" id="guess12"></td>
-					<td class="num-box" id="num22">22.</td>
-					<td class="guess-box" id="guess22"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num3">3.</td>
-					<td class="guess-box" id="guess3"></td>
-					<td class="num-box" id="num13">13.</td>
-					<td class="guess-box" id="guess13"></td>
-					<td class="num-box" id="num23">23.</td>
-					<td class="guess-box" id="guess23"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num4">4.</td>
-					<td class="guess-box" id="guess4"></td>
-					<td class="num-box" id="num14">14.</td>
-					<td class="guess-box" id="guess14"></td>
-					<td class="num-box" id="num24">24.</td>
-					<td class="guess-box" id="guess24"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num5">5.</td>
-					<td class="guess-box" id="guess5"></td>
-					<td class="num-box" id="num15">15.</td>
-					<td class="guess-box" id="guess15"></td>
-					<td class="num-box" id="num25">25.</td>
-					<td class="guess-box" id="guess25"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num6">6.</td>
-					<td class="guess-box" id="guess6"></td>
-					<td class="num-box" id="num16">16.</td>
-					<td class="guess-box" id="guess16"></td>
-					<td class="num-box" id="num26">26.</td>
-					<td class="guess-box" id="guess26"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num7">7.</td>
-					<td class="guess-box" id="guess7"></td>
-					<td class="num-box" id="num17">17.</td>
-					<td class="guess-box" id="guess17"></td>
-					<td class="num-box" id="num27">27.</td>
-					<td class="guess-box" id="guess27"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num8">8.</td>
-					<td class="guess-box" id="guess8"></td>
-					<td class="num-box" id="num18">18.</td>
-					<td class="guess-box" id="guess18"></td>
-					<td class="num-box" id="num28">28.</td>
-					<td class="guess-box" id="guess28"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num9">9.</td>
-					<td class="guess-box" id="guess9"></td>
-					<td class="num-box" id="num19">19.</td>
-					<td class="guess-box" id="guess19"></td>
-					<td class="num-box" id="num29">29.</td>
-					<td class="guess-box" id="guess29"></td>
-				</tr>
-				<tr>
-					<td class="num-box" id="num10">10.</td>
-					<td class="guess-box" id="guess10"></td>
-					<td class="num-box" id="num20">20.</td>
-					<td class="guess-box" id="guess20"></td>
-					<td class="num-box" id="num30">30.</td>
-					<td class="guess-box" id="guess30"></td>
-				</tr>
-			</table>
+			<button type="button" class="btn-danger-outline giveUpBtn" id="giveUpBtn" onclick="giveUp()">Give Up</button>
 		</div>
 
-		<div class="container-row" id="player-iframe">
+		<div id="main-section-4">
+			<div class="quiz-columns-grid">
+				<div class="quiz-col">
+					<div class="track-slot" id="slot1"><span class="num-box" id="num1">1.</span><div class="guess-box" id="guess1"></div></div>
+					<div class="track-slot" id="slot2"><span class="num-box" id="num2">2.</span><div class="guess-box" id="guess2"></div></div>
+					<div class="track-slot" id="slot3"><span class="num-box" id="num3">3.</span><div class="guess-box" id="guess3"></div></div>
+					<div class="track-slot" id="slot4"><span class="num-box" id="num4">4.</span><div class="guess-box" id="guess4"></div></div>
+					<div class="track-slot" id="slot5"><span class="num-box" id="num5">5.</span><div class="guess-box" id="guess5"></div></div>
+					<div class="track-slot" id="slot6"><span class="num-box" id="num6">6.</span><div class="guess-box" id="guess6"></div></div>
+					<div class="track-slot" id="slot7"><span class="num-box" id="num7">7.</span><div class="guess-box" id="guess7"></div></div>
+					<div class="track-slot" id="slot8"><span class="num-box" id="num8">8.</span><div class="guess-box" id="guess8"></div></div>
+					<div class="track-slot" id="slot9"><span class="num-box" id="num9">9.</span><div class="guess-box" id="guess9"></div></div>
+					<div class="track-slot" id="slot10"><span class="num-box" id="num10">10.</span><div class="guess-box" id="guess10"></div></div>
+				</div>
+				<div class="quiz-col">
+					<div class="track-slot" id="slot11"><span class="num-box" id="num11">11.</span><div class="guess-box" id="guess11"></div></div>
+					<div class="track-slot" id="slot12"><span class="num-box" id="num12">12.</span><div class="guess-box" id="guess12"></div></div>
+					<div class="track-slot" id="slot13"><span class="num-box" id="num13">13.</span><div class="guess-box" id="guess13"></div></div>
+					<div class="track-slot" id="slot14"><span class="num-box" id="num14">14.</span><div class="guess-box" id="guess14"></div></div>
+					<div class="track-slot" id="slot15"><span class="num-box" id="num15">15.</span><div class="guess-box" id="guess15"></div></div>
+					<div class="track-slot" id="slot16"><span class="num-box" id="num16">16.</span><div class="guess-box" id="guess16"></div></div>
+					<div class="track-slot" id="slot17"><span class="num-box" id="num17">17.</span><div class="guess-box" id="guess17"></div></div>
+					<div class="track-slot" id="slot18"><span class="num-box" id="num18">18.</span><div class="guess-box" id="guess18"></div></div>
+					<div class="track-slot" id="slot19"><span class="num-box" id="num19">19.</span><div class="guess-box" id="guess19"></div></div>
+					<div class="track-slot" id="slot20"><span class="num-box" id="num20">20.</span><div class="guess-box" id="guess20"></div></div>
+				</div>
+				<div class="quiz-col">
+					<div class="track-slot" id="slot21"><span class="num-box" id="num21">21.</span><div class="guess-box" id="guess21"></div></div>
+					<div class="track-slot" id="slot22"><span class="num-box" id="num22">22.</span><div class="guess-box" id="guess22"></div></div>
+					<div class="track-slot" id="slot23"><span class="num-box" id="num23">23.</span><div class="guess-box" id="guess23"></div></div>
+					<div class="track-slot" id="slot24"><span class="num-box" id="num24">24.</span><div class="guess-box" id="guess24"></div></div>
+					<div class="track-slot" id="slot25"><span class="num-box" id="num25">25.</span><div class="guess-box" id="guess25"></div></div>
+					<div class="track-slot" id="slot26"><span class="num-box" id="num26">26.</span><div class="guess-box" id="guess26"></div></div>
+					<div class="track-slot" id="slot27"><span class="num-box" id="num27">27.</span><div class="guess-box" id="guess27"></div></div>
+					<div class="track-slot" id="slot28"><span class="num-box" id="num28">28.</span><div class="guess-box" id="guess28"></div></div>
+					<div class="track-slot" id="slot29"><span class="num-box" id="num29">29.</span><div class="guess-box" id="guess29"></div></div>
+					<div class="track-slot" id="slot30"><span class="num-box" id="num30">30.</span><div class="guess-box" id="guess30"></div></div>
+				</div>
+			</div>
+		</div>
+
+		<div id="player-iframe">
 			<audio controls class="hidden-item" id="audio"></audio>
-			<button class="hidden-item" id="hiddenPlayBtn"></button>
+			<button type="button" class="hidden-item" id="hiddenPlayBtn"></button>
 			<div id="embed-iframe"></div>
 		</div>
 	</div>
 
+	<script src="theme.js"></script>
 	<script type="text/javascript">
 		var quizLinks = [];
 		var songLinks = [];
@@ -784,6 +180,7 @@
 		const RING_CIRCUMFERENCE = 2 * Math.PI * 9;
 		let clipRafId = null;
 		let guessedSongs = new Set();
+		let artistBySong = new Map();
 		const preloadAudio = new Audio();
 		preloadAudio.preload = "auto";
 
@@ -791,7 +188,7 @@
 			const element = document.getElementById('embed-iframe');
 			const options = {
 				width: '100%',
-				height: '200px'
+				height: 152
 			};
 			const callback = (EmbedController) => {
 				quizEmbedController = EmbedController;
@@ -919,12 +316,15 @@
 
 			for (const cat of catsToElems)
 			{
+				const group = document.createElement("div");
+				group.classList.add("category-group");
 				const title = document.createElement("div");
 				title.classList.add("category-title");
 				title.innerText = cat[0];
 
-				document.getElementById("checkboxes").appendChild(title);
-				document.getElementById("checkboxes").appendChild(cat[1]);
+				group.appendChild(title);
+				group.appendChild(cat[1]);
+				document.getElementById("checkboxes").appendChild(group);
 			}
 
 			document.getElementById("checkboxes").addEventListener("change", updateNewQuizBtn);
@@ -1079,6 +479,8 @@
 				clearRowPlaying();
 			}
 			activeRowIndex = idx;
+			const slot = document.getElementById("slot" + (idx + 1));
+			if (slot) slot.classList.add("is-playing");
 			const spk = document.getElementById("speaker" + (idx + 1));
 			const wrap = document.getElementById("pauseWrap" + (idx + 1));
 			const fg = document.getElementById("ringFg" + (idx + 1));
@@ -1091,6 +493,8 @@
 			if (activeRowIndex === -1) return;
 			const idx = activeRowIndex;
 			activeRowIndex = -1;
+			const slot = document.getElementById("slot" + (idx + 1));
+			if (slot) slot.classList.remove("is-playing");
 			const spk = document.getElementById("speaker" + (idx + 1));
 			const wrap = document.getElementById("pauseWrap" + (idx + 1));
 			const fg = document.getElementById("ringFg" + (idx + 1));
@@ -1358,24 +762,33 @@
 					let songTitleBox = document.createElement("div");
 					songTitleBox.classList.add('answer-box');
 					let blankContainer = document.createElement("div");
-					let blank = document.createElement("text");
+					let blank = document.createElement("span");
+					blank.className = "song-label-title";
 					blank.id = "guessText" + (i + 1);
 
-					const speakerIcon = document.createElement("img");
+					const speakerIcon = document.createElement("button");
+					speakerIcon.type = "button";
 					speakerIcon.id = "speaker" + (i + 1);
-					speakerIcon.src = "img/speaker.png";
-					speakerIcon.classList.add("inline-img");
-					speakerIcon.style.cursor = "pointer";
-					speakerIcon.onclick = function () {
-						loadClip(i);
-					};
+					speakerIcon.className = "row-speaker-btn";
+					speakerIcon.setAttribute("aria-label", "Play clip " + (i + 1));
+					speakerIcon.innerHTML = MELODLE_ICONS.speaker;
 
-					const pauseWrap = document.createElement("div");
+					const pauseWrap = document.createElement("button");
+					pauseWrap.type = "button";
 					pauseWrap.id = "pauseWrap" + (i + 1);
 					pauseWrap.classList.add("row-pause-wrap");
-					pauseWrap.innerHTML = '<svg class="clip-ring-svg" viewBox="0 0 22 22"><circle class="clip-ring-bg" cx="11" cy="11" r="9"></circle><circle class="clip-ring-fg" id="ringFg' + (i + 1) + '" cx="11" cy="11" r="9"></circle></svg><img src="img/clear_pause.png" class="row-pause-icon">';
+					pauseWrap.setAttribute("aria-label", "Pause clip " + (i + 1));
+					pauseWrap.innerHTML = '<svg class="clip-ring-svg" viewBox="0 0 22 22"><circle class="clip-ring-bg" cx="11" cy="11" r="9"></circle><circle class="clip-ring-fg" id="ringFg' + (i + 1) + '" cx="11" cy="11" r="9"></circle></svg><span class="row-pause-icon">' + MELODLE_ICONS.pause + '</span>';
+
+					speakerIcon.onclick = function () {
+						const hadFocus = (document.activeElement === speakerIcon);
+						loadClip(i);
+						if (hadFocus && pauseWrap.style.display !== "none") pauseWrap.focus();
+					};
 					pauseWrap.onclick = function () {
+						const hadFocus = (document.activeElement === pauseWrap);
 						pausePlayback();
+						if (hadFocus) speakerIcon.focus();
 					};
 
 					blankContainer.appendChild(blank);
@@ -1386,6 +799,10 @@
 					songBox.appendChild(songTitleBox);
 				}
 				songs.push(songStatsCleaned[i][0]);
+				if (songStatsCleaned[i][4])
+				{
+					artistBySong.set(songStatsCleaned[i][0], String(songStatsCleaned[i][4]));
+				}
 			}
 
 			quizStats = shuffle(quizStats);
@@ -1448,9 +865,11 @@
 				{
 					songsFound--;
 					songTitleText.innerText = quizTitles[i];
-					songTitleText.style.color = "red";
-					songTitleText.style.fontWeight = "bold";
+					songTitleText.classList.add("missed-song-text");
+					const slot = document.getElementById("slot" + (i + 1));
+					if (slot) slot.classList.add("is-missed");
 				}
+				songTitleText.title = quizTitles[i];
 
 				songTitleText.onclick = function () {
 					songVal = i;
@@ -1460,20 +879,23 @@
 				songTitleText.style.cursor = "pointer";
 			}
 
-			document.getElementById("game-over-section-1").innerHTML = (songsFound === activeCount) ? "<b>YOU WIN</b>" : "<b>GAME OVER</b>";
-			document.getElementById("game-over-section-1").style.display = 'block';
+			const go1 = document.getElementById("game-over-section-1");
+			go1.innerHTML = (songsFound === activeCount) ? "<b>YOU WIN</b>" : "<b>GAME OVER</b>";
+			go1.style.display = 'block';
 			document.getElementById("game-over-section-2").style.display = 'block';
+			document.getElementById("game-over-section-2").innerText = (songsFound === activeCount) ? "All songs found!" : ("" + songsFound + " of " + activeCount + " songs found.");
 			document.getElementById("main-section-1").style.display = 'none';
 			document.getElementById("main-section-2").style.display = 'none';
-			document.getElementById("game-over-section-2").innerText = (songsFound === activeCount) ? "All songs found!" : ("" + songsFound + " of " + activeCount + " songs found.");
+			document.getElementById("main-section-3").style.display = 'none';
 			document.getElementById("giveUpBtn").disabled = true;
 			document.getElementById("giveUpBtn").style.display = 'none';
-			document.getElementById("main-section-3").appendChild(document.getElementById("difficulty-container"));
+			document.getElementById("quiz-game-over-row").appendChild(document.getElementById("difficulty-container"));
+			document.getElementById("quiz-game-over-row").style.display = 'grid';
 
 			document.getElementById("player-iframe").style.width = "100%";
 			document.getElementById("player-iframe").style.height = "auto";
 			document.getElementById("player-iframe").style.overflow = "visible";
-			document.getElementById("player-iframe").style.padding = "5px";
+			document.getElementById("player-iframe").style.padding = "4px 0 0";
 
 			songVal = 0;
 			document.getElementById("hiddenPlayBtn").click();
@@ -1494,7 +916,11 @@
 				if (quizSongs.includes(input))
 				{
 					const matchIdx = quizSongs.indexOf(input);
-					document.getElementById("guessText" + (matchIdx + 1)).innerText = quizTitles[matchIdx];
+					const guessEl = document.getElementById("guessText" + (matchIdx + 1));
+					guessEl.innerText = quizTitles[matchIdx];
+					guessEl.title = quizTitles[matchIdx];
+					const slot = document.getElementById("slot" + (matchIdx + 1));
+					if (slot) slot.classList.add("is-solved");
 
 					let allFound = quizSongs.length > 0;
 					for (let i = 0; i < quizSongs.length; i++)
@@ -1514,9 +940,7 @@
 				else
 				{
 					wrongAnswers++;
-					let xImg = document.createElement("img");
-					xImg.src = "img/x.png";
-					document.getElementById("wrong-answer-" + wrongAnswers).appendChild(xImg);
+					document.getElementById("wrong-answer-" + wrongAnswers).innerHTML = MELODLE_ICONS.x;
 
 					if (wrongAnswers == 5)
 					{
@@ -1599,6 +1023,7 @@
 			playing = false;
 			wrongAnswers = 0;
 			guessedSongs.clear();
+			artistBySong.clear();
 
 			document.getElementById("myInput").value = "";
 			document.querySelectorAll(".autocomplete-items").forEach(function(el) { el.remove(); });
@@ -1614,13 +1039,17 @@
 			{
 				songBox = document.getElementById("guess" + (i + 1));
 				songBox.innerHTML = "";
+				const slot = document.getElementById("slot" + (i + 1));
+				if (slot) slot.className = "track-slot";
 			}
 
+			document.getElementById("quiz-game-over-row").style.display = 'none';
 			document.getElementById("game-over-section-1").style.display = 'none';
 			document.getElementById("game-over-section-2").style.display = 'none';
 			document.getElementById("main-section-2").appendChild(document.getElementById("difficulty-container"));
-			document.getElementById("main-section-1").style.display = 'grid';
-			document.getElementById("main-section-2").style.display = 'grid';
+			document.getElementById("main-section-1").style.display = '';
+			document.getElementById("main-section-2").style.display = '';
+			document.getElementById("main-section-3").style.display = '';
 
 			document.getElementById("giveUpBtn").style.display = '';
 			document.getElementById("giveUpBtn").disabled = false;
@@ -1656,13 +1085,7 @@
 							this.parentNode.appendChild(a);
 						}
 						const itemValue = arr[i];
-						b = document.createElement("DIV");
-						index = itemValue.toUpperCase().indexOf(val.toUpperCase());
-						b.appendChild(document.createTextNode(itemValue.substr(0, index)));
-						const strongEl = document.createElement("STRONG");
-						strongEl.textContent = itemValue.substr(index, val.length);
-						b.appendChild(strongEl);
-						b.appendChild(document.createTextNode(itemValue.substr(index + val.length)));
+						b = buildAutocompleteItem(itemValue, val, artistBySong.get(itemValue));
 						b.addEventListener("click", function(e) {
 							inp.value = itemValue;
 							currentFocus = -1;

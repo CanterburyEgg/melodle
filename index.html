@@ -1,510 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 	<meta charset="UTF-8">
-	<title>Melodle</title>
-	<link rel="icon" type="image/x-icon" href="img/logo.png">
-	<style>
-		body {
-			font-family: Helvetica;
-			background-color: #f6f6f6;
-			overscroll-behavior: none;
-			margin: 0;
-			min-height: 100vh;
-			display: flex;
-			padding: 5vh 16px;
-			box-sizing: border-box;
-		}
-		table {
-			border-collapse: collapse;
-			width: 100%;
-			border: 2px solid #171717;
-
-		}
-		tr {
-			height: 45px;
-		}
-		td,
-		th {
-			border: 1px solid #171717;
-			border-right: 2px solid #171717;
-			font-size: 18px;
-		}
-		a {
-			cursor: pointer;
-		}
-		.x-box {
-			width: 7%;
-			min-width: 50px;
-			text-align: center;
-		}
-		.guess-box {
-			padding-left: 2%;
-			text-align: left;
-		}
-		.switcher {
-			display: inline-flex;
-			flex-direction: row;
-			padding: 10px;
-			justify-content: space-between;
-			flex-grow: 1;
-			width: 50%;
-			align-items: center;
-		}
-		#completed-text {
-			margin: auto;
-			font-size: 28px;
-			text-align: center;
-		}
-		.container {
-			position: relative;
-			margin: auto;
-			display: block;
-			width: 750px;
-		}
-		.container-row {
-			width: 100%;
-			display: inline-flex;
-			flex-direction: row;
-			padding: 5px;
-			justify-content: space-between;
-			align-items: center;
-		}
-		#title-row {
-			 border-bottom: solid;
-			 padding: 0;
-			 margin: 5px;
-		}
-		#decades {
-			padding-bottom: 15px;
-		}
-		#header {
-			 font-size: 60px;
-			 margin: auto;
-			 padding-bottom: 5px;
-		}
-		#main-section-1 {
-			padding-top: 20px;
-			display: grid;
-			grid-template-columns: 2fr 1fr 0.5fr 1fr 1.25fr 0.5fr;
-			gap: 5px;
-			justify-items: center;
-		}
-		#main-section-2 {
-			padding: 25px 0;
-		}
-		#main-section-3 {
-			margin: 0 auto;
-			width: 95%;
-			display: flex;
-			gap: 20px;
-			justify-items: center;
-		}
-		#main-section-3 img {
-			width: auto;
-			height: 30px;
-			flex-shrink: 0;
-			cursor: pointer;
-		}
-		#main-section-4 {
-			width: 95%;
-			margin: 0 auto;
-			display: flex;
-		}
-		#main-section-completed {
-			display: none;
-			padding-bottom: 45px;
-		}
-		.songpicker {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-		}
-		.prev-next-btns {
-			display: flex;
-		}
-		.prev-next-btns img {
-			cursor: pointer;
-			width: 25px;
-			height: auto;
-		}
-		.submit {
-			position: absolute;
-			height: 16px !important;
-			right: 12px;
-			top: 50%;
-			transform: translate(0, -50%);
-			cursor: pointer;
-		}
-		#playlist {
-			text-align: center;
-	  	  	padding-right: 13px;
-	    	font-size: 15.5px;
-		}
-		#player-iframe {
-			width: 0;
-			height: 0;
-			overflow: hidden;
-			padding: 0;
-			box-sizing: border-box;
-			display: block;
-		}
-		form {
-			padding-bottom: 5px;
-			margin-block-end: 0em;
-		}
-		.form-input {
-			float: right;
-			min-width: 50px;
-			text-align: center;
-		}
-		/* Chrome, Safari, Edge, Opera -- to remove arrows*/
-		input::-webkit-outer-spin-button,
-		input::-webkit-inner-spin-button {
-		  -webkit-appearance: none;
-		  margin: 0;
-		}
-		/* Firefox */
-		input[type=number] {
-		  -moz-appearance: textfield;
-		}
-		button {
-			width: 110px;
-			height: 50px;
-			margin-left: 1%;
-			margin-right: 1%;
-			border-radius: 10px;
-			border: 0;
-			background: #191414;
-			color: #fff;
-			font-size: 15px;
-			cursor: pointer;
-		}
-		.arrowbutton {
-			width: 40px;
-			height: 25px;
-		}
-		.arrowbuttons {
-			display: flex;
-			margin-left: auto;
-		}
-		button:hover {
-			background: #515151;
-		}
-		.autocomplete {
-			/*the container must be positioned relative:*/
-			position: relative;
-			display: inline-block;
-			width: 100%;
-		}
-		input {
-			border: 1px solid #000;
-			background-color: #f1f1f1;
-			padding: 10px 35px 10px 10px;
-			font-size: 16px;
-			box-sizing: border-box;
-		}
-		input[type=text] {
-			background-color: #f1f1f1;
-			width: 100%;
-		}
-		.autocomplete-items {
-			position: absolute;
-			border: 1px solid #d4d4d4;
-			border-bottom: none;
-			z-index: 99;
-			/*position the autocomplete items to be the same width as the container:*/
-			bottom: 100%;
-			left: 0;
-			right: 0;
-			overflow-y: auto;
-			max-height: 317px;
-		}
-		.autocomplete-items div {
-			padding: 10px;
-			cursor: pointer;
-			background-color: #fff;
-			border-bottom: 1px solid #d4d4d4;
-		}
-		.autocomplete-items div:hover {
-			/*when hovering an item:*/
-			background-color: #e9e9e9;
-		}
-		.autocomplete-active {
-			/*when navigating through the items using the arrow keys:*/
-			background-color: DodgerBlue !important;
-			color: #ffffff;
-		}
-		.auto-container {
-			width: 100%;
-			padding-right: 5px;
-		}
-		.progressbar {
-			width: 100%;
-			height: auto;
-		}
-		.progressbar .inner {
-			height: 10px;
-			background: #171717;
-			animation: progressbar-countdown;
-			/* Placeholder, this will be updated using javascript */
-			animation-duration: 40s;
-			/* We stop in the end */
-			animation-iteration-count: 1;
-			/* Stay on pause when the animation is finished finished */
-			animation-fill-mode: forwards;
-			/* We start paused, we start the animation using javascript */
-			animation-play-state: paused;
-			/* We want a linear animation, ease-out is standard */
-			animation-timing-function: linear;
-		}
-		@keyframes progressbar-countdown {
-			0% {
-				width: 100%;
-			}
-			100% {
-				width: 0%;
-			}
-		}
-		.popup {
-			position: relative;
-			display: inline-block;
-			cursor: pointer;
-		}
-		/* The actual popup */
-		.popup .popuptext {
-			visibility: hidden;
-			width: 240px;
-			background-color: #555;
-			color: #fff;
-			text-align: center;
-			border-radius: 6px;
-			padding: 8px 0;
-			position: absolute;
-			z-index: 1;
-		  /*bottom: 0%;
-		  left: 50%;*/
-		  margin-left: -131px;
-		  margin-top: 60px;
-		}
-		/* Popup arrow */
-		.popup .popuptext::after {
-			content: "";
-			position: absolute;
-			top: -11%;
-			left: 50%;
-			transform: scaleY(-1);
-			margin-left: -5px;
-			border-width: 5px;
-			border-style: solid;
-			border-color: #555 transparent transparent transparent;
-		}
-		#qmark {
-			height: 30px;
-		}
-		a {
-			color: #AFDCEB;
-		}
-		#decades {
-			font-weight: bold;
-			font-family: Verdana;
-			font-size: 12px;
-		}
-		#decades a {
-			color: #0047AB;
-			text-decoration: none;
-		}
-		/* Toggle this class - hide and show the popup */
-		.popup .show {
-			visibility: visible;
-			-webkit-animation: fadeIn 1s;
-			animation: fadeIn 1s;
-		}
-		/* Add animation (fade in the popup) */
-		@-webkit-keyframes fadeIn {
-			from {opacity: 0;} 
-			to {opacity: 1;}
-		}
-		@keyframes fadeIn {
-			from {opacity: 0;}
-			to {opacity:1 ;}
-		}
-		.date-picker-wrap {
-			position: relative;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 28px;
-			height: 28px;
-			overflow: hidden;
-		}
-		.date-picker-wrap:focus-within {
-			outline: 2px solid #191414;
-			outline-offset: 2px;
-			border-radius: 4px;
-		}
-		.date-picker-wrap svg {
-			width: 26px;
-			height: 26px;
-			pointer-events: none;
-		}
-		.date-picker {
-			-webkit-appearance: none;
-			appearance: none;
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			opacity: 0;
-			cursor: pointer;
-			border: none;
-			padding: 0;
-			margin: 0;
-		}
-		.date-text {
-			text-align: center;
-			font-size: 20px;
-		}
-		.quiz-year {
-			font-size: 40px;
-		}
-		.mode-nav {
-			position: fixed;
-			top: 20px;
-			left: 16px;
-			display: flex;
-			flex-direction: column;
-			gap: 8px;
-			z-index: 100;
-			font-family: Helvetica, Arial, sans-serif;
-		}
-		.mode-nav a {
-			display: block;
-			padding: 7px 14px;
-			border-radius: 8px;
-			font-size: 13px;
-			font-weight: bold;
-			text-decoration: none;
-			text-align: center;
-			color: #191414;
-			background-color: #ffffff;
-			border: 1px solid #cccccc;
-			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-			cursor: pointer;
-		}
-		.mode-nav a:hover {
-			background-color: #e8e8e8;
-		}
-		.mode-nav a.active {
-			background-color: #191414;
-			color: #ffffff;
-			border-color: #191414;
-		}
-		@media (max-width: 1260px) {
-			body {
-				flex-direction: column;
-				align-items: center;
-				gap: 16px;
-			}
-			.mode-nav {
-				position: static;
-				flex-direction: row;
-				flex-wrap: wrap;
-				justify-content: center;
-			}
-		}
-	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Melodle — Daily song-guessing game across decades, Billboard #1 hits, and custom Spotify playlists.">
+	<title>Melodle — Daily Song Game</title>
+	<link rel="icon" type="image/png" href="img/logo.png">
+	<script>(function(){try{var t=localStorage.getItem('melodle-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+	<link rel="stylesheet" href="styles.css">
 </head>
 
-<body onload="setDailySongVal()">
-	<nav class="mode-nav">
+<body>
+	<nav class="mode-nav" aria-label="Game modes">
 		<a href="index.html" class="active">Daily Melodle</a>
 		<a href="quiz.html">Song Quiz</a>
 		<a href="billboard.html">Billboard</a>
 		<a href="timeline.html">Timeline</a>
+		<div class="nav-divider"></div>
+		<button type="button" class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle color theme">Dark Mode</button>
 	</nav>
 	<div class="container">
-		<div id="decades" style="text-align: center;">
-			<a onclick="switchPlaylist('1960s')">1960s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('1970s')">1970s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('1980s')">1980s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('1990s')">1990s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('2000s')">2000s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('2010s')">2010s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('2020s')">2020s</a>&nbsp;&nbsp;•&nbsp;&nbsp;<a onclick="switchPlaylist('billboard-no-1s')">Billboard #1 Hits</a>
+		<div id="decades" role="navigation" aria-label="Playlist filters">
+			<a href="#" data-playlist="startup-playlist" onclick="event.preventDefault();switchPlaylist('startup-playlist')">Most Streamed</a><span class="decade-sep" aria-hidden="true">•</span><a href="#" data-playlist="1960s" onclick="event.preventDefault();switchPlaylist('1960s')">1960s</a><span class="decade-sep" aria-hidden="true">•</span><a href="#" data-playlist="1970s" onclick="event.preventDefault();switchPlaylist('1970s')">1970s</a><span class="decade-sep" aria-hidden="true">•</span><a href="#" data-playlist="1980s" onclick="event.preventDefault();switchPlaylist('1980s')">1980s</a><span class="decade-sep" aria-hidden="true">•</span><a href="#" data-playlist="1990s" onclick="event.preventDefault();switchPlaylist('1990s')">1990s</a><span class="decade-sep" aria-hidden="true">•</span><a href="#" data-playlist="2000s" onclick="event.preventDefault();switchPlaylist('2000s')">2000s</a><span class="decade-sep" aria-hidden="true">•</span><a href="#" data-playlist="2010s" onclick="event.preventDefault();switchPlaylist('2010s')">2010s</a><span class="decade-sep" aria-hidden="true">•</span><a href="#" data-playlist="2020s" onclick="event.preventDefault();switchPlaylist('2020s')">2020s</a><span class="decade-sep" aria-hidden="true">•</span><a href="#" data-playlist="billboard-no-1s" onclick="event.preventDefault();switchPlaylist('billboard-no-1s')">Billboard #1 Hits</a>
 		</div>
-		<div class="container-row" id="title-row">
-			<div id="header">
-				<b style="cursor: pointer;" onclick="switchPlaylist('startup-playlist', null)">Melodle</b>
+
+		<header class="masthead" id="title-row">
+			<div class="masthead-clickable" id="header" role="button" tabindex="0" onclick="switchPlaylist('startup-playlist')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchPlaylist('startup-playlist');}" title="Switch to Spotify's Most Streamed">
+				<img src="img/logo.png" class="masthead-logo" alt="Melodle logo">
+				<h1>Melodle</h1>
 			</div>
-		</div>
-		<div class="container-row" id="main-section-1">
-			<div id="playlist"><b>Current Playlist:</b><br/><div id="playlist-name">Spotify's Most Streamed</div></div>
-			<button id="setplaylist" onclick="uploadPlaylist()">Upload Playlist</button>
-			<div class="popup">
-				<img id="qmark" src="img/qmark.png" onclick="showPopup()">
-				<span class="popuptext" id="myPopup">Use a site like <a href="https://www.soundiiz.com" target="_blank">Soundiiz</a> to convert your Spotify playlist to JSON, then upload it here for a custom Melodle game!</span>
+		</header>
+
+		<div class="daily-meta-bar" id="main-section-1">
+			<div class="playlist-meta">
+				<div id="playlist">
+					<span class="meta-eyebrow">Current Playlist</span>
+					<div id="playlist-name">Spotify's Most Streamed</div>
+				</div>
+				<div class="playlist-actions">
+					<button type="button" class="btn-secondary" id="setplaylist" onclick="uploadPlaylist()">Upload Playlist</button>
+					<div class="popup">
+						<button type="button" class="help-btn" id="qmark" onclick="showPopup()" aria-label="How to upload a custom playlist">?</button>
+						<span class="popuptext" id="myPopup">Use a site like <a href="https://www.soundiiz.com" target="_blank" rel="noopener">Soundiiz</a> to convert your Spotify playlist to JSON, then upload it here for a custom Melodle game!</span>
+					</div>
+				</div>
 			</div>
-			<div></div> <!-- empty div for space in the grid -->
-			<div class="date-text" id="currentDate"></div>
-			<div class="songpicker">
-				<div class="date-picker-wrap" title="Pick a date"><svg viewBox="0 0 24 24" fill="none" stroke="#191414" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><input type="date" class="date-picker" id="datepicker" aria-label="Pick a date" title="Pick a date" onclick="if(this.showPicker)try{this.showPicker()}catch(e){}" onkeydown="if((event.key==='Enter'||event.key===' ')&&this.showPicker){event.preventDefault();try{this.showPicker()}catch(e){}}"/></div>
-				<div class="prev-next-btns">
-					<img id="prev" src="img/prev.png">
-					<img id="next" src="img/next.png">
+			<div class="date-controls">
+				<div class="date-text" id="currentDate"></div>
+				<div class="songpicker">
+					<div class="date-picker-wrap" title="Pick a date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><input type="hidden" class="date-picker" id="datepicker" min="2025-08-27" aria-label="Pick a date"/></div>
+					<div class="prev-next-btns">
+						<button type="button" class="icon-btn nav-chevron-btn" id="prev" aria-label="Previous day" title="Previous day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+						<button type="button" class="icon-btn nav-chevron-btn" id="next" aria-label="Next day" title="Next day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="container-row" id="main-section-2">
-			<table>
-				<tr>
-					<td class="x-box" id="x1"></td>
-					<td class="guess-box" id="guess1"></td>
-				</tr>
-				<tr>
-					<td class="x-box" id="x2"></td>
-					<td class="guess-box" id="guess2"></td>
-				</tr>
-				<tr>
-					<td class="x-box" id="x3"></td>
-					<td class="guess-box" id="guess3"></td>
-				</tr>
-				<tr>
-					<td class="x-box" id="x4"></td>
-					<td class="guess-box" id="guess4"></td>
-				</tr>
-				<tr>
-					<td class="x-box" id="x5"></td>
-					<td class="guess-box" id="guess5"></td>
-				</tr>
-				<tr>
-					<td class="x-box" id="x6"></td>
-					<td class="guess-box" id="guess6"></td>
-				</tr>
-			</table>
+		<div class="daily-slots" id="main-section-2">
+			<div class="daily-slot is-current" id="slot1"><div class="x-box" id="x1">1</div><div class="guess-box" id="guess1"></div></div>
+			<div class="daily-slot" id="slot2"><div class="x-box" id="x2">2</div><div class="guess-box" id="guess2"></div></div>
+			<div class="daily-slot" id="slot3"><div class="x-box" id="x3">3</div><div class="guess-box" id="guess3"></div></div>
+			<div class="daily-slot" id="slot4"><div class="x-box" id="x4">4</div><div class="guess-box" id="guess4"></div></div>
+			<div class="daily-slot" id="slot5"><div class="x-box" id="x5">5</div><div class="guess-box" id="guess5"></div></div>
+			<div class="daily-slot" id="slot6"><div class="x-box" id="x6">6</div><div class="guess-box" id="guess6"></div></div>
 		</div>
 
-		<div class="container-row" id="main-section-completed">
+		<div id="main-section-completed">
 			<div id="completed-text"></div>
 		</div>
 
-		<div class="container-row" id="player-iframe">
+		<div id="player-iframe">
 			<div id="embed-iframe"></div>
 		</div>
 
-		<div class="container-row" id="main-section-3">
+		<div class="daily-player-dock" id="main-section-3">
 			<div class="auto-container" autocomplete="off">
-				<div class="autocomplete">
+				<div class="autocomplete autocomplete-up">
 					<input id="myInput" type="text" name="myInput" placeholder="Type a song name ...">
-					<img class="submit" src="img/submit.png" onclick="checkAnswer()">
+					<button type="button" class="submit" onclick="checkAnswer()" aria-label="Submit guess"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
 				</div>
 			</div>
-			<img src="img/play.png" class="active-button" id="play-button">
-			<img class="skip" src="img/skip.png" onclick="skip()">
+			<button type="button" class="icon-btn primary daily-play-btn" id="play-button" aria-label="Play clip"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6,4 20,12 6,20"></polygon></svg></button>
+			<button type="button" class="btn-secondary skip-btn" onclick="skip()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg><span>Skip</span></button>
 		</div>
 
-		<div class="container-row" id="main-section-4">
-			<div id='progressbar'></div>
-		</div>	
+		<div id="main-section-4">
+			<div id="progressbar"></div>
+		</div>
 	</div>
 
+	<script src="theme.js"></script>
 	<script type="text/javascript">
 		var links = [];
 		var songs = [];
@@ -598,7 +185,7 @@
 			const element = document.getElementById('embed-iframe');
 			const options = {
 				width: '100%',
-				height: '200px'
+				height: 152
 			};
 			const callback = (EmbedController) => {
 				controller = EmbedController;
@@ -728,8 +315,10 @@
 				EmbedController.addListener('playback_started', e => {
 					if (!songVisible && playing)
 					{
-						document.getElementById("play-button").src = "img/stop.png";
-						document.getElementById("play-button").addEventListener('click', resetPlayState);
+						const playBtn = document.getElementById("play-button");
+						playBtn.innerHTML = MELODLE_ICONS.stop;
+						playBtn.setAttribute("aria-label", "Stop clip");
+						playBtn.addEventListener('click', resetPlayState);
 					}
 				});
 
@@ -754,26 +343,26 @@
 		function updatePrevNextBtns() {
 			if (datepicker.value >= getFormattedDate(new Date()))
 			{
-				next.src = "img/next-disabled.png";
-				next.style.cursor = "auto";
+				next.classList.add("is-disabled");
+				next.disabled = true;
 				next.removeEventListener('click', nextDay);
 			}
 			else
 			{
-				next.src = "img/next.png";
-				next.style.cursor = "pointer";
+				next.classList.remove("is-disabled");
+				next.disabled = false;
 				next.addEventListener('click', nextDay);
 			}
 			if (datepicker.value <= getFormattedDate(firstDay))
 			{
-				prev.src = "img/prev-disabled.png";
-				prev.style.cursor = "auto";
+				prev.classList.add("is-disabled");
+				prev.disabled = true;
 				prev.removeEventListener('click', previousDay);
 			}
 			else
 			{
-				prev.src = "img/prev.png";
-				prev.style.cursor = "pointer";
+				prev.classList.remove("is-disabled");
+				prev.disabled = false;
 				prev.addEventListener('click', previousDay);
 			}
 		}
@@ -829,9 +418,11 @@
 
 		function playAudio() {
 			if (!controller || !links[songVal]) return;
-			document.getElementById("play-button").removeEventListener('click', playAudio);
-			document.getElementById("play-button").src = "img/stop.png";
-			document.getElementById("play-button").addEventListener('click', resetPlayState);
+			const playBtn = document.getElementById("play-button");
+			playBtn.removeEventListener('click', playAudio);
+			playBtn.innerHTML = MELODLE_ICONS.stop;
+			playBtn.setAttribute("aria-label", "Stop clip");
+			playBtn.addEventListener('click', resetPlayState);
 			clipStarted = false;
 			clipStartPos = 0;
 			remainingMs = timer;
@@ -921,10 +512,26 @@
 				}
 			}
 
-			document.getElementById('progressbar').innerHTML = "";			
-			document.getElementById("play-button").removeEventListener('click', resetPlayState);
-			document.getElementById("play-button").src = "img/play.png";
-			document.getElementById("play-button").addEventListener('click', playAudio);
+			document.getElementById('progressbar').innerHTML = "";
+			const playBtn = document.getElementById("play-button");
+			playBtn.removeEventListener('click', resetPlayState);
+			playBtn.innerHTML = MELODLE_ICONS.play;
+			playBtn.setAttribute("aria-label", "Play clip");
+			playBtn.addEventListener('click', playAudio);
+		}
+
+		function syncActiveDecadePill(activePlaylist) {
+			document.querySelectorAll('#decades a[data-playlist]').forEach(function(a) {
+				a.classList.toggle('active-decade', a.getAttribute('data-playlist') === activePlaylist);
+			});
+		}
+
+		function updateActiveSlot() {
+			for (let i = 1; i <= 6; i++)
+			{
+				const slot = document.getElementById('slot' + i);
+				if (slot) slot.classList.toggle('is-current', !songVisible && i === guess);
+			}
 		}
 
 		async function setDailySongVal(fDay = firstDay, playlist = null, pushHistory = false) {
@@ -1003,6 +610,7 @@
 			autocomplete(document.getElementById("myInput"), sortedSongs);
 
 			document.getElementById('playlist-name').innerText = (playlist === defaultPlaylist) ? "Spotify's Most Streamed" : (playlistTitles[playlist] || playlist);
+			syncActiveDecadePill(playlist);
 
 			currentDate.innerHTML = date.toLocaleString('default', { month: 'long' }) + " " + date.getDate() + "<br><div class='quiz-year'>" + date.getFullYear() + "</div>";
 
@@ -1020,6 +628,14 @@
 			var popup = document.getElementById("myPopup");
 			popup.classList.toggle("show");
 		}
+
+		document.addEventListener("click", function(e) {
+			const popup = document.getElementById("myPopup");
+			if (popup && popup.classList.contains("show") && !e.target.closest(".popup"))
+			{
+				popup.classList.remove("show");
+			}
+		});
 
 		function uploadPlaylist() {
 			let input = document.createElement('input');
@@ -1059,6 +675,7 @@
 					autocomplete(document.getElementById("myInput"), sortedSongs);
 
 					document.getElementById('playlist-name').innerText = file.name.replace(/\.json$/i, '');
+					syncActiveDecadePill(null);
 					if (controller && links[songVal])
 					{
 						controller.loadUri(links[songVal]);
@@ -1153,7 +770,9 @@
 			for (let i = 1; i <= 6; i++)
 			{
 				document.getElementById('guess' + i).innerHTML = "";
-				document.getElementById('x' + i).innerHTML = "";
+				document.getElementById('x' + i).textContent = String(i);
+				const slot = document.getElementById('slot' + i);
+				if (slot) slot.className = 'daily-slot';
 			}
 
 			document.getElementById('main-section-3').style.display = 'flex';
@@ -1165,29 +784,24 @@
 			document.getElementById('player-iframe').style.padding = '0';
 
 			songVisible = false;
+			updateActiveSlot();
 		}
 
 		function createProgressbar(id, duration, callback) {
-	  		// We select the div that we want to turn into a progressbar
 			var progressBar = document.getElementById(id);
+			progressBar.innerHTML = '';
 			progressBar.className = 'progressbar';
 
-	  		// We create the div that changes width to show progress
 			var progressBarInner = document.createElement('div');
 			progressBarInner.className = 'inner';
 
-	  		// Now we set the animation parameters
 			progressBarInner.style.animationDuration = duration;
 
-	  		// Eventually couple a callback
 			if (typeof(callback) === 'function') {
 				progressBarInner.addEventListener('animationend', callback);
 			}
 
-	  		// Append the progressbar to the main progressbardiv
 			progressBar.appendChild(progressBarInner);
-
-	  		// When everything is set up we start the animation
 			progressBarInner.style.animationPlayState = 'running';
 		}
 
@@ -1195,6 +809,7 @@
 			resetPlayState();
 			songVisible = true;
 			lastKnownPosition = 0;
+			updateActiveSlot();
 
 			if (controller && links[songVal])
 			{
@@ -1204,7 +819,7 @@
 			document.getElementById('player-iframe').style.width = '100%';
 			document.getElementById('player-iframe').style.height = 'auto';
 			document.getElementById('player-iframe').style.overflow = 'visible';
-			document.getElementById('player-iframe').style.padding = '5px';
+			document.getElementById('player-iframe').style.padding = '0';
 			document.getElementById('main-section-completed').style.display = 'flex';
 			document.getElementById('main-section-3').style.display = 'none';
 			document.getElementById('main-section-4').style.display = 'none';
@@ -1261,8 +876,9 @@
 			resetPlayState();
 
 			document.getElementById('myInput').value = "";
-			document.getElementById('guess' + guess).innerText = "-- Skipped --";
-			document.getElementById('x' + guess).innerHTML = '<img src="img/x.png" style="width:25px; margin:auto;"></img>';
+			document.getElementById('guess' + guess).textContent = "Skipped";
+			document.getElementById('x' + guess).innerHTML = MELODLE_ICONS.x;
+			document.getElementById('slot' + guess).classList.add('slot-skipped');
 			if (guess == 6)
 			{
 				displayCorrectSong();
@@ -1273,6 +889,7 @@
 				timer = timer + increment;
 				increment = increment + 1000;
 				guess++;
+				updateActiveSlot();
 			}
 		}
 
@@ -1283,20 +900,27 @@
 			{
 				resetPlayState();
 				document.getElementById('myInput').value = "";
-				document.getElementById('guess' + guess).innerText = input;
+				setFormattedSongText(document.getElementById('guess' + guess), input, artistBySong.get(input));
 
 				if (songs[songVal] == input)
 				{
+					document.getElementById('slot' + guess).classList.add('slot-correct');
+					document.getElementById('x' + guess).innerHTML = MELODLE_ICONS.check;
 					displayCorrectSong();
-					document.getElementById('x' + guess).innerHTML = '<img src="img/check.png" style="width:25px; margin:auto;"></img>';
 					document.getElementById('completed-text').innerHTML = '<b>Nailed it!</b><br/>You solved the Melodle in ' + ((timer-1000) / 1000).toString() + ' second(s).';
 				}
 				else
 				{
 					if (checkForSimilarArtist(songs[songVal], input))
-						document.getElementById('x' + guess).innerHTML = '<img src="img/alert.png" style="width:25px; margin:auto;"></img>';
+					{
+						document.getElementById('slot' + guess).classList.add('slot-artist');
+						document.getElementById('x' + guess).innerHTML = MELODLE_ICONS.alert;
+					}
 					else
-						document.getElementById('x' + guess).innerHTML = '<img src="img/x.png" style="width:25px; margin:auto;"></img>';
+					{
+						document.getElementById('slot' + guess).classList.add('slot-wrong');
+						document.getElementById('x' + guess).innerHTML = MELODLE_ICONS.x;
+					}
 
 					if (guess == 6)
 					{
@@ -1308,6 +932,7 @@
 						timer = timer + increment;
 						increment = increment + 1000;
 						guess++;
+						updateActiveSlot();
 					}
 				}
 			}
@@ -1338,13 +963,7 @@
 							this.parentNode.appendChild(a);
 						}
 						const itemValue = arr[i];
-						b = document.createElement("DIV");
-						index = itemValue.toUpperCase().indexOf(val.toUpperCase());
-						b.appendChild(document.createTextNode(itemValue.substr(0, index)));
-						const strongEl = document.createElement("STRONG");
-						strongEl.textContent = itemValue.substr(index, val.length);
-						b.appendChild(strongEl);
-						b.appendChild(document.createTextNode(itemValue.substr(index + val.length)));
+						b = buildAutocompleteItem(itemValue, val, artistBySong.get(itemValue));
 						b.addEventListener("click", function(e) {
 							inp.value = itemValue;
 							currentFocus = -1;
@@ -1406,6 +1025,11 @@
 				closeAllLists(e.target);
 			}, sig);
 		}
+
+		initDatePicker();
+		document.addEventListener("DOMContentLoaded", function () {
+			setDailySongVal();
+		});
 	</script>
 	<script src="https://open.spotify.com/embed-podcast/iframe-api/v1" async></script>
 </body>

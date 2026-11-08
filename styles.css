@@ -2471,17 +2471,19 @@ input[type="number"] {
 	margin-bottom: 14px;
 }
 
-.ts-miss-count {
-	font-family: var(--font-display);
-	font-size: 13px;
-	font-weight: 700;
-	color: var(--text-secondary);
-	font-variant-numeric: tabular-nums;
-	white-space: nowrap;
+.ts-search-row #wrong-answer-boxes {
+	gap: 6px;
 }
 
-.ts-miss-count b {
-	color: var(--text-primary);
+.ts-search-row .wrong-answer {
+	width: 30px;
+	height: 30px;
+	border-radius: 7px;
+}
+
+.ts-search-row .wrong-answer svg {
+	width: 15px;
+	height: 15px;
 }
 
 .ts-gameover-row {

@@ -1,6 +1,6 @@
 /* ==========================================================================
    Melodle Design System — Editorial Light & Studio Vinyl Dark
-   Shared across index.html, quiz.html, billboard.html, and timeline.html
+   Shared across index.html, quiz.html, billboard.html, topsongs.html, and timeline.html
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
@@ -2361,6 +2361,184 @@ input[type="number"] {
 }
 
 /* ==========================================================================
+   Page 5: Top Songs (topsongs.html)
+   ========================================================================== */
+
+.container.topsongs-container {
+	width: 1200px;
+	max-width: calc(100vw - 360px);
+}
+
+.ts-eyebrow {
+	font-family: var(--font-display);
+	font-size: 11.5px;
+	font-weight: 800;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--text-muted);
+	text-align: center;
+	margin-bottom: 14px;
+}
+
+.ts-year-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	max-width: 760px;
+	margin: 0 auto 6px;
+}
+
+.ts-decade-row {
+	display: grid;
+	grid-template-columns: 64px repeat(10, minmax(0, 1fr));
+	gap: 6px;
+	align-items: center;
+}
+
+.ts-decade-label {
+	font-family: var(--font-display);
+	font-size: 12.5px;
+	font-weight: 800;
+	color: var(--text-muted);
+	text-align: right;
+	padding-right: 6px;
+}
+
+.ts-year-btn {
+	height: 38px;
+	padding: 0;
+	border-radius: 9px;
+	background: var(--bg-slot);
+	border: 1px solid var(--border-subtle);
+	color: var(--text-primary);
+	font-family: var(--font-display);
+	font-size: 13px;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+
+.ts-year-btn:hover:not(:disabled) {
+	background: var(--accent);
+	border-color: var(--accent);
+	color: var(--accent-fg);
+}
+
+.ts-year-btn:disabled {
+	opacity: 0.35;
+}
+
+.ts-year-btn.is-empty {
+	visibility: hidden;
+}
+
+.ts-game-header {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 16px;
+}
+
+.ts-back-btn {
+	justify-self: start;
+	height: 34px;
+	padding: 0 12px;
+	font-size: 13px;
+}
+
+.ts-year-title {
+	font-family: var(--font-display);
+	font-size: 34px;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+	color: var(--text-primary);
+}
+
+.ts-header-right {
+	justify-self: end;
+	display: flex;
+	align-items: center;
+	gap: 18px;
+}
+
+.ts-search-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto auto;
+	gap: 16px;
+	align-items: center;
+	margin-bottom: 14px;
+}
+
+.ts-miss-count {
+	font-family: var(--font-display);
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--text-secondary);
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.ts-miss-count b {
+	color: var(--text-primary);
+}
+
+.ts-gameover-row {
+	display: none;
+	grid-template-columns: 150px minmax(0, 1fr) 150px;
+	gap: 16px;
+	align-items: center;
+	margin: 2px 0 14px;
+}
+
+.ts-gameover-row .gameover-stack {
+	grid-column: 2;
+	display: flex;
+	justify-self: center;
+}
+
+.ts-next-btn {
+	grid-column: 3;
+	justify-self: end;
+}
+
+.ts-columns-grid {
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	gap: 10px;
+	width: 100%;
+}
+
+.ts-columns-grid .track-slot {
+	padding: 6px 8px;
+	gap: 7px;
+}
+
+.ts-columns-grid .num-box {
+	min-width: 20px;
+}
+
+.ts-slot-label {
+	display: block;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ts-slot-artist {
+	display: block;
+	font-size: 11px;
+	font-weight: 500;
+	color: var(--text-muted);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1.2;
+}
+
+/* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
 
@@ -2385,6 +2563,15 @@ input[type="number"] {
 	}
 	.mode-nav .theme-toggle {
 		width: auto;
+	}
+	.container.topsongs-container {
+		max-width: 100%;
+	}
+}
+
+@media (max-width: 1100px) {
+	.ts-columns-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}
 }
 
@@ -2411,6 +2598,29 @@ input[type="number"] {
 @media (max-width: 720px) {
 	.quiz-columns-grid {
 		grid-template-columns: 1fr;
+	}
+	.ts-columns-grid {
+		grid-template-columns: 1fr;
+	}
+	.ts-search-row,
+	.ts-game-header,
+	.ts-gameover-row {
+		grid-template-columns: 1fr;
+		justify-items: center;
+	}
+	.ts-gameover-row .gameover-stack,
+	.ts-next-btn,
+	.ts-back-btn,
+	.ts-header-right {
+		grid-column: 1;
+		justify-self: center;
+	}
+	.ts-decade-row {
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+	}
+	.ts-decade-label {
+		grid-column: 1 / -1;
+		text-align: left;
 	}
 }
 

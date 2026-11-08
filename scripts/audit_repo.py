@@ -33,9 +33,10 @@ from _common import (  # noqa: E402
     is_banned_entry,
 )
 
-HTML_FILES = ("index.html", "quiz.html", "billboard.html", "timeline.html")
+HTML_FILES = ("index.html", "quiz.html", "billboard.html", "topsongs.html", "timeline.html")
 FRONTEND_LF_FILES = ("styles.css", "theme.js")
-EXPECTED_DATA_FILES = {"chart_dates.json", "top_10s.json", "top_10s_linked.json", "top_10s_data.json"}
+TOP_SONGS_FILES = {"top_songs.json", "hot100_songs.json"}
+EXPECTED_DATA_FILES = {"chart_dates.json", "top_10s.json", "top_10s_linked.json", "top_10s_data.json"} | TOP_SONGS_FILES
 HTML_ENTITY_RE = re.compile(r"&(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);")
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
@@ -246,6 +247,58 @@ def audit_billboard_and_timeline(errors: list[str], *, strict_previews: bool) ->
     }
 
 
+def audit_top_songs(errors: list[str]) -> dict[str, int]:
+    """Validate Top Songs data. Messages cite year/slot indices only (never titles) to stay spoiler-free."""
+    if not all((DATA_DIR / fn).exists() for fn in TOP_SONGS_FILES):
+        return {}
+    ts_text = check_file_formatting(DATA_DIR / "top_songs.json", errors)
+    pool_text = check_file_formatting(DATA_DIR / "hot100_songs.json", errors)
+    years = (json.loads(ts_text) or {}).get("years", {})
+    pool = json.loads(pool_text)
+
+    pool_names: set[str] = set()
+    for idx, pair in enumerate(pool):
+        if not (isinstance(pair, list) and len(pair) == 2 and all(isinstance(x, str) and x for x in pair)):
+            errors.append(f"hot100_songs.json[{idx}]: expected [title, artist] pair")
+            continue
+        if is_banned_entry(pair[0], pair[1]):
+            errors.append(f"hot100_songs.json[{idx}]: banned entry")
+        pool_names.add(f"{pair[0]} - {pair[1]}")
+    if len(pool_names) != len(pool):
+        errors.append("hot100_songs.json: duplicate [title, artist] pairs")
+
+    current_year = datetime.now().year
+    for yr, rows in years.items():
+        if not re.fullmatch(r"\d{4}", yr) or not (1958 <= int(yr) < current_year):
+            errors.append(f"top_songs.json: invalid or current/future year key {yr!r}")
+        if len(rows) != 50:
+            errors.append(f"top_songs.json[{yr}]: expected 50 songs, got {len(rows)}")
+        seen_links: set[str] = set()
+        seen_names: set[str] = set()
+        for idx, r in enumerate(rows):
+            where = f"top_songs.json[{yr}][#{idx + 1}]"
+            if set(r.keys()) != {"title", "artist", "link", "names"}:
+                errors.append(f"{where}: unexpected keys {sorted(r.keys())}")
+                continue
+            if not r["title"] or not r["artist"] or is_banned_entry(r["title"], r["artist"]):
+                errors.append(f"{where}: empty or banned title/artist")
+            if not PREVIEW_URL_RE.match(str(r["link"])):
+                errors.append(f"{where}: malformed or missing preview link")
+            elif r["link"] in seen_links:
+                errors.append(f"{where}: duplicate preview audio within year")
+            seen_links.add(r["link"])
+            names = r["names"]
+            if not names or f"{r['title']} - {r['artist']}" not in names:
+                errors.append(f"{where}: names list missing its own display credit")
+            for nm in names:
+                if nm not in pool_names:
+                    errors.append(f"{where}: alias absent from hot100_songs.json guess pool")
+                if nm in seen_names:
+                    errors.append(f"{where}: alias shared with another slot in the same year")
+                seen_names.add(nm)
+    return {"top_song_years": len(years), "guess_pool": len(pool)}
+
+
 def audit_html_files(errors: list[str]) -> None:
     osascript_bin = shutil.which("osascript")
     for lf_name in FRONTEND_LF_FILES:
@@ -294,6 +347,7 @@ def main(argv: list[str] | None = None) -> int:
     errors: list[str] = []
     playlist_count = audit_playlists(errors)
     summary = audit_billboard_and_timeline(errors, strict_previews=args.strict_previews)
+    ts_summary = audit_top_songs(errors)
     audit_html_files(errors)
 
     if errors:
@@ -308,6 +362,7 @@ def main(argv: list[str] | None = None) -> int:
         f"AUDIT PASSED: {playlist_count} playlists, {summary.get('weeks', 0)} Billboard weeks "
         f"({summary.get('chart_rows', 0)} rows, {summary.get('empty_links', 0)} unlinked), "
         f"{summary.get('timeline_songs', 0)} Timeline songs ({summary.get('incomplete_timeline', 0)} skeleton), "
+        f"{ts_summary.get('top_song_years', 0)} Top Songs years ({ts_summary.get('guess_pool', 0)} guessable songs), "
         f"and {len(HTML_FILES)} HTML apps clean."
     )
     return 0

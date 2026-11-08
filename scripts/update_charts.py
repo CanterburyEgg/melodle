@@ -672,6 +672,178 @@ def load_credentials(creds_file: str | None) -> dict[str, str] | None:
     return None
 
 
+# ---------------------------------------------------------------------------
+# Top Songs (year-end Top 50) mode
+# ---------------------------------------------------------------------------
+TOP_SONGS_PER_YEAR = 50
+TOP_SONGS_RUN_GAP_DAYS = 26 * 7
+TOP_SONGS_PRIORITY_YEARS = tuple(range(2000, 2021))
+TOP_SONGS_PATH = DATA_DIR / "top_songs.json"
+HOT100_POOL_PATH = DATA_DIR / "hot100_songs.json"
+
+
+def compute_top_song_candidates(
+    charts: list[dict[str, Any]],
+    max_year_exclusive: int,
+) -> tuple[dict[int, list[dict[str, Any]]], list[list[str]]]:
+    """Rank every Hot 100 song into a single year using (101 - rank)^2 weekly points.
+
+    A song's chart history is split into runs wherever it is absent 26+ weeks; only its
+    biggest run (by points) is scored, and the whole run total is credited to the calendar
+    year in which that run earned the most points. Returns ({year: candidates sorted by
+    points desc}, guess pool of unique [title, artist] pairs).
+    """
+    from datetime import date as _date
+
+    weeks_by_key: dict[tuple[str, str], list[tuple[_date, int, str, str]]] = {}
+    pool: set[tuple[str, str]] = set()
+    for ch in charts:
+        d = _date.fromisoformat(ch["date"])
+        for entry in ch.get("data", []):
+            t = clean_text(entry.get("song", ""))
+            a = ARTIST_TYPO_FIXES.get(clean_text(entry.get("artist", "")), clean_text(entry.get("artist", "")))
+            if not t or not a or is_banned_entry(t, a):
+                continue
+            pool.add((t, a))
+            weeks_by_key.setdefault(normalize_match_key(t, a), []).append((d, int(entry["this_week"]), t, a))
+
+    by_year: dict[int, list[dict[str, Any]]] = {}
+    for mk, weeks in weeks_by_key.items():
+        weeks.sort(key=lambda w: w[0])
+        runs: list[list[tuple[_date, int, str, str]]] = [[weeks[0]]]
+        for w in weeks[1:]:
+            if (w[0] - runs[-1][-1][0]).days > TOP_SONGS_RUN_GAP_DAYS:
+                runs.append([w])
+            else:
+                runs[-1].append(w)
+
+        def run_points(run: list[tuple[_date, int, str, str]]) -> int:
+            return sum((101 - rk) ** 2 for _, rk, _, _ in run)
+
+        best = max(runs, key=run_points)
+        total = run_points(best)
+        year_pts: dict[int, int] = {}
+        credit_counts: dict[tuple[str, str], int] = {}
+        for d, rk, t, a in best:
+            year_pts[d.year] = year_pts.get(d.year, 0) + (101 - rk) ** 2
+            credit_counts[(t, a)] = credit_counts.get((t, a), 0) + 1
+        year = max(year_pts.items(), key=lambda kv: (kv[1], -kv[0]))[0]
+        if year >= max_year_exclusive:
+            continue
+        title, artist = max(credit_counts.items(), key=lambda kv: kv[1])[0]
+        names = sorted({f"{t} - {a}" for _, _, t, a in weeks})
+        by_year.setdefault(year, []).append(
+            {"key": mk, "title": title, "artist": artist, "points": total, "names": names}
+        )
+
+    for cands in by_year.values():
+        cands.sort(key=lambda c: (-c["points"], c["title"].lower()))
+    pool_list = sorted(([t, a] for t, a in pool), key=lambda p: (p[0].lower(), p[1].lower()))
+    return by_year, pool_list
+
+
+def sync_top_songs(charts: list[dict[str, Any]], resolver: SpotifyResolver, args: argparse.Namespace) -> None:
+    """Resolve playable previews for each year's Top 50 and write top_songs.json + hot100_songs.json.
+
+    Prints aggregate counts only (never titles) so the mode stays spoiler-free.
+    Years are processed 2000-2020 first so link backfills prioritize them under quota limits.
+    """
+    from datetime import datetime as _dt
+
+    current_year = _dt.now().year
+    by_year, pool = compute_top_song_candidates(charts, current_year)
+    existing_years: dict[str, Any] = {}
+    if TOP_SONGS_PATH.exists():
+        existing_years = (read_json(TOP_SONGS_PATH) or {}).get("years", {}) or {}
+
+    all_years = sorted(by_year)
+    order = [y for y in TOP_SONGS_PRIORITY_YEARS if y in by_year]
+    order += [y for y in all_years if y > TOP_SONGS_PRIORITY_YEARS[-1]]
+    order += [y for y in reversed(all_years) if y < TOP_SONGS_PRIORITY_YEARS[0]]
+
+    christmas_path = JSONS_DIR / "christmas.json"
+    christmas_rows = read_json(christmas_path) if christmas_path.exists() else []
+    christmas_uris = {r["trackLink"] for r in christmas_rows if r.get("trackLink")}
+    christmas_keys = {normalize_match_key(r["title"], r["artist"]) for r in christmas_rows}
+
+    out_years: dict[str, list[dict[str, Any]]] = {
+        k: v for k, v in existing_years.items() if k.isdigit() and int(k) in by_year
+    }
+    stats = {"complete": 0, "incomplete": 0, "dropped_no_preview": 0, "uncached": 0, "holiday_excluded": 0}
+    quota_hit = False
+
+    for year in order:
+        if quota_hit:
+            break
+        chosen: list[dict[str, Any]] = []
+        seen_previews: set[str] = set()
+        for cand in by_year[year]:
+            if len(chosen) >= TOP_SONGS_PER_YEAR:
+                break
+            if HOLIDAY_TITLE_RE.search(cand["title"]) or cand["key"] in christmas_keys:
+                stats["holiday_excluded"] += 1
+                continue
+            try:
+                hit = resolver.resolve(cand["title"], cand["artist"], year)
+            except QuotaExceededError as exc:
+                print(f"[TOP-SONGS] {exc} Stopping; completed years are kept.", file=sys.stderr)
+                quota_hit = True
+                break
+            if hit and hit.get("banned"):
+                continue
+            if hit and hit.get("uncached_offline"):
+                stats["uncached"] += 1
+                continue
+            prev = clean_preview_url((hit or {}).get("preview", ""))
+            if not prev:
+                stats["dropped_no_preview"] += 1
+                continue
+            if prev in seen_previews:
+                continue
+            if hit.get("uri") in christmas_uris or HOLIDAY_TITLE_RE.search(hit.get("sp_title") or ""):
+                stats["holiday_excluded"] += 1
+                continue
+            seen_previews.add(prev)
+            chosen.append({
+                "title": cand["title"],
+                "artist": cand["artist"],
+                "link": prev,
+                "names": cand["names"],
+            })
+        if len(chosen) == TOP_SONGS_PER_YEAR:
+            out_years[str(year)] = chosen
+            stats["complete"] += 1
+        else:
+            stats["incomplete"] += 1
+            print(f"[TOP-SONGS] {year}: only {len(chosen)}/{TOP_SONGS_PER_YEAR} playable so far", file=sys.stderr)
+
+    # Each guess-pool name that maps to a ranked song must be accepted for that slot; add
+    # cross-key aliases for pool names whose cached preview matches a ranked song's preview.
+    preview_to_slot: dict[str, dict[str, Any]] = {}
+    for rows in out_years.values():
+        for row in rows:
+            preview_to_slot[row["link"]] = row
+    for t, a in pool:
+        cached = resolver.exact_cache.get(f"{t}|||{a}") or {}
+        row = preview_to_slot.get(clean_preview_url(cached.get("preview", "")))
+        name = f"{t} - {a}"
+        if row is not None and name not in row["names"]:
+            row["names"] = sorted(set(row["names"]) | {name})
+
+    ordered = {k: out_years[k] for k in sorted(out_years)}
+    print(
+        f"[TOP-SONGS] years_ready={len(ordered)}/{len(all_years)} "
+        f"(this run: {stats['complete']} complete, {stats['incomplete']} incomplete) "
+        f"priority_2000_2020_ready={sum(1 for y in TOP_SONGS_PRIORITY_YEARS if str(y) in ordered)}/21 "
+        f"dropped_no_preview={stats['dropped_no_preview']} uncached_offline={stats['uncached']} "
+        f"holiday_excluded={stats['holiday_excluded']} guess_pool={len(pool)}"
+    )
+    if not args.dry_run:
+        atomic_write_json(TOP_SONGS_PATH, {"years": ordered}, indent=None)
+        atomic_write_json(HOT100_POOL_PATH, pool, indent=None)
+        print("[WRITE] top_songs.json and hot100_songs.json updated.")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Update Melodle Billboard charts, Timeline, and decade playlists.")
     parser.add_argument(
@@ -700,6 +872,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--decade-max-rank", type=int, default=20, help="Max Billboard peak rank for --sync-decades.")
     parser.add_argument("--sync-no1s", action="store_true", help="Sync new #1 hits into jsons/billboard-no-1s.json.")
+    parser.add_argument(
+        "--sync-top-songs",
+        action="store_true",
+        help="Rebuild Top Songs year-end Top 50 lists (top_songs.json) and the Hot 100 guess pool.",
+    )
+    parser.add_argument(
+        "--top-songs-only",
+        action="store_true",
+        help="Only run the --sync-top-songs step; skip all weekly chart/timeline/playlist rebuilds.",
+    )
     parser.add_argument("--offline", action="store_true", help="Use local caches only without network calls.")
     parser.add_argument("--dry-run", action="store_true", help="Compute updates without writing to jsons/.")
     args = parser.parse_args(argv)
@@ -746,6 +928,13 @@ def main(argv: list[str] | None = None) -> int:
         rps=args.rps,
         offline=args.offline,
     )
+
+    if args.top_songs_only:
+        try:
+            sync_top_songs(charts, resolver, args)
+        finally:
+            resolver.save_checkpoint()
+        return 0
 
     new_dates: list[str] = []
     out_top10: list[dict[str, Any]] = []
@@ -1023,6 +1212,9 @@ def main(argv: list[str] | None = None) -> int:
                     })
                     added_no1 += 1
             print(f"[NO-1S] billboard-no-1s.json: +{added_no1} tracks -> {len(no1_entries)} total")
+
+        if args.sync_top_songs:
+            sync_top_songs(charts, resolver, args)
 
     finally:
         resolver.save_checkpoint()
